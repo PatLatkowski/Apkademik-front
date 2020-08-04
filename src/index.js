@@ -5,7 +5,7 @@ import Joi from '@hapi/joi';
 import './index.css';
 
 var schema = Joi.object().keys({
-  login: Joi.string().required().email({ tlds: { allow: false } }),
+  login: Joi.string().required().email({ tlds: { allow: ['com', 'net', 'pl'] } }), //FIXME: allow: false always returns error for some reason
   password: Joi.string().min(8).required()
 });
 
@@ -24,15 +24,12 @@ class App extends React.Component{
    }
 
   handleLogin(event){
-    schema.validate({login: this.state.login}, function(err, res){
+    schema.validate({login: this.state.login, password: this.state.password}, (err, res) =>{
       if(err)
-        console.log('Bad mail');
+        console.log(err);
       else
-        console.log('Ok mail');
-    }
-
-    )
-    //alert(this.state.login +' '+ this.state.password);
+        console.log('Ok');
+    })
     event.preventDefault();
   }
 
