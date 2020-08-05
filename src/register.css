@@ -61,12 +61,12 @@ h1 {
   float: left;
 }
 
-.inputName {
+.inputFirstName {
   width: 29%;
   margin-right: 5px;
 }
 
-.inputSurname {
+.inputLastName {
   width: 29%;
   margin-left: 5px;
 }
