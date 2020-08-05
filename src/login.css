@@ -1,0 +1,76 @@
+html,
+body,
+#root,
+#root > div {
+  background-color: white;
+}
+
+.container {
+  margin: auto;
+  margin-top: 10vh;
+  width: 80vw;
+  height: 100vh;
+
+  place-self: center;
+}
+
+img {
+  padding-top: 13%;
+  width: 80%;
+  float: right;
+}
+
+input {
+  background-color: lightgray;
+  border: none;
+  border-radius: 12px;
+  width: 80%;
+  font-size: xx-large;
+  padding: 10px;
+}
+
+button {
+  background-color: #25e81f;
+  border: none;
+  border-radius: 12px;
+  font-size: xx-large;
+  width: 60%;
+  cursor: pointer;
+  color: white;
+  margin: 4px 2px;
+  opacity: 1;
+  padding: 10px;
+  outline: none;
+}
+
+button:hover {
+  opacity: 0.8;
+  transition: 0.3s;
+}
+
+.topBox {
+  height: 50%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.logo {
+  display: block;
+  width: 50%;
+  height: 100%;
+  float: left;
+}
+
+.loginInput {
+  padding-top: 13%;
+  text-align: center;
+  width: 50%;
+  float: left;
+  height: 100%;
+}
+
+.bottomBox {
+  text-align: center;
+  width: 100%;
+  height: 50%;
+}

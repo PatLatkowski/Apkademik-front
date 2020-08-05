@@ -1,61 +1,19 @@
-import ReactDOM from 'react-dom';
-import React from 'react';
-import logo from "./components/logo.png";
-import Joi from '@hapi/joi';
-import './index.css';
+import ReactDOM from "react-dom";
+import React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
-var schema = Joi.object().keys({
-  login: Joi.string().required().email({ tlds: { allow: ['com', 'net', 'pl'] } }), //FIXME: allow: false always returns error for some reason
-  password: Joi.string().min(8).required()
-});
+import Login from "./login";
+import Register from "./register";
 
-class App extends React.Component{
-
-  constructor(props){
-    super(props);
-    this.state = {login: ''};
-    this.state = {password: ''};
-    this.handleChange = this.handleChange.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
-  }
-
-  handleChange(event) {    
-    this.setState({[event.target.name]: event.target.value}); 
-   }
-
-  handleLogin(event){
-    schema.validate({login: this.state.login, password: this.state.password}, (err, res) =>{
-      if(err)
-        console.log(err);
-      else
-        console.log('Ok');
-    })
-    event.preventDefault();
-  }
-
-  render(){
-    return(
-      <div className="container">
-        <div className="topBox">
-          <div className="logo">
-            <img src={logo} alt="logo"/>
-          </div>
-          <div className="loginInput">
-            <form id='log' onSubmit={this.handleLogin}>
-              <input type="text" name="login" id="login" value={this.state.value} onChange={this.handleChange} /><br/>
-              <input type="password" name="password" id="password" value={this.state.value} onChange={this.handleChange}/>
-            </form>
-          </div>
-        </div>
-        <div className="botBox">
-          <button form='log' type="submit">Login</button>
-          <button>Register</button>
-        </div>
-      </div>
-
+class App extends React.Component {
+  render() {
+    return (
+      <Router>
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+      </Router>
     );
   }
   
 }
-
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById("root"));
