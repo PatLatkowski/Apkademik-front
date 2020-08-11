@@ -1,4 +1,3 @@
-
 import React from "react";
 import logo from "./components/logo.png";
 import Joi from "@hapi/joi";
@@ -15,14 +14,34 @@ var schema = Joi.object().keys({
   lastName: Joi.string()
     .regex(new RegExp("[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*"))
     .required(),
-  password: Joi.string().min(8).required(),
+  password: Joi.string()
+    .min(8)
+    .required()
+    .error((errors) => {
+      errors.forEach((err) => {
+        switch (err.type) {
+          case "any.empty":
+            err.message = "Value should not be empty!";
+            break;
+          case "string.min":
+            err.message = `Value should have at least ${err.context.limit} characters!`;
+            break;
+          case "string.max":
+            err.message = `Value should have at most ${err.context.limit} characters!`;
+            break;
+          default:
+            break;
+        }
+      });
+      return errors;
+    }),
   confirmPassword: Joi.any()
     .valid(Joi.ref("password"))
     .required()
     .options({ language: { any: { allowOnly: "must match password" } } }),
 });
 
-const serverUrl = 'http://46.41.142.44:8080';
+const serverUrl = "http://46.41.142.44:8080";
 
 class Register extends React.Component {
   constructor(props) {
@@ -52,26 +71,31 @@ class Register extends React.Component {
         confirmPassword: this.state.confirmPassword,
       },
       (err, res) => {
-        if (err) console.log(err);
-        else console.log("Ok");
+        if (err) {
+          alert(err.message);
+          console.log(err);
+        } else {
+          axios
+            .post(serverUrl + "/register", {
+              username: "NieWiemPoCoJestTuUsernameXD",
+              password: this.state.password,
+              name: this.state.firstName,
+              fullname: this.state.lastName,
+              email: this.state.email,
+              role: "testrole",
+            })
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          this.props.history.push("/login");
+          console.log("Ok");
+        }
       }
     );
 
-    axios.post(serverUrl + '/register', {
-      username: 'NieWiemPoCoJestTuUsernameXD',
-      password: this.state.password,
-      name: this.state.firstName,
-      fullname: this.state.lastName,
-      email: this.state.email,
-      role: 'testrole'
-    })
-    .then(
-      (response) => { console.log(response)}
-    )
-    .catch(
-      (error) => {console.log(error)}
-    )
-    this.props.history.push("/login");
     event.preventDefault();
   }
 
