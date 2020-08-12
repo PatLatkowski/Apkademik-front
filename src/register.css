@@ -4,84 +4,100 @@ body,
   background-color: white;
 }
 
-.container {
+.register-container {
   margin: auto;
   width: 80vw;
   height: 90vh;
+  padding-top: 10vh;
 }
 
-img {
+.register-img {
   width: 80%;
   float: center;
   padding: 10%;
 }
 
-input {
+.register-inputFirstName {
+  display: inline-block;
   background-color: lightgray;
   border: none;
   border-radius: 12px;
-  width: 60%;
   font-size: x-large;
   padding: 10px;
+  margin-left: 20vw;
+  width: 24.15%;
 }
 
-input[type="submit"] {
+.register-inputLastName {
+  display: inline-block;
+  background-color: lightgray;
+  border: none;
+  border-radius: 12px;
+  font-size: x-large;
+  padding: 10px;
+  width: 24.15%;
+  margin-left: 0.5%;
+}
+
+.register-input {
+  display: block;
+  background-color: lightgray;
+  border: none;
+  border-radius: 12px;
+  width: 50%;
+  font-size: x-large;
+  padding: 10px;
+  margin: 1vh 20vw;
+}
+
+.register-input[type="submit"] {
+  display: block;
   background-color: #25e81f;
   border: none;
+  cursor: pointer;
   width: 20%;
   color: white;
   border-radius: 12px;
   font-size: x-large;
+  margin-left: 40%;
   padding: 10px;
   opacity: 1;
   outline: none;
 }
 
-input[type="submit"]:hover {
+.register-input[type="submit"]:hover {
   opacity: 0.8;
   transition: 0.3s;
 }
 
-h1 {
+.register-h1 {
   padding-right: 10%;
   color: #25e81f;
-  font-size: 350%;
+  font-size: 370%;
 }
 
-.topBox {
-  height: 40%;
+.register-topBox {
+  height: 35%;
   width: 100%;
   overflow: hidden;
 }
 
-.logo {
+.register-logo {
   display: block;
   width: 40%;
   height: 100%;
   float: left;
 }
-
-.inputFirstName {
-  width: 29%;
-  margin-right: 5px;
-}
-
-.inputLastName {
-  width: 29%;
-  margin-left: 5px;
-}
-
-.header {
+.register-header {
   width: 60%;
   height: 100%;
   float: left;
   font-size: 1.5vw;
-  padding-top: 7vh;
+  padding-top: 1vh;
 }
 
-.bottomBox {
-  text-align: center;
-  padding-top: 50px;
+.register-bottomBox {
+  float: center;
   width: 100%;
-  height: 60%;
+  height: 65%;
 }
