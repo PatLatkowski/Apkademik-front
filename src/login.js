@@ -5,12 +5,6 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "./login.css";
 
-var schema = Joi.object().keys({
-  login: Joi.string()
-    .required()
-    .email({ tlds: { allow: ["com", "net", "pl"] } }), //FIXME: allow: false always returns error for some reason
-  password: Joi.string().min(8).required(),
-});
 
 const serverUrl = "http://46.41.142.44:8080";
 
@@ -28,30 +22,17 @@ class Login extends React.Component {
   }
 
   handleLogin(event) {
-    schema.validate(
-      {
-        login: this.state.login,
-        password: this.state.password,
-      },
-      (err, res) => {
-        if (err) console.log(err);
-        else {
-          axios
-          // Tymczasowo ustawione na sztywno
-            .post(serverUrl + "/authenticate", {
-              email: "czajnik98@wp.pl",
-              password: "ala",
-            })
-            .then((response) => {
-              console.log(response);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-          console.log("Ok");
-        }
-      }
-    );
+    axios
+        .post(serverUrl + "/authenticate", {
+          email: this.state.login,
+          password: this.state.password,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
     event.preventDefault();
   }
@@ -65,7 +46,7 @@ class Login extends React.Component {
             <input
               type="text"
               id="login"
-              placeholder="Login"
+              placeholder="email"
               name="login"
               value={this.state.value}
               onChange={this.handleChange}
