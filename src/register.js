@@ -77,12 +77,10 @@ class Register extends React.Component {
         } else {
           axios
             .post(serverUrl + "/register", {
-              username: "NieWiemPoCoJestTuUsernameXD",
               password: this.state.password,
               name: this.state.firstName,
-              fullname: this.state.lastName,
+              fullName: this.state.lastName,
               email: this.state.email,
-              role: "testrole",
             })
             .then((response) => {
               console.log(response);
@@ -161,7 +159,7 @@ class Register extends React.Component {
               className="register-input"
             />
             <input
-              type="text"
+              type="password"
               id="confirmPassword"
               name="confirmPassword"
               placeholder="Confirm password"
