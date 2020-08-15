@@ -43,7 +43,7 @@ class Login extends React.Component {
             // Tymczasowo ustawione na sztywno
             .post(serverUrl + "/authenticate", {
               email: "czajnik98@wp.pl",
-              password: "alads",
+              password: "ala",
             })
             .then((response) => {
               console.log(response);
