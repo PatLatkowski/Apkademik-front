@@ -19,6 +19,7 @@ class Login extends React.Component {
     super(props);
     this.state = { login: "" };
     this.state = { password: "" };
+    this.state = { errorMessage: "" };
     this.handleChange = this.handleChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
   }
@@ -34,18 +35,22 @@ class Login extends React.Component {
         password: this.state.password,
       },
       (err, res) => {
-        if (err) console.log(err);
-        else {
+        if (err) {
+          alert(err.details[0].message);
+          console.log(err);
+        } else {
           axios
-          // Tymczasowo ustawione na sztywno
+            // Tymczasowo ustawione na sztywno
             .post(serverUrl + "/authenticate", {
               email: "czajnik98@wp.pl",
-              password: "ala",
+              password: "alads",
             })
             .then((response) => {
               console.log(response);
             })
             .catch((error) => {
+              if (error.request.status === 401)
+                alert("Incorrect email or password");
               console.log(error);
             });
           console.log("Ok");
