@@ -61,3 +61,18 @@
   opacity: 0.8;
   transition: 0.3s;
 }
+
+.error-message {
+  background-color: #ff8585;
+  border-style: solid;
+  border-color: #fc3f3f;
+  border-width: thin;
+  border-radius: 12px;
+  text-align: center;
+  font-size: x-large;
+  width: 60%;
+  opacity: 1;
+  padding: 10px;
+  margin-left: 23%;
+  outline: none;
+}

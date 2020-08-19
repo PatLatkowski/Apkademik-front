@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "./components/logo.png";
 import Joi from "@hapi/joi";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./login.css";
+import ErrorMessage from "./components/ErrorMessage";
 
 var schema = Joi.object().keys({
   login: Joi.string()
@@ -36,7 +37,7 @@ class Login extends React.Component {
       },
       (err, res) => {
         if (err) {
-          alert(err.details[0].message);
+          this.setState({ errorMessage: err.details[0].message });
           console.log(err);
         } else {
           axios
@@ -50,7 +51,7 @@ class Login extends React.Component {
             })
             .catch((error) => {
               if (error.request.status === 401)
-                alert("Incorrect email or password");
+                this.setState({ errorMessage: "Incorrect email or password" });
               console.log(error);
             });
           console.log("Ok");
@@ -85,7 +86,10 @@ class Login extends React.Component {
               onChange={this.handleChange}
               className="login-input"
             />
+            <ErrorMessage text={this.state.errorMessage} />
           </div>
+        </form>
+        <div>
           <input
             form="log"
             type="submit"
@@ -93,12 +97,12 @@ class Login extends React.Component {
             value="Submit"
             className="login-input"
           />
-        </form>
-        <Link to="/register">
-          <button type="submit" name="Register" className="login-button">
-            Register
-          </button>
-        </Link>
+          <Link to="/register">
+            <button type="submit" name="Register" className="login-button">
+              Register
+            </button>
+          </Link>
+        </div>
       </div>
     );
   }

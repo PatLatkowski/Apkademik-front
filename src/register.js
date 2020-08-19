@@ -3,6 +3,7 @@ import logo from "./components/logo.png";
 import Joi from "@hapi/joi";
 import axios from "axios";
 import "./register.css";
+import ErrorMessage from "./components/ErrorMessage";
 
 var schema = Joi.object().keys({
   email: Joi.string()
@@ -33,6 +34,7 @@ class Register extends React.Component {
     this.state = { roomNumber: "" };
     this.state = { password: "" };
     this.state = { confirmPassword: "" };
+    this.state = { errorMessage: "" };
     this.handleChange = this.handleChange.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
   }
@@ -52,7 +54,7 @@ class Register extends React.Component {
       },
       (err, res) => {
         if (err) {
-          alert(err.details[0].message);
+          this.setState({ errorMessage: err.details[0].message });
           console.log(err);
         } else {
           axios
@@ -66,7 +68,8 @@ class Register extends React.Component {
               console.log(response);
             })
             .catch((error) => {
-              if (error.request.status === 409) alert("User already exists");
+              if (error.request.status === 409)
+                this.setState({ errorMessage: "User already exists" });
               console.log(error);
             });
           this.props.history.push("/login");
@@ -147,6 +150,7 @@ class Register extends React.Component {
               onChange={this.handleChange}
               className="register-input"
             />
+            <ErrorMessage text={this.state.errorMessage} />
             <input
               form="register"
               type="submit"
