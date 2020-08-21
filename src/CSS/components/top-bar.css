@@ -1,6 +1,18 @@
 @import "../main.css";
 
-.container {
+.container-topbar {
   width: 100%;
+}
+
+.img-topbar {
   height: 60px;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.account {
+  position: absolute;
+  top: 25%;
+  right: 2%;
 }
