@@ -8,6 +8,13 @@ import ErrorMessage from "./components/ErrorMessage";
 
 const serverUrl = "http://46.41.142.44:8080";
 
+var schema = Joi.object().keys({
+  login: Joi.string()
+    .required()
+    .email({ tlds: { allow: ["com", "net", "pl"] } }), //FIXME: allow: false always returns error for some reason
+  password: Joi.string().min(8).required(),
+});
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
