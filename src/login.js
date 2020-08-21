@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "./components/logo.png";
 import Joi from "@hapi/joi";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./login.css";
-
+import ErrorMessage from "./components/ErrorMessage";
 
 const serverUrl = "http://46.41.142.44:8080";
 
@@ -13,6 +13,7 @@ class Login extends React.Component {
     super(props);
     this.state = { login: "" };
     this.state = { password: "" };
+    this.state = { errorMessage: "" };
     this.handleChange = this.handleChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
   }
@@ -22,17 +23,34 @@ class Login extends React.Component {
   }
 
   handleLogin(event) {
-    axios
-        .post(serverUrl + "/authenticate", {
-          email: this.state.login,
-          password: this.state.password,
-        })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    schema.validate(
+      {
+        login: this.state.login,
+        password: this.state.password,
+      },
+      (err, res) => {
+        if (err) {
+          this.setState({ errorMessage: err.details[0].message });
+          console.log(err);
+        } else {
+          axios
+            // Tymczasowo ustawione na sztywno
+            .post(serverUrl + "/authenticate", {
+              email: "czajnik98@wp.pl",
+              password: "ala",
+            })
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              if (error.request.status === 401)
+                this.setState({ errorMessage: "Incorrect email or password" });
+              console.log(error);
+            });
+          console.log("Ok");
+        }
+      }
+    );
 
     event.preventDefault();
   }
@@ -61,7 +79,10 @@ class Login extends React.Component {
               onChange={this.handleChange}
               className="login-input"
             />
+            <ErrorMessage text={this.state.errorMessage} />
           </div>
+        </form>
+        <div>
           <input
             form="log"
             type="submit"
@@ -69,12 +90,12 @@ class Login extends React.Component {
             value="Submit"
             className="login-input"
           />
-        </form>
-        <Link to="/register">
-          <button type="submit" name="Register" className="login-button">
-            Register
-          </button>
-        </Link>
+          <Link to="/register">
+            <button type="submit" name="Register" className="login-button">
+              Register
+            </button>
+          </Link>
+        </div>
       </div>
     );
   }
