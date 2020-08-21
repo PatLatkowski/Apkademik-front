@@ -2,7 +2,7 @@ import ReactDOM from "react-dom";
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import "./main-layout.css";
+import "./CSS/main-layout.css";
 import TopBar from "./components/top-bar";
 
 class MainPage extends React.Component {

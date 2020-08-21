@@ -3,7 +3,7 @@ import logo from "./components/logo.png";
 import Joi from "@hapi/joi";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "./login.css";
+import "./CSS/login.css";
 import ErrorMessage from "./components/ErrorMessage";
 
 const serverUrl = "http://46.41.142.44:8080";

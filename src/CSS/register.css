@@ -1,8 +1,4 @@
-body,
-#root,
-#root > div {
-  background-color: white;
-}
+@import "./main.css";
 
 .register-container {
   margin: auto;

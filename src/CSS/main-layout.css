@@ -1,0 +1,6 @@
+@import "./main.css";
+
+.container {
+  min-width: 100%;
+  background: #aaa;
+}

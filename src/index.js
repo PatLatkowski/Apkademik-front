@@ -7,6 +7,7 @@ import {
   Switch,
 } from "react-router-dom";
 
+import "./CSS/index.css";
 import Login from "./login";
 import Register from "./register";
 import MainPage from "./main-layout";
