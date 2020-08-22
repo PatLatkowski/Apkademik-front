@@ -64,44 +64,58 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div className="login-container">
-        <img src={logo} alt="logo" className="login-img" />
-        <form id="log" onSubmit={this.handleLogin} className="login-form">
-          <div className="login-inputDiv">
-            <input
-              type="text"
-              id="login"
-              placeholder="email"
-              name="login"
-              value={this.state.value}
-              onChange={this.handleChange}
-              className="login-input"
-            />
-            <input
-              type="password"
-              id="password"
-              placeholder="Password"
-              name="password"
-              value={this.state.value}
-              onChange={this.handleChange}
-              className="login-input"
-            />
-            <ErrorMessage text={this.state.errorMessage} />
+      <div class="container login-container">
+        <div class="row m-2">
+          <div class="col-6">
+            <img src={logo} alt="logo" class="rounded float-right" />
           </div>
-        </form>
-        <div>
-          <input
-            form="log"
-            type="submit"
-            name="Submit"
-            value="Submit"
-            className="login-input"
-          />
-          <Link to="/register">
-            <button type="submit" name="Register" className="login-button">
-              Register
-            </button>
-          </Link>
+          <div class="col-3 login-inputDiv">
+            <form id="log" onSubmit={this.handleLogin}>
+              <div class="row form-group">
+                <input
+                  type="email"
+                  id="login"
+                  placeholder="email"
+                  name="login"
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                />
+              </div>
+              <div class="row form-group">
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="Password"
+                  name="password"
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                />
+              </div>
+            </form>
+            <div class="row">
+              <ErrorMessage text={this.state.errorMessage} />
+            </div>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-5 mx-auto">
+            <input
+              form="log"
+              type="submit"
+              name="Submit"
+              value="Submit"
+              className="login-input"
+            />
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-5 mx-auto login-button">
+            <Link to="/register">
+              <button type="submit" name="Register">
+                Register
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     );

@@ -83,82 +83,104 @@ class Register extends React.Component {
 
   render() {
     return (
-      <div className="register-container">
-        <div className="register-topBox">
-          <div className="register-logo">
-            <img src={logo} alt="logo" />
+      <div class="conteiner register-container">
+        <div class="row m-2">
+          <div class="col-6">
+            <img src={logo} alt="logo" class="rounded float-right" />
           </div>
-          <div className="register-header">
-            <h1 className="register-h1">Create account</h1>
+          <div class="col-6">
+            <h1 class="font-weight-bold register-header">Register</h1>
           </div>
         </div>
-        <div className="register-bottomBox">
-          <form id="register" onSubmit={this.handleRegister}>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              placeholder="Email"
-              onChange={this.handleChange}
-              className="register-input"
-            />
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              placeholder="First name"
-              onChange={this.handleChange}
-              className="register-inputFirstName"
-            />
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              placeholder="Last name"
-              onChange={this.handleChange}
-              className="register-inputLastName"
-            />
-            <input
-              type="text"
-              id="dormNumber"
-              name="dormNumber"
-              placeholder="Dorm number"
-              onChange={this.handleChange}
-              className="register-input"
-            />
-            <input
-              type="text"
-              id="roomNumber"
-              name="roomNumber"
-              placeholder="Room number"
-              onChange={this.handleChange}
-              className="register-input"
-            />
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              onChange={this.handleChange}
-              className="register-input"
-            />
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              placeholder="Confirm password"
-              onChange={this.handleChange}
-              className="register-input"
-            />
-            <ErrorMessage text={this.state.errorMessage} />
-            <input
-              form="register"
-              type="submit"
-              name="Confirm"
-              value="Confirm"
-              className="register-input"
-            />
-          </form>
+        <div class="row">
+          <div class="col-6 mx-auto">
+            <form id="register" onSubmit={this.handleRegister}>
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="email"
+                  name="email"
+                  placeholder="Email"
+                  onChange={this.handleChange}
+                  className="register-input"
+                />
+              </div>
+              <div class="form-row">
+                <div class="form-group col">
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    placeholder="First name"
+                    onChange={this.handleChange}
+                    className="register-input"
+                  />
+                </div>
+                <div class="form-group col">
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Last name"
+                    onChange={this.handleChange}
+                    className="register-input"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="dormNumber"
+                  name="dormNumber"
+                  placeholder="Dorm number"
+                  onChange={this.handleChange}
+                  className="register-input"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="roomNumber"
+                  name="roomNumber"
+                  placeholder="Room number"
+                  onChange={this.handleChange}
+                  className="register-input"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  onChange={this.handleChange}
+                  className="register-input"
+                />
+              </div>
+              <div class="form-group">
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="Confirm password"
+                  onChange={this.handleChange}
+                  className="register-input"
+                />
+              </div>
+              <div class="form-group">
+                <ErrorMessage text={this.state.errorMessage} />
+              </div>
+              <div class="form-group">
+                <input
+                  form="register"
+                  type="submit"
+                  name="Confirm"
+                  value="Confirm"
+                  className="register-input"
+                />
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     );
