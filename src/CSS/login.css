@@ -7,13 +7,10 @@
   height: 70vh;
 }
 
-.login-img {
-  display: block;
-  text-align: right;
-  align-items: center;
-  margin-top: auto;
-  margin-bottom: auto;
+.login-container img {
+  max-width: 100%;
 }
+
 .login-inputDiv {
   margin-top: auto;
   margin-bottom: auto;

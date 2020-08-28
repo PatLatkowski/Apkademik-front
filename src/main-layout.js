@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import "./CSS/main-layout.css";
 import TopBar from "./components/top-bar";
+import Board from "./components/board";
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -20,7 +21,9 @@ class MainPage extends React.Component {
         </div>
         <div class="row">
           <div class="col-2 bg-primary ">col1</div>
-          <div class="col-10 bg-secondary">col2</div>
+          <div class="col-10 bg-light">
+            <Board tableTitle={"Tytuł tablicy"} />
+          </div>
         </div>
       </div>
     );

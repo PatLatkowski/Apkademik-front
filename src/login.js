@@ -48,6 +48,7 @@ class Login extends React.Component {
             })
             .then((response) => {
               console.log(response);
+              this.props.history.push("/main-page");
             })
             .catch((error) => {
               if (error.request.status === 401)

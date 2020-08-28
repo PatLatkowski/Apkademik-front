@@ -72,7 +72,7 @@ class Register extends React.Component {
                 this.setState({ errorMessage: "User already exists" });
               console.log(error);
             });
-          this.props.history.push("/login");
+          this.props.history.push("");
           console.log("Ok");
         }
       }
