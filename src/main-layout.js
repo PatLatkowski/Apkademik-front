@@ -1,26 +1,26 @@
-import ReactDOM from "react-dom";
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import "./CSS/main-layout.css";
 import TopBar from "./components/top-bar";
+import SideBar from "./components/side-bar";
 
 class MainPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div class="container">
         <div class="row">
-          <div class="col bg-success">
+          <div class="col" style={{ background: "#EEEEEE" }}>
             <TopBar />
           </div>
         </div>
         <div class="row">
-          <div class="col-2 bg-primary ">col1</div>
-          <div class="col-10 bg-secondary">col2</div>
+          <div class="col-2" style={{ background: "#EEEEEE" }}>
+            <SideBar />
+          </div>
+          <div class="col-10 bg-secondary">
+            Środkowy panel do wyświetlania tablicy ogłoszeń lub rezerwacji
+          </div>
         </div>
       </div>
     );
