@@ -2,36 +2,42 @@ import React from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import "../CSS/components/top-bar.css";
 import logo from "../components/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import Cookies from "universal-cookie";
 
-class TopBar extends React.Component {
-  render() {
-    return (
-      <div class="container-topbar">
-        <div class="row">
-          <div class="col-2 bg-warning">
-            <Link to="/main-page">
-              <img class="img-topbar" src={logo} alt="logo" />
-            </Link>
-          </div>
-          <div class="col-10">
-            <div class="account-topbar">
-              <Dropdown>
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                  Ururarer
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item href="/account">Konto</Dropdown.Item>
-                  <Dropdown.Item href="#/action-3">
-                    Wyloguj (TODO)
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
+const TopBar = () => {
+  let history = useHistory();
+
+  const handleLogout = (event) => {
+    const cookies = new Cookies();
+    cookies.remove("token");
+    history.push("/login");
+  };
+  return (
+    <div className="container-topbar">
+      <div className="row">
+        <div className="col-2 bg-warning">
+          <Link to="/">
+            <img className="img-topbar" src={logo} alt="logo" />
+          </Link>
+        </div>
+        <div className="col-10">
+          <div className="account-topbar">
+            <Dropdown>
+              <Dropdown.Toggle variant="success" id="dropdown-basic">
+                Ururarer
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item href="/account">Konto</Dropdown.Item>
+                <Dropdown.Item onClick={handleLogout}>
+                  Wyloguj (TODO)
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 export default TopBar;

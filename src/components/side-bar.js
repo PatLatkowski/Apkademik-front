@@ -1,7 +1,6 @@
 import React from "react";
 import TreeView from "@material-ui/lab/TreeView";
 import StyledTreeItem from "./StyledTreeItem";
-import Label from "@material-ui/icons/Label";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import { makeStyles } from "@material-ui/core/styles";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
