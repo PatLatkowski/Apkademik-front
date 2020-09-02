@@ -1,5 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Schedule from "./components/Schedule";
 
 import "./CSS/main-layout.css";
 import TopBar from "./components/top-bar";
@@ -19,7 +20,7 @@ class MainPage extends React.Component {
             <SideBar />
           </div>
           <div className="col-10 bg-secondary">
-            Środkowy panel do wyświetlania tablicy ogłoszeń lub rezerwacji
+            <Schedule />
           </div>
         </div>
       </div>

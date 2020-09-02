@@ -76,7 +76,7 @@ class Login extends React.Component {
             <form id="log" onSubmit={this.handleLogin}>
               <div className="row form-group">
                 <input
-                  type="email"
+                  type="text"
                   id="login"
                   placeholder="email"
                   name="login"

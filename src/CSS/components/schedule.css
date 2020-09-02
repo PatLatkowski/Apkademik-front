@@ -1,0 +1,39 @@
+.schedule-box {
+  background-color: white;
+}
+
+.hour {
+  min-width: 100%;
+  min-height: 100px;
+  font-size: x-large;
+  text-align: right;
+}
+
+.schedule-button {
+  border-style: solid;
+  border-top: none;
+  min-width: 20%;
+  min-height: 100px;
+}
+
+.date {
+  min-width: 20%;
+  text-align: center;
+  font-size: x-large;
+  border-style: solid;
+  border-top-style: none;
+}
+
+.submit-button {
+  background-color: #25e81f;
+  border: none;
+  border-radius: 12px;
+  font-size: xx-large;
+  width: 100%;
+  float: center;
+  cursor: pointer;
+  color: white;
+  opacity: 1;
+  padding: 10px;
+  outline: none;
+}
