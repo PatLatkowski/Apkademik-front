@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import "../CSS/components/schedule.css";
+import ErrorMessage from "./ErrorMessage";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -31,20 +32,29 @@ function Square(props) {
 function Schedule() {
   const numOfHours = 15;
   const numOfDays = 5;
+  const [errorMessage, setErrorMessage] = useState("");
   const [reservationColor, setReservationColor] = useState(
     Array(numOfHours * numOfDays).fill("white")
   );
   const [reservationState, setReservationState] = useState(
     Array(numOfHours * numOfDays).fill(1)
   );
+  const [validateHours, setValidateHours] = useState(Array(5).fill(0));
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
+  function handleSubmit() {
+    if (Math.max.apply(null, validateHours) > 3)
+      setErrorMessage(" You can reserve max 3 hour in single day");
+    else setErrorMessage("");
+  }
+
   function handleClick(i) {
     const reservationColor2 = reservationColor.slice();
     const reservationState2 = reservationState.slice();
+    const validateHours2 = validateHours.slice();
     switch (reservationState[i]) {
       case rstate.RESERVED:
         break;
@@ -53,12 +63,16 @@ function Schedule() {
         setReservationColor(reservationColor2);
         reservationState2[i] = rstate.HOVER;
         setReservationState(reservationState2);
+        validateHours2[i % numOfDays]++;
+        setValidateHours(validateHours2);
         break;
       case rstate.HOVER:
         reservationColor2[i] = "white";
         setReservationColor(reservationColor2);
         reservationState2[i] = rstate.FREE;
         setReservationState(reservationState2);
+        validateHours2[i % numOfDays]--;
+        setValidateHours(validateHours2);
         break;
     }
   }
@@ -152,9 +166,17 @@ function Schedule() {
               </MuiPickersUtilsProvider>{" "}
             </div>
           </div>
+          <div className="row mx-auto p-3">
+            <ErrorMessage text={errorMessage} />
+          </div>
           <div class="row" class="position-relative">
             <div class="col mx-auto">
-              <button type="submit" name="Register" className="submit-button">
+              <button
+                type="submit"
+                name="Register"
+                className="submit-button"
+                onClick={handleSubmit}
+              >
                 Submit
               </button>
             </div>
