@@ -16,21 +16,35 @@ function CustomToggle({ children, eventKey }) {
   );
 }
 
-const serverUrl = "http://46.41.142.44:8080";
+function show(postsData) {
+  if (postsData) {
+    return postsData.map((postData) => (
+      <div class="row" key={postData.id}>
+        <div class="col m-1">
+          <Post post={postData} />
+        </div>
+      </div>
+    ));
+  }
+}
+
+const serverUrl = "http://localhost:8080";
 
 class Table extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { postsData: {} };
+    this.state = {
+      postsData: [],
+    };
     this.state = { tableTitle: props.tableTitle };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     axios
       .get(serverUrl + "/posts")
       .then((response) => {
-        this.state.postsData = response;
-        console.log(response);
+        console.log(response.data);
+        this.setState({ postsData: response.data });
       })
       .catch((error) => {
         console.log(error);
@@ -40,19 +54,8 @@ class Table extends React.Component {
   }
 
   render() {
-    const getPosts = (postsData) => {
-      let content = [];
-      for (let postData of postsData) {
-        content.push(
-          <div class="col m-1" key={postData.id}>
-            <Post post={postData} />
-          </div>
-        );
-      }
-      return content;
-    };
+    const { postsData } = this.state;
 
-    //zmienić PostData1 w funkcji getPosts na this.state.postsData jak będzie zrobiony backend
     return (
       <Accordion defaultActiveKey="0">
         <div class="container-table">
@@ -73,32 +76,13 @@ class Table extends React.Component {
               </Accordion.Collapse>
             </div>
           </div>
-          <div class="row m-2">{getPosts(PostsData1)}</div>
+          <div class="row m-2">
+            <div class="col">{show(postsData)}</div>
+          </div>
         </div>
       </Accordion>
     );
   }
 }
 
-//do przetestowania bez backendu, później do wyrzucenia
-const PostsData1 = [
-  {
-    id: 1,
-    title: "Nowy tytuł",
-    text:
-      "Witaj świecie! Długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst,",
-    date: "24.08.2020 13:30",
-    author: "Adam Nowak",
-    room: "108B",
-  },
-  {
-    id: 2,
-    title: "Nowy tytuł 2",
-    text:
-      "Witaj świecie! Długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst, długi tekst,",
-    date: "25.08.2020 7:22",
-    author: "Beata Kowalska",
-    room: "308A",
-  },
-];
 export default Table;
