@@ -5,19 +5,21 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Joi from "@hapi/joi";
 import axios from "axios";
+import ErrorMessage from "./ErrorMessage";
 
 var schema = Joi.object().keys({
   title: Joi.string().required(),
   text: Joi.string().required(),
 });
 
-const serverUrl = "http://46.41.142.44:8080";
+const serverUrl = "http://localhost:8080";
 
 class AddPost extends React.Component {
   constructor(props) {
     super(props);
     this.state = { title: "" };
     this.state = { text: "" };
+    this.state = { errorMessage: "" };
     this.handleChange = this.handleChange.bind(this);
     this.handlePost = this.handlePost.bind(this);
   }
@@ -87,6 +89,11 @@ class AddPost extends React.Component {
                       name="text"
                       onChange={this.handleChange}
                     />
+                  </div>
+                </div>
+                <div class="form-row mb-2">
+                  <div class="col">
+                    <ErrorMessage text={this.state.errorMessage} />
                   </div>
                 </div>
                 <div class="form-row">

@@ -5,6 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./CSS/main-layout.css";
 import TopBar from "./components/top-bar";
 import Board from "./components/board";
+import { Switch, Route } from "react-router-dom";
+import ShowPost from "./components/showPost";
 
 class MainPage extends React.Component {
   constructor(props) {
@@ -21,8 +23,13 @@ class MainPage extends React.Component {
         </div>
         <div class="row">
           <div class="col-2 bg-primary ">col1</div>
-          <div class="col-10 bg-light">
-            <Board tableTitle={"Tytuł tablicy"} />
+          <div class="col-10 bg-light mt-2">
+            <Switch>
+              <Route exact path="/main-page">
+                <Board tableTitle={"Tytuł tablicy"} />
+              </Route>
+              <Route path="/main-page/post/:id" component={ShowPost} />
+            </Switch>
           </div>
         </div>
       </div>

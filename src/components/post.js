@@ -4,53 +4,66 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
+
+function formatDate(string) {
+  var options = { year: "numeric", month: "numeric", day: "numeric" };
+  return new Date(string).toLocaleDateString([], options);
+}
+
+function formatTime(string) {
+  return new Date(string).toLocaleTimeString("it-IT");
+}
 
 class Post extends React.Component {
   render() {
-    const { id,title, text, date, author, room } = this.props.post;
+    const { id, title, text, date, author, room } = this.props.post;
     return (
       <Accordion defaultActiveKey="0">
         <Card>
           <Card.Body>
             <div class="row">
               <div class="col-10">
-              <a href={'/posts/' + id} >
-                <Card>
-                  <Card.Body >
-                    <Card.Title >{title}</Card.Title>
-                    <Card.Text class="col-11 text-truncate ">{text}</Card.Text>
+                <Card as={Link} to={"main-page/post/" + id}>
+                  <Card.Body>
+                    <Card.Title>{title}</Card.Title>
+                    <Card.Text class="col-11 text-truncate">{text}</Card.Text>
                   </Card.Body>
                 </Card>
-                </a>
               </div>
               <div class="col-2 ">
                 <div class="row mx-auto">
                   <div class="col mx-auto text-center">
-                    <Card.Text>{date}</Card.Text>
+                    <Card.Text>{formatDate(date)}</Card.Text>
+                  </div>
+                </div>
+                <div class="row mx-auto">
+                  <div class="col mx-auto text-center">
+                    <Card.Text>{formatTime(date)}</Card.Text>
                   </div>
                 </div>
                 <div class="row">
-                <div class="row mx-auto">
-                  <div class="col mx-auto text-center">
-                    <Card.Text>{author}</Card.Text>
+                  <div class="row mx-auto">
+                    <div class="col mx-auto text-center">
+                      <Card.Text>AUTOR</Card.Text>
+                    </div>
                   </div>
-                </div>
                 </div>
                 <div class="row  ">
-                <div class="row mx-auto">
-                  <div class="col mx-auto text-center">
-                    <Card.Text>{room}</Card.Text>
+                  <div class="row mx-auto">
+                    <div class="col mx-auto text-center">
+                      <Card.Text>POKÓJ</Card.Text>
+                    </div>
                   </div>
                 </div>
-                </div>
                 <div class="row mx-auto">
-                <div class="row mx-auto">
-                  <div class="col mx-auto text-center">
-                    <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                  Komentarze
-                  </Accordion.Toggle>
+                  <div class="row mx-auto">
+                    <div class="col mx-auto text-center">
+                      <Accordion.Toggle as={Button} variant="link" eventKey="1">
+                        Komentarze
+                      </Accordion.Toggle>
+                    </div>
                   </div>
-                </div>
                 </div>
               </div>
             </div>
