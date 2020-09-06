@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "./CSS/login.css";
 import ErrorMessage from "./components/ErrorMessage";
+import Cookies from "universal-cookie";
 
-const serverUrl = "http://46.41.142.44:8080";
+const serverUrl = "http://localhost:8080";
 
 var schema = Joi.object().keys({
   login: Joi.string()
@@ -43,11 +44,12 @@ class Login extends React.Component {
           axios
             // Tymczasowo ustawione na sztywno
             .post(serverUrl + "/authenticate", {
-              email: "czajnik98@wp.pl",
-              password: "ala",
+              email: this.state.login,
+              password: this.state.password,
             })
             .then((response) => {
-              console.log(response);
+              const cookies = new Cookies();
+              cookies.set("token", response.data, { path: "/" });
               this.props.history.push("/main-page");
             })
             .catch((error) => {

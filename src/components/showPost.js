@@ -5,8 +5,11 @@ import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
+import Cookies from "universal-cookie";
 
 const serverUrl = "http://localhost:8080";
+const cookies = new Cookies();
+const token = cookies.get("token");
 
 function ShowPost({ match }) {
   let params = match.params;
@@ -32,7 +35,11 @@ function ShowPost({ match }) {
   useEffect(() => {
     let mounted = true;
     axios
-      .get(serverUrl + "/post/" + params.id)
+      .get(serverUrl + "/post/" + params.id, {
+        headers: {
+          Authorization: `Bearer ${token.token}`,
+        },
+      })
       .then((response) => {
         if (mounted) {
           setData(response.data);
@@ -48,40 +55,40 @@ function ShowPost({ match }) {
   return (
     <Card>
       <Card.Body>
-        <div class="row">
-          <div class="col-10">
+        <div className="row">
+          <div className="col-10">
             <Card>
               <Card.Body>
                 <Card.Title>{data.title}</Card.Title>
-                <Card.Text class="col-11 ">{data.text}</Card.Text>
+                <Card.Text className="col-11 ">{data.text}</Card.Text>
               </Card.Body>
             </Card>
           </div>
-          <div class="col-2 ">
-            <div class="row mx-auto">
-              <div class="col mx-auto text-center">
+          <div className="col-2 ">
+            <div className="row mx-auto">
+              <div className="col mx-auto text-center">
                 <Card.Text>{formatDate(data.date)}</Card.Text>
               </div>
             </div>
-            <div class="row mx-auto">
-              <div class="col mx-auto text-center">
+            <div className="row mx-auto">
+              <div className="col mx-auto text-center">
                 <Card.Text>{formatTime(data.date)}</Card.Text>
               </div>
             </div>
-            <div class="row mx-auto">
-              <div class="col mx-auto text-center">
+            <div className="row mx-auto">
+              <div className="col mx-auto text-center">
                 <Card.Text>{data.author}</Card.Text>
               </div>
             </div>
-            <div class="row mx-auto">
-              <div class="col mx-auto text-center">
+            <div className="row mx-auto">
+              <div className="col mx-auto text-center">
                 <Card.Text>{data.room}</Card.Text>
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col">
+        <div className="row">
+          <div className="col">
             <p>komentarz</p>
           </div>
         </div>

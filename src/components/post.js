@@ -17,48 +17,51 @@ function formatTime(string) {
 
 class Post extends React.Component {
   render() {
+    const boardTitle = this.props.boardTitle;
     const { id, title, text, date, author, room } = this.props.post;
     return (
       <Accordion defaultActiveKey="0">
         <Card>
           <Card.Body>
-            <div class="row">
-              <div class="col-10">
-                <Card as={Link} to={"main-page/post/" + id}>
+            <div className="row">
+              <div className="col-10">
+                <Card as={Link} to={boardTitle + "/post/" + id}>
                   <Card.Body>
                     <Card.Title>{title}</Card.Title>
-                    <Card.Text class="col-11 text-truncate">{text}</Card.Text>
+                    <Card.Text className="col-11 text-truncate">
+                      {text}
+                    </Card.Text>
                   </Card.Body>
                 </Card>
               </div>
-              <div class="col-2 ">
-                <div class="row mx-auto">
-                  <div class="col mx-auto text-center">
+              <div className="col-2 ">
+                <div className="row mx-auto">
+                  <div className="col mx-auto text-center">
                     <Card.Text>{formatDate(date)}</Card.Text>
                   </div>
                 </div>
-                <div class="row mx-auto">
-                  <div class="col mx-auto text-center">
+                <div className="row mx-auto">
+                  <div className="col mx-auto text-center">
                     <Card.Text>{formatTime(date)}</Card.Text>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="row mx-auto">
-                    <div class="col mx-auto text-center">
-                      <Card.Text>AUTOR</Card.Text>
+                <div className="row">
+                  <div className="row mx-auto">
+                    <div className="col mx-auto text-center">
+                      <Card.Text>{author}</Card.Text>
                     </div>
                   </div>
                 </div>
-                <div class="row  ">
-                  <div class="row mx-auto">
-                    <div class="col mx-auto text-center">
+                <div className="row  ">
+                  <div className="row mx-auto">
+                    <div className="col mx-auto text-center">
                       <Card.Text>POKÓJ</Card.Text>
                     </div>
                   </div>
                 </div>
-                <div class="row mx-auto">
-                  <div class="row mx-auto">
-                    <div class="col mx-auto text-center">
+                <div className="row mx-auto">
+                  <div className="row mx-auto">
+                    <div className="col mx-auto text-center">
                       <Accordion.Toggle as={Button} variant="link" eventKey="1">
                         Komentarze
                       </Accordion.Toggle>
@@ -67,8 +70,8 @@ class Post extends React.Component {
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col">
+            <div className="row">
+              <div className="col">
                 <Accordion.Collapse eventKey="1">
                   <p>komentarz</p>
                 </Accordion.Collapse>

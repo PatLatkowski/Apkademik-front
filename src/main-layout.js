@@ -8,32 +8,28 @@ import Board from "./components/board";
 import { Switch, Route } from "react-router-dom";
 import ShowPost from "./components/showPost";
 
-class MainPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div class="container">
-        <div class="row">
-          <div class="col bg-success">
-            <TopBar />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-2 bg-primary ">col1</div>
-          <div class="col-10 bg-light mt-2">
-            <Switch>
-              <Route exact path="/main-page">
-                <Board tableTitle={"Tytuł tablicy"} />
-              </Route>
-              <Route path="/main-page/post/:id" component={ShowPost} />
-            </Switch>
-          </div>
+function MainPage() {
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col bg-success">
+          <TopBar />
         </div>
       </div>
-    );
-  }
+      <div className="row">
+        <div className="col-2 bg-primary ">col1</div>
+        <div className="col-10 bg-light mt-2">
+          <Switch>
+            <Route exact path="/main-page/:boardTitle" component={Board} />
+            <Route
+              path="/main-page/:boardTitle/post/:id"
+              component={ShowPost}
+            />
+          </Switch>
+        </div>
+      </div>
+    </div>
+  );
 }
+
 export default MainPage;

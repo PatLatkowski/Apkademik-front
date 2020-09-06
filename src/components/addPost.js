@@ -6,13 +6,16 @@ import Button from "react-bootstrap/Button";
 import Joi from "@hapi/joi";
 import axios from "axios";
 import ErrorMessage from "./ErrorMessage";
+import Cookies from "universal-cookie";
 
 var schema = Joi.object().keys({
   title: Joi.string().required(),
   text: Joi.string().required(),
 });
 
-const serverUrl = "http://localhost:8080";
+const serverUrl = "http://localhost:8080/";
+const cookies = new Cookies();
+const token = cookies.get("token");
 
 class AddPost extends React.Component {
   constructor(props) {
@@ -40,17 +43,24 @@ class AddPost extends React.Component {
           console.log(err);
         } else {
           axios
-            .post(serverUrl + "/addPost", {
-              title: this.state.title,
-              text: this.state.text,
-            })
+            .post(
+              serverUrl + this.props.boardTitle + "/addPost",
+              {
+                title: this.state.title,
+                text: this.state.text,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token.token}`,
+                },
+              }
+            )
             .then((response) => {
               console.log(response);
             })
             .catch((error) => {
               console.log(error);
             });
-          this.props.history.push("");
           console.log("Ok");
         }
       }
@@ -63,14 +73,14 @@ class AddPost extends React.Component {
     return (
       <Card>
         <Card.Body>
-          <div class="row m-auto">
-            <div class="col">
-              <form class="mx-auto" onSubmit={this.handlePost}>
-                <div class="form-row ">
-                  <div class="form-group col-1 h3 m-auto mx-auto">
-                    <label class=" m-auto ">Title:</label>
+          <div className="row m-auto">
+            <div className="col">
+              <form className="mx-auto" onSubmit={this.handlePost}>
+                <div className="form-row ">
+                  <div className="form-group col-1 h3 m-auto mx-auto">
+                    <label className=" m-auto ">Title:</label>
                   </div>
-                  <div class="form-group col-11">
+                  <div className="form-group col-11">
                     <Form.Control
                       size="lg"
                       type="text"
@@ -80,8 +90,8 @@ class AddPost extends React.Component {
                     />
                   </div>
                 </div>
-                <div class="form-row">
-                  <div class="form-group col">
+                <div className="form-row">
+                  <div className="form-group col">
                     <Form.Control
                       as="textarea"
                       rows="3"
@@ -91,13 +101,13 @@ class AddPost extends React.Component {
                     />
                   </div>
                 </div>
-                <div class="form-row mb-2">
-                  <div class="col">
+                <div className="form-row mb-2">
+                  <div className="col">
                     <ErrorMessage text={this.state.errorMessage} />
                   </div>
                 </div>
-                <div class="form-row">
-                  <div class="form-group col text-right mr-10">
+                <div className="form-row">
+                  <div className="form-group col text-right mr-10">
                     <Button variant="primary" type="submit">
                       Submit
                     </Button>

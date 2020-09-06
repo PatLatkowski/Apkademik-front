@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
+import Cookies from "universal-cookie";
 
 import Post from "./post";
 import AddPost from "./addPost";
@@ -16,16 +17,23 @@ function CustomToggle({ children, eventKey }) {
   );
 }
 
-const serverUrl = "http://localhost:8080";
+const serverUrl = "http://localhost:8080/";
+const cookies = new Cookies();
+const token = cookies.get("token");
 
-function Table(props) {
+function Board({ match }) {
+  let params = match.params;
   const [data, setData] = useState([]);
-  const [title, setTitle] = useState(props.tableTitle);
+  const [title, setTitle] = useState(params.boardTitle);
 
   useEffect(() => {
     let mounted = true;
     axios
-      .get(serverUrl + "/posts")
+      .get(serverUrl + params.boardTitle + "/posts", {
+        headers: {
+          Authorization: `Bearer ${token.token}`,
+        },
+      })
       .then((response) => {
         if (mounted) {
           setData(response.data);
@@ -40,28 +48,28 @@ function Table(props) {
 
   return (
     <Accordion defaultActiveKey="0">
-      <div class="container-table">
-        <div class="row m-3">
-          <div class="col-10">
-            <h1 class="font-weight-bold font-italic">{title}</h1>
+      <div className="container-table">
+        <div className="row m-3">
+          <div className="col-10">
+            <h1 className="font-weight-bold font-italic">{title}</h1>
           </div>
-          <div class="col-2 m-auto text-center">
+          <div className="col-2 m-auto text-center">
             <CustomToggle eventKey="1">Dodaj Post</CustomToggle>
           </div>
         </div>
-        <div class="row m-2">
-          <div class="col ">
+        <div className="row m-2">
+          <div className="col ">
             <Accordion.Collapse eventKey="1">
-              <AddPost />
+              <AddPost boardTitle={params.boardTitle} />
             </Accordion.Collapse>
           </div>
         </div>
-        <div class="row m-2">
-          <div class="col">
+        <div className="row m-2">
+          <div className="col">
             {data.map((postData) => (
-              <div class="row" key={postData.id}>
-                <div class="col m-1">
-                  <Post post={postData} />
+              <div className="row" key={postData.id}>
+                <div className="col m-1">
+                  <Post post={postData} boardTitle={params.boardTitle} />
                 </div>
               </div>
             ))}
@@ -72,4 +80,4 @@ function Table(props) {
   );
 }
 
-export default Table;
+export default Board;
