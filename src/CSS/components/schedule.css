@@ -12,35 +12,32 @@
 }
 
 .hour {
+  background-color: #ddd;
+  border: 1px solid #999;
   font-size: x-large;
   text-align: right;
-  background-color: #fff;
   min-width: 10%;
   padding-right: 1%;
+  border-top-style: none;
+  border-left: none;
 }
 
 .schedule-button {
-  margin-right: -1px;
-  margin-top: -1px;
   border: 1px solid #999;
-  border-style: solid;
-  border-width: 2px;
   border-top: none;
+  border-left: none;
   min-width: 18%;
   min-height: 100px;
 }
 
 .date {
-  margin-right: -1px;
-  margin-top: -1px;
-  background-color: #fff;
+  background-color: #ddd;
   border: 1px solid #999;
+  border-top: none;
+  border-left: none;
   min-width: 18%;
   text-align: center;
-  border-width: 2px;
   font-size: x-large;
-  border-style: solid;
-  border-top-style: none;
 }
 
 .submit-button {
