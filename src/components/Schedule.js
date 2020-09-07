@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import "../CSS/components/schedule.css";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import { nb } from "date-fns/locale";
 
 const rstate = {
   FREE: 1,
@@ -15,7 +13,6 @@ const rstate = {
 };
 
 function Square(props) {
-  const [color, setColor] = useState(props.value);
   return (
     <div
       onClick={() => props.onClick()}
@@ -152,7 +149,7 @@ function Schedule() {
               </MuiPickersUtilsProvider>{" "}
             </div>
           </div>
-          <div class="row" class="position-relative">
+          <div class="row position-relative">
             <div class="col mx-auto">
               <button type="submit" name="Register" className="submit-button">
                 Submit

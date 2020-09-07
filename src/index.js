@@ -12,6 +12,7 @@ import Register from "./register";
 import MainPage from "./main-layout";
 import Account from "./account";
 import { checkIfTokenExists } from "./functions";
+import AppAdminPanel from "./appAdminPanel";
 
 class App extends React.Component {
   render() {
@@ -54,6 +55,16 @@ class App extends React.Component {
             render={(props) => {
               if (checkIfTokenExists()) {
                 return <Account {...props} />;
+              } else {
+                return <Redirect to={"/login"} />;
+              }
+            }}
+          />
+          <Route
+            path="/appAdminPanel"
+            render={(props) => {
+              if (checkIfTokenExists()) {
+                return <AppAdminPanel {...props} />;
               } else {
                 return <Redirect to={"/login"} />;
               }

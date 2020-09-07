@@ -4,6 +4,7 @@ import Joi from "@hapi/joi";
 import axios from "axios";
 import "./CSS/register.css";
 import ErrorMessage from "./components/ErrorMessage";
+import { Link } from "react-router-dom";
 
 var schema = Joi.object().keys({
   email: Joi.string()
@@ -86,7 +87,9 @@ class Register extends React.Component {
       <div class="conteiner register-container">
         <div class="row m-2">
           <div class="col-6">
-            <img src={logo} alt="logo" class="rounded float-right" />
+            <Link to="/">
+              <img src={logo} alt="logo" class="rounded float-right" />
+            </Link>
           </div>
           <div class="col-6">
             <h1 class="font-weight-bold register-header">Register</h1>

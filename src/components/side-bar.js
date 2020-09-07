@@ -3,8 +3,6 @@ import TreeView from "@material-ui/lab/TreeView";
 import StyledTreeItem from "./StyledTreeItem";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import { makeStyles } from "@material-ui/core/styles";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import HouseIcon from "@material-ui/icons/House";
 import InfoIcon from "@material-ui/icons/Info";
 import SubjectIcon from "@material-ui/icons/Subject";
@@ -19,16 +17,15 @@ const useStyles = makeStyles({
   },
 });
 
-function SideBar() {
+function SideBar(props) {
   const classes = useStyles();
 
   return (
     <TreeView
       className={classes.root}
-      defaultExpanded={["3"]}
-      defaultCollapseIcon={<ArrowDropDownIcon />}
-      defaultExpandIcon={<ArrowRightIcon />}
+      expanded={["2"]}
       defaultEndIcon={<div style={{ width: 24 }} />}
+      onNodeSelect={(event, value) => props.onNodeSelect(event, value)}
     >
       <StyledTreeItem
         nodeId="1"
