@@ -62,19 +62,19 @@ class Register extends React.Component {
             .post(serverUrl + "/register", {
               password: this.state.password,
               name: this.state.firstName,
-              fullName: this.state.lastName,
+              surname: this.state.lastName,
               email: this.state.email,
             })
             .then((response) => {
               console.log(response);
+              this.props.history.push("/login");
+              console.log("Ok");
             })
             .catch((error) => {
               if (error.request.status === 409)
                 this.setState({ errorMessage: "User already exists" });
               console.log(error);
             });
-          this.props.history.push("/login");
-          console.log("Ok");
         }
       }
     );

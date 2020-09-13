@@ -39,3 +39,9 @@ hr {
   padding: 10px;
   outline: none;
 }
+
+.account-data-section {
+  font-size: 18px;
+  padding: 10px;
+  margin: auto;
+}
