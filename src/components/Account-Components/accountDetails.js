@@ -6,8 +6,8 @@ function AccountDetails() {
   const [name, setName] = useState("null");
   const [surname, setSurname] = useState("null");
   const [email, setEmail] = useState("null");
-  const [dormNum, setDormNum] = useState("null");
-  const [roomNum, setRoomNum] = useState("null");
+  const [dormNum, setDormNum] = useState("1");
+  const [roomNum, setRoomNum] = useState("1");
 
   function getAccountInfo() {
     const cookies = new Cookies();

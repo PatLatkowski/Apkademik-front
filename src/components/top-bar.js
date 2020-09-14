@@ -28,11 +28,14 @@ const TopBar = () => {
                 Ururarer
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item href="/account">Konto</Dropdown.Item>
-                <Dropdown.Item href="/appAdminPanel">
-                  Panel Administratora Aplikacji
+                <Dropdown.Item href="/account">Account</Dropdown.Item>
+                <Dropdown.Item href="/">
+                  Dorm Adminitrator's Panel (TODO)
                 </Dropdown.Item>
-                <Dropdown.Item onClick={handleLogout}>Wyloguj</Dropdown.Item>
+                <Dropdown.Item href="/appAdminPanel">
+                  App Adminitrator's Panel
+                </Dropdown.Item>
+                <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

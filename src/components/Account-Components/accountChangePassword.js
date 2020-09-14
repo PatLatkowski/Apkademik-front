@@ -84,7 +84,7 @@ function AccountChangePassword() {
         <hr />
       </div>
 
-      <div className="w-100 account-section">
+      <div className="w-75 account-section">
         <form id="changePassword" onSubmit={handleSubmit}>
           <div className="form-group">
             <input
