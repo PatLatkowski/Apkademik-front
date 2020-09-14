@@ -35,8 +35,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Square(props) {
-  const [color, setColor] = useState(props.value);
-
   return (
     <div
       onClick={() => props.onClick()}
@@ -50,8 +48,6 @@ function Square(props) {
 }
 
 function Stable(props) {
-  const [res, setRes] = useState(null);
-
   function renderSquare(n) {
     return (
       <Square

@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
-import React from "react";
+import React, { createContext, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -14,9 +14,22 @@ import Account from "./account";
 import { checkIfTokenExists } from "./functions";
 import AppAdminPanel from "./appAdminPanel";
 
-class App extends React.Component {
-  render() {
-    return (
+const contextData = {
+  userData: {
+    user: "User Name",
+  },
+};
+
+export const UserContext = createContext(contextData.userData);
+
+function App() {
+  const [userName, setUserName] = useState("User");
+  function changeUserContextData(userName) {
+    setUserName(userName);
+  }
+
+  return (
+    <UserContext.Provider value={{ userName, changeUserContextData }}>
       <Router>
         <Switch>
           <Route
@@ -72,7 +85,7 @@ class App extends React.Component {
           />
         </Switch>
       </Router>
-    );
-  }
+    </UserContext.Provider>
+  );
 }
 ReactDOM.render(<App />, document.getElementById("root"));

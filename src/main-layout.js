@@ -22,9 +22,7 @@ function MainPage(props) {
   return (
     <div className="container">
       <div className="row">
-        <div className="col" style={{ background: "#EEEEEE" }}>
-          <TopBar />
-        </div>
+        <TopBar />
       </div>
       <div className="row">
         <div className="col-2" style={{ background: "#EEEEEE" }}>

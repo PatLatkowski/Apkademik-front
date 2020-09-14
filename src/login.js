@@ -6,6 +6,7 @@ import axios from "axios";
 import "./CSS/login.css";
 import ErrorMessage from "./components/ErrorMessage";
 import Cookies from "universal-cookie";
+import { UserContext } from "./index";
 
 const serverUrl = "http://46.41.142.44:8080";
 
@@ -124,4 +125,5 @@ class Login extends React.Component {
     );
   }
 }
+
 export default Login;

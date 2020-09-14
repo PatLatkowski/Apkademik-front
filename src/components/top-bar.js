@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import "../CSS/components/top-bar.css";
 import logo from "../components/logo.png";
 import { Link, useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
+import { UserContext } from "../index";
 
 const TopBar = () => {
   let history = useHistory();
+  const { userName, changeUserName } = useContext(UserContext);
 
   const handleLogout = (event) => {
     const cookies = new Cookies();
@@ -25,7 +27,7 @@ const TopBar = () => {
           <div className="account-topbar">
             <Dropdown>
               <Dropdown.Toggle variant="success" id="dropdown-basic">
-                Ururarer
+                {userName}
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item href="/account">Account</Dropdown.Item>
