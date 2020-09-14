@@ -130,7 +130,7 @@ function Stable(props) {
   return generateTable();
 }
 
-function Mypicker(props) {
+function Roompicker(props) {
   const classes = useStyles();
 
   function menuItems() {
@@ -139,6 +139,36 @@ function Mypicker(props) {
     props.items.forEach((element) => {
       result.push(<MenuItem value={element}>{element}</MenuItem>);
     });
+
+    return result;
+  }
+
+  return (
+    <FormControl className={classes.formControl}>
+      <InputLabel>{props.name}</InputLabel>
+      <Select value={props.current} onChange={props.onChange}>
+        {menuItems()}
+      </Select>
+    </FormControl>
+  );
+}
+
+function Floorpicker(props) {
+  const classes = useStyles();
+
+  function menuItems() {
+    var result = [];
+    var curroom = [];
+    for (var x = 0; x < props.rooms.length; x++) {
+      if (props.rooms[x] === props.room) curroom = props.items[x];
+    }
+
+    console.log(curroom);
+
+    curroom.forEach((element) => {
+      result.push(<MenuItem value={element}>{element}</MenuItem>);
+    });
+
     return result;
   }
 
@@ -154,11 +184,11 @@ function Mypicker(props) {
 
 function Schedule() {
   const [currentRoom, setCurrentRoom] = useState(1);
-  const [currentFloor, setCurrentFloor] = useState(1);
+  const [currentMachine, setCurrentMachine] = useState(1);
   const [errorMessage, setErrorMessage] = useState("");
   const [validateHours, setValidateHours] = useState(Array(5).fill(0));
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [floors, setFloors] = useState(Array(1).fill(""));
+  const [machine, setMachine] = useState(Array(1).fill(""));
   const [rooms, setRooms] = useState(Array(1).fill(""));
   const [reservationColor, setReservationColor] = useState(
     Array(numOfHours * numOfDays).fill("white")
@@ -175,7 +205,7 @@ function Schedule() {
     const reservationColor2 = Array(numOfHours * numOfDays).fill("white");
     const reservationState2 = Array(numOfHours * numOfDays).fill(1);
     setStartParameters(reservationColor2, reservationState2);
-  }, [selectedDate, currentFloor, currentRoom]);
+  }, [selectedDate, currentMachine, currentRoom]);
 
   function setStartParameters(reservationColor2, reservationState2) {
     const options = {
@@ -192,7 +222,7 @@ function Schedule() {
             : selectedDate.getDate()),
       },
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjekB3cC5wbCIsImV4cCI6MTYwMDA3MTA2MSwiaWF0IjoxNjAwMDUzMDYxfQ.uK-Wmo6feoI5BdOcn6snzm8Bizc0LWXWa-Eg7EPsh_Xih8vOkX2SK3dQym6zMWW0sQJ7NEd-TdvCX9xvnRbNwg`,
+        Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjekB3cC5wbCIsImV4cCI6MTYwMDEwOTAwMiwiaWF0IjoxNjAwMDkxMDAyfQ.LiCXoKkZA4Utdn_jiSk4oh6d6N9Eaqcjxy5NLFWMBTU5tkFcpu2p4O4jlkdg9IY9XOgkKvQVFjXr6vwxl00vyA`,
       },
     };
 
@@ -201,13 +231,23 @@ function Schedule() {
       .then((response) => {
         //console.log(response.data);
         //console.log(response.data[0].washingMachines[0].washingReservations);
-        var tempFloor = [];
+        var tempMachine = [];
         var tempRooms = [];
+        console.log(response.data);
         for (var i = 1; i <= response.data.length; i++) {
-          tempFloor.push(i);
           tempRooms.push(response.data[i - 1].number);
+          var temp = [];
+          for (
+            var j = 1;
+            j <= response.data[i - 1].washingMachines.length;
+            j++
+          ) {
+            temp.push(j);
+          }
+          tempMachine.push(temp);
         }
-        setFloors(tempFloor);
+
+        setMachine(tempMachine);
         setRooms(tempRooms);
         response.data[0].washingMachines[0].washingReservations.forEach(
           (element) => {
@@ -234,7 +274,7 @@ function Schedule() {
   }
 
   const handleChangeFloor = (event) => {
-    setCurrentFloor(event.target.value);
+    setCurrentMachine(event.target.value);
   };
   const handleChangeRoom = (event) => {
     setCurrentRoom(event.target.value);
@@ -299,19 +339,21 @@ function Schedule() {
           </div>
           <div class="row">
             <div class="col mx-auto">
-              <Mypicker
-                name="Floor"
-                onChange={handleChangeFloor}
-                items={floors}
-                current={currentFloor}
-              />
-            </div>
-            <div class="col mx-auto">
-              <Mypicker
+              <Roompicker
                 name="Room"
                 onChange={handleChangeRoom}
                 items={rooms}
                 current={currentRoom}
+              />
+            </div>
+            <div class="col mx-auto">
+              <Floorpicker
+                name="Mashine"
+                onChange={handleChangeFloor}
+                room={currentRoom}
+                items={machine}
+                current={currentMachine}
+                rooms={rooms}
               />
             </div>
           </div>
