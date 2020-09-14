@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import "../CSS/components/schedule.css";
 import axios from "axios";
@@ -13,9 +13,6 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
-import { nb } from "date-fns/locale";
-import { set } from "date-fns";
-import { findAllByTestId } from "@testing-library/react";
 
 const serverUrl = "http://46.41.142.44:8080";
 
@@ -38,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Square(props) {
-
   const [color, setColor] = useState(props.value);
 
   return (
