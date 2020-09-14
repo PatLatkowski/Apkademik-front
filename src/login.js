@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import logo from "./components/logo.png";
 import Joi from "@hapi/joi";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "./login.css";
+import "./CSS/login.css";
 import ErrorMessage from "./components/ErrorMessage";
+import Cookies from "universal-cookie";
 
 const serverUrl = "http://46.41.142.44:8080";
+
+var schema = Joi.object().keys({
+  login: Joi.string()
+    .required()
+    .email({ tlds: { allow: ["com", "net", "pl"] } }), //FIXME: allow: false always returns error for some reason
+  password: Joi.string().min(8).required(),
+});
 
 class Login extends React.Component {
   constructor(props) {
@@ -34,13 +42,15 @@ class Login extends React.Component {
           console.log(err);
         } else {
           axios
-            // Tymczasowo ustawione na sztywno
             .post(serverUrl + "/authenticate", {
-              email: "czajnik98@wp.pl",
-              password: "ala",
+              email: this.state.login,
+              password: this.state.password,
             })
             .then((response) => {
-              console.log(response);
+              const cookies = new Cookies();
+              cookies.set("token", response.data, { path: "/" });
+              console.log(cookies);
+              this.props.history.push("/");
             })
             .catch((error) => {
               if (error.request.status === 401)
@@ -57,44 +67,58 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div className="login-container">
-        <img src={logo} alt="logo" className="login-img" />
-        <form id="log" onSubmit={this.handleLogin} className="login-form">
-          <div className="login-inputDiv">
-            <input
-              type="text"
-              id="login"
-              placeholder="email"
-              name="login"
-              value={this.state.value}
-              onChange={this.handleChange}
-              className="login-input"
-            />
-            <input
-              type="password"
-              id="password"
-              placeholder="Password"
-              name="password"
-              value={this.state.value}
-              onChange={this.handleChange}
-              className="login-input"
-            />
-            <ErrorMessage text={this.state.errorMessage} />
+      <div className="container login-container">
+        <div className="row m-2">
+          <div className="col-6">
+            <img src={logo} alt="logo" className="rounded float-right" />
           </div>
-        </form>
-        <div>
-          <input
-            form="log"
-            type="submit"
-            name="Submit"
-            value="Submit"
-            className="login-input"
-          />
-          <Link to="/register">
-            <button type="submit" name="Register" className="login-button">
-              Register
-            </button>
-          </Link>
+          <div className="col-3 login-inputDiv">
+            <form id="log" onSubmit={this.handleLogin}>
+              <div className="row form-group">
+                <input
+                  type="text"
+                  id="login"
+                  placeholder="email"
+                  name="login"
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                />
+              </div>
+              <div className="row form-group">
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="Password"
+                  name="password"
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                />
+              </div>
+            </form>
+            <div className="row">
+              <ErrorMessage text={this.state.errorMessage} />
+            </div>
+          </div>
+        </div>
+        <div className="row form-group">
+          <div className="col-5 mx-auto">
+            <input
+              form="log"
+              type="submit"
+              name="Submit"
+              value="Submit"
+              className="login-input"
+            />
+          </div>
+        </div>
+        <div className="row form-group">
+          <div className="col-5 mx-auto login-button">
+            <Link to="/register">
+              <button type="submit" name="Register">
+                Register
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     );

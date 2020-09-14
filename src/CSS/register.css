@@ -1,0 +1,43 @@
+@import "./main.css";
+
+.register-container {
+  margin: auto;
+  padding-top: 10vh;
+}
+
+.register-input {
+  display: block;
+  background-color: lightgray;
+  border: none;
+  border-radius: 12px;
+  min-width: 100%;
+  font-size: x-large;
+  padding: 10px;
+}
+
+.register-input[type="submit"] {
+  display: block;
+  background-color: #25e81f;
+  border: none;
+  cursor: pointer;
+  width: 20%;
+  color: white;
+  border-radius: 12px;
+  font-size: x-large;
+  padding: 10px;
+  opacity: 1;
+  outline: none;
+}
+
+.register-input[type="submit"]:hover {
+  opacity: 0.8;
+  transition: 0.3s;
+}
+
+.register-header {
+  color: #25e81f;
+  height: 100%;
+  font-size: 800%;
+  display: flex;
+  align-items: center;
+}

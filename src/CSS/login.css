@@ -1,3 +1,5 @@
+@import "./main.css";
+
 .login-container {
   padding-top: 10%;
   margin: auto;
@@ -6,21 +8,24 @@
 }
 
 .login-img {
-  width: 40%;
-  float: left;
+  display: block;
+  text-align: right;
+  align-items: center;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 .login-inputDiv {
-  margin: 10vh 5vw 15vh 0;
-  float: right;
+  margin-top: auto;
+  margin-bottom: auto;
 }
-.login-input {
+
+.login-inputDiv input {
   background-color: lightgray;
   border: none;
   border-radius: 12px;
-  width: 100%;
+  min-width: 100%;
   font-size: x-large;
   padding: 10px;
-  margin: 1vh;
 }
 
 .login-input[type="submit"] {
@@ -28,13 +33,12 @@
   border: none;
   border-radius: 12px;
   font-size: xx-large;
-  width: 60%;
+  width: 100%;
   float: center;
   cursor: pointer;
   color: white;
   opacity: 1;
   padding: 10px;
-  margin: 0 0 2% 23%;
   outline: none;
 }
 
@@ -43,36 +47,20 @@
   transition: 0.3s;
 }
 
-.login-button {
+.login-button button {
   background-color: #25e81f;
   border: none;
   border-radius: 12px;
   font-size: xx-large;
-  width: 60%;
+  width: 100%;
   cursor: pointer;
   color: white;
   opacity: 1;
   padding: 10px;
-  margin-left: 23%;
   outline: none;
 }
 
-.login-button:hover {
+.login-button:hover button {
   opacity: 0.8;
   transition: 0.3s;
-}
-
-.error-message {
-  background-color: #ff8585;
-  border-style: solid;
-  border-color: #fc3f3f;
-  border-width: thin;
-  border-radius: 12px;
-  text-align: center;
-  font-size: x-large;
-  width: 60%;
-  opacity: 1;
-  padding: 10px;
-  margin-left: 23%;
-  outline: none;
 }

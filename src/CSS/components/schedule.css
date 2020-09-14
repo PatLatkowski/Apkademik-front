@@ -1,0 +1,57 @@
+.schedule-box {
+  background-color: white;
+}
+
+.rightcol {
+  background-color: white;
+  min-height: 100%;
+}
+
+.scroll {
+  overflow-y: scroll;
+  height: 90vh;
+}
+
+.hour {
+  background-color: #ddd;
+  border: 1px solid #999;
+  font-size: x-large;
+  text-align: right;
+  min-width: 10%;
+  padding-right: 1.5%;
+  border-top-style: none;
+  border-left: none;
+}
+
+.schedule-button {
+  border: 1px solid #999;
+  border-top: none;
+  border-left: none;
+  min-width: 18%;
+  min-height: 60px;
+  padding: 30px;
+  text-align: center;
+}
+
+.date {
+  background-color: #ddd;
+  border: 1px solid #999;
+  border-top: none;
+  border-left: none;
+  min-width: 18%;
+  text-align: center;
+  font-size: x-large;
+}
+
+.submit-button {
+  background-color: #25e81f;
+  border: none;
+  border-radius: 12px;
+  font-size: xx-large;
+  width: 100%;
+  float: center;
+  cursor: pointer;
+  color: white;
+  opacity: 1;
+  padding: 10px;
+}
