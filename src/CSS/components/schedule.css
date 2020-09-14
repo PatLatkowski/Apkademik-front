@@ -2,26 +2,45 @@
   background-color: white;
 }
 
+.rightcol {
+  background-color: white;
+  min-height: 100%;
+}
+
+.scroll {
+  overflow-y: scroll;
+  height: 90vh;
+}
+
 .hour {
-  min-width: 100%;
-  min-height: 100px;
+  background-color: #ddd;
+  border: 1px solid #999;
   font-size: x-large;
   text-align: right;
+  min-width: 10%;
+  padding-right: 1.5%;
+  border-top-style: none;
+  border-left: none;
 }
 
 .schedule-button {
-  border-style: solid;
+  border: 1px solid #999;
   border-top: none;
-  min-width: 20%;
-  min-height: 100px;
+  border-left: none;
+  min-width: 18%;
+  min-height: 60px;
+  padding: 30px;
+  text-align: center;
 }
 
 .date {
-  min-width: 20%;
+  background-color: #ddd;
+  border: 1px solid #999;
+  border-top: none;
+  border-left: none;
+  min-width: 18%;
   text-align: center;
   font-size: x-large;
-  border-style: solid;
-  border-top-style: none;
 }
 
 .submit-button {
@@ -35,5 +54,4 @@
   color: white;
   opacity: 1;
   padding: 10px;
-  outline: none;
 }
