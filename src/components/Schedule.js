@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import "../CSS/components/schedule.css";
 import axios from "axios";
 import ErrorMessage from "./ErrorMessage";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Square(props) {
+
   const [color, setColor] = useState(props.value);
 
   return (
@@ -337,6 +338,7 @@ function Schedule() {
               </MuiPickersUtilsProvider>{" "}
             </div>
           </div>
+
           <div class="row">
             <div class="col mx-auto">
               <Roompicker

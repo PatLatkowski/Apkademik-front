@@ -1,0 +1,47 @@
+@import "./main.css";
+
+.account-section {
+  text-align: center;
+}
+
+.section-header {
+  padding: 40px 20px 20px 20px;
+  font-size: xx-large;
+  color: #25e81f;
+}
+
+.account-input {
+  background-color: lightgray;
+  border: none;
+  border-radius: 12px;
+  min-width: 80%;
+  font-size: x-large;
+  padding: 10px;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 3px solid lightgray;
+  padding: 0;
+}
+
+.account-button {
+  background-color: #25e81f;
+  border: none;
+  border-radius: 12px;
+  font-size: xx-large;
+  width: 80%;
+  cursor: pointer;
+  color: white;
+  opacity: 1;
+  padding: 10px;
+  outline: none;
+}
+
+.account-data-section {
+  font-size: 18px;
+  padding: 10px;
+  margin: auto;
+}

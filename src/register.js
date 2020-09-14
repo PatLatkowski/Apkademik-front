@@ -4,6 +4,7 @@ import Joi from "@hapi/joi";
 import axios from "axios";
 import "./CSS/register.css";
 import ErrorMessage from "./components/ErrorMessage";
+import { Link } from "react-router-dom";
 
 var schema = Joi.object().keys({
   email: Joi.string()
@@ -61,19 +62,19 @@ class Register extends React.Component {
             .post(serverUrl + "/register", {
               password: this.state.password,
               name: this.state.firstName,
-              fullName: this.state.lastName,
+              surname: this.state.lastName,
               email: this.state.email,
             })
             .then((response) => {
               console.log(response);
+              this.props.history.push("/login");
+              console.log("Ok");
             })
             .catch((error) => {
               if (error.request.status === 409)
                 this.setState({ errorMessage: "User already exists" });
               console.log(error);
             });
-          this.props.history.push("/login");
-          console.log("Ok");
         }
       }
     );
@@ -86,7 +87,9 @@ class Register extends React.Component {
       <div class="conteiner register-container">
         <div class="row m-2">
           <div class="col-6">
-            <img src={logo} alt="logo" class="rounded float-right" />
+            <Link to="/">
+              <img src={logo} alt="logo" class="rounded float-right" />
+            </Link>
           </div>
           <div class="col-6">
             <h1 class="font-weight-bold register-header">Register</h1>

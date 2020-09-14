@@ -16,12 +16,12 @@ const TopBar = () => {
   return (
     <div className="container-topbar">
       <div className="row">
-        <div className="col-2 bg-warning">
+        <div className="col-2">
           <Link to="/">
             <img className="img-topbar" src={logo} alt="logo" />
           </Link>
         </div>
-        <div className="col-10">
+        <div className="col-10 second-column">
           <div className="account-topbar">
             <Dropdown>
               <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -29,9 +29,10 @@ const TopBar = () => {
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item href="/account">Konto</Dropdown.Item>
-                <Dropdown.Item onClick={handleLogout}>
-                  Wyloguj (TODO)
+                <Dropdown.Item href="/appAdminPanel">
+                  Panel Administratora Aplikacji
                 </Dropdown.Item>
+                <Dropdown.Item onClick={handleLogout}>Wyloguj</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

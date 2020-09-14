@@ -48,7 +48,7 @@ class Login extends React.Component {
             })
             .then((response) => {
               const cookies = new Cookies();
-              cookies.set("token", response.data, { path: "/" });
+              cookies.set("token", response.data["token"], { path: "/" });
               console.log(cookies);
               this.props.history.push("/");
             })
