@@ -29,25 +29,25 @@ function SideBar(props) {
     >
       <StyledTreeItem
         nodeId="1"
-        labelText="Rezerwacje"
+        labelText="Reservations"
         labelIcon={CalendarTodayIcon}
       />
-      <StyledTreeItem
-        nodeId="2"
-        labelText="Tablica ogłoszeń"
-        labelIcon={HouseIcon}
-      >
-        <StyledTreeItem nodeId="3" labelText="Ogólne" labelIcon={SubjectIcon} />
-        <StyledTreeItem nodeId="4" labelText="Inne" labelIcon={SpeakerIcon} />
+      <StyledTreeItem nodeId="2" labelText="Notice board" labelIcon={HouseIcon}>
+        <StyledTreeItem
+          nodeId="3"
+          labelText="General"
+          labelIcon={SubjectIcon}
+        />
+        <StyledTreeItem nodeId="4" labelText="Other" labelIcon={SpeakerIcon} />
         <StyledTreeItem
           nodeId="5"
-          labelText="Administracyjne"
+          labelText="Administration"
           labelIcon={InfoIcon}
         />
       </StyledTreeItem>
       <StyledTreeItem
         nodeId="6"
-        labelText="Ogloszenia miedzyakademikowe"
+        labelText="Common announcement"
         labelIcon={LocationCityIcon}
       />
     </TreeView>

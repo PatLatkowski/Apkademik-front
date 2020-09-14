@@ -8,7 +8,7 @@ function AccountDeleteAccount() {
         Delete Account
         <hr />
       </div>
-      <div className="w-100 account-section">
+      <div className="w-75 account-section">
         <form id="deleteAccount">
           <div className="form-group">
             <input

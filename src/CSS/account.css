@@ -2,6 +2,7 @@
 
 .account-section {
   text-align: center;
+  margin: auto;
 }
 
 .section-header {
@@ -14,7 +15,7 @@
   background-color: lightgray;
   border: none;
   border-radius: 12px;
-  min-width: 80%;
+  min-width: 100%;
   font-size: x-large;
   padding: 10px;
 }
@@ -32,7 +33,7 @@ hr {
   border: none;
   border-radius: 12px;
   font-size: xx-large;
-  width: 80%;
+  width: 100%;
   cursor: pointer;
   color: white;
   opacity: 1;
@@ -44,4 +45,5 @@ hr {
   font-size: 18px;
   padding: 10px;
   margin: auto;
+  width: 80%;
 }
