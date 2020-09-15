@@ -2,6 +2,11 @@
 
 .container-topbar {
   width: 100%;
+  background-color: lightgray;
+}
+
+.second-column {
+  text-align: right;
 }
 
 .img-topbar {
@@ -11,8 +16,6 @@
   margin-left: auto;
 }
 
-.account {
-  position: absolute;
-  top: 25%;
-  right: 2%;
+.account-topbar {
+  height: 100%;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import logo from "./components/logo.png";
 import Joi from "@hapi/joi";
 import { Link } from "react-router-dom";
@@ -42,15 +42,14 @@ class Login extends React.Component {
           console.log(err);
         } else {
           axios
-            // Tymczasowo ustawione na sztywno
             .post(serverUrl + "/authenticate", {
               email: this.state.login,
               password: this.state.password,
             })
             .then((response) => {
               const cookies = new Cookies();
-              cookies.set("token", response.data, { path: "/" });
-              this.props.history.push("/main-page");
+              cookies.set("token", response.data["token"], { path: "/" });
+              this.props.history.push("/");
             })
             .catch((error) => {
               if (error.request.status === 401)
@@ -67,16 +66,16 @@ class Login extends React.Component {
 
   render() {
     return (
-      <div class="container login-container">
-        <div class="row m-2">
-          <div class="col-6">
-            <img src={logo} alt="logo" class="rounded float-right" />
+      <div className="container login-container">
+        <div className="row m-2">
+          <div className="col-6">
+            <img src={logo} alt="logo" className="rounded float-right" />
           </div>
-          <div class="col-3 login-inputDiv">
+          <div className="col-3 login-inputDiv">
             <form id="log" onSubmit={this.handleLogin}>
-              <div class="row form-group">
+              <div className="row form-group">
                 <input
-                  type="email"
+                  type="text"
                   id="login"
                   placeholder="email"
                   name="login"
@@ -84,7 +83,7 @@ class Login extends React.Component {
                   onChange={this.handleChange}
                 />
               </div>
-              <div class="row form-group">
+              <div className="row form-group">
                 <input
                   type="password"
                   id="password"
@@ -95,13 +94,13 @@ class Login extends React.Component {
                 />
               </div>
             </form>
-            <div class="row">
+            <div className="row">
               <ErrorMessage text={this.state.errorMessage} />
             </div>
           </div>
         </div>
-        <div class="row form-group">
-          <div class="col-5 mx-auto">
+        <div className="row form-group">
+          <div className="col-5 mx-auto">
             <input
               form="log"
               type="submit"
@@ -111,8 +110,8 @@ class Login extends React.Component {
             />
           </div>
         </div>
-        <div class="row form-group">
-          <div class="col-5 mx-auto login-button">
+        <div className="row form-group">
+          <div className="col-5 mx-auto login-button">
             <Link to="/register">
               <button type="submit" name="Register">
                 Register
