@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import "../CSS/components/schedule.css";
 import axios from "axios";
@@ -38,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Square(props) {
-
   const [color, setColor] = useState(props.value);
 
   return (
