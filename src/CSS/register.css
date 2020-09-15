@@ -5,6 +5,10 @@
   padding-top: 10vh;
 }
 
+.register-container img {
+  max-width: 100%;
+}
+
 .register-input {
   display: block;
   background-color: lightgray;
@@ -37,7 +41,8 @@
 .register-header {
   color: #25e81f;
   height: 100%;
-  font-size: 800%;
+  width: 100%;
+  font-size: 8vw;
   display: flex;
   align-items: center;
 }

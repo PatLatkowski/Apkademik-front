@@ -4,6 +4,9 @@ import Schedule from "./components/Schedule";
 import TestComponent from "./components/testComponent";
 import "./CSS/main-layout.css";
 import TopBar from "./components/top-bar";
+import Board from "./components/board";
+import { Switch, Route } from "react-router-dom";
+import ShowPost from "./components/showPost";
 import SideBar from "./components/side-bar";
 
 function MainPage(props) {
@@ -37,4 +40,5 @@ function MainPage(props) {
     </div>
   );
 }
+
 export default MainPage;

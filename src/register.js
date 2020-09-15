@@ -23,7 +23,7 @@ var schema = Joi.object().keys({
     .options({ language: { any: { allowOnly: "must match password" } } }),
 });
 
-const serverUrl = "http://46.41.142.44:8080";
+const serverUrl = "http://localhost:8080";
 
 class Register extends React.Component {
   constructor(props) {
