@@ -5,6 +5,7 @@ import axios from "axios";
 import "./CSS/register.css";
 import ErrorMessage from "./components/ErrorMessage";
 import { Link } from "react-router-dom";
+import { serverUrl } from "./consts";
 
 var schema = Joi.object().keys({
   email: Joi.string()
@@ -22,8 +23,6 @@ var schema = Joi.object().keys({
     .required()
     .options({ language: { any: { allowOnly: "must match password" } } }),
 });
-
-const serverUrl = "http://46.41.142.44:8080";
 
 class Register extends React.Component {
   constructor(props) {

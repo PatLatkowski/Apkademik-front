@@ -14,22 +14,23 @@ import Account from "./account";
 import { checkIfTokenExists } from "./functions";
 import AppAdminPanel from "./appAdminPanel";
 
-const contextData = {
-  userData: {
-    user: "User Name",
-  },
+const contextInitialState = {
+  user: "User Name",
 };
 
-export const UserContext = createContext(contextData.userData);
+export const UserContext = createContext({
+  username: "context",
+});
 
 function App() {
   const [userName, setUserName] = useState("User");
+
   function changeUserContextData(userName) {
     setUserName(userName);
   }
 
   return (
-    <UserContext.Provider value={{ userName, changeUserContextData }}>
+    <UserContext.Provider value={{ userName, setUserName }}>
       <Router>
         <Switch>
           <Route

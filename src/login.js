@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import logo from "./components/logo.png";
 import Joi from "@hapi/joi";
 import { Link, useHistory } from "react-router-dom";
@@ -8,8 +8,7 @@ import ErrorMessage from "./components/ErrorMessage";
 import Cookies from "universal-cookie";
 import { UserContext } from "./index";
 import { useInput } from "./components/useInput";
-
-const serverUrl = "http://46.41.142.44:8080";
+import { serverUrl } from "./consts";
 
 var schema = Joi.object().keys({
   login: Joi.string()
@@ -19,7 +18,8 @@ var schema = Joi.object().keys({
 });
 
 function Login(props) {
-  let history = useHistory();
+  const history = useHistory();
+  const { setUserName } = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState("");
   const { value: login, bind: loginChange, reset: resetLogin } = useInput("");
   const {
@@ -48,7 +48,17 @@ function Login(props) {
             .then((response) => {
               const cookies = new Cookies();
               cookies.set("token", response.data["token"], { path: "/" });
-              console.log(cookies);
+              const config = {
+                headers: { Authorization: `Bearer ${response.data["token"]}` },
+              };
+              axios
+                .get("http://46.41.142.44:8080/user", config)
+                .then(({ data: { name } }) => {
+                  setUserName(name);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
               history.push("/");
             })
             .catch((error) => {
