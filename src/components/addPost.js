@@ -44,7 +44,7 @@ class AddPost extends React.Component {
         } else {
           axios
             .post(
-              serverUrl + this.props.boardTitle + "/addPost",
+              serverUrl + "noticeBoard/" + this.props.boardTitle + "/post",
               {
                 title: this.state.title,
                 text: this.state.text,

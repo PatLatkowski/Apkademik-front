@@ -1,4 +1,3 @@
-import ReactDOM from "react-dom";
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
@@ -12,7 +11,7 @@ import Accordion from "react-bootstrap/Accordion";
 function CustomToggle({ children, eventKey }) {
   return (
     <Button variant="primary" onClick={useAccordionToggle(eventKey)}>
-      Dodaj post
+      Add post
     </Button>
   );
 }
@@ -27,9 +26,10 @@ function Board({ match }) {
   const [title, setTitle] = useState(params.boardTitle);
 
   useEffect(() => {
+    console.log(token.token);
     let mounted = true;
     axios
-      .get(serverUrl + params.boardTitle + "/posts", {
+      .get(serverUrl + "noticeBoard/" + params.boardTitle + "/posts", {
         headers: {
           Authorization: `Bearer ${token.token}`,
         },
@@ -54,7 +54,7 @@ function Board({ match }) {
             <h1 className="font-weight-bold font-italic">{title}</h1>
           </div>
           <div className="col-2 m-auto text-center">
-            <CustomToggle eventKey="1">Dodaj Post</CustomToggle>
+            <CustomToggle eventKey="1" />
           </div>
         </div>
         <div className="row m-2">
