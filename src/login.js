@@ -7,7 +7,7 @@ import "./CSS/login.css";
 import ErrorMessage from "./components/ErrorMessage";
 import Cookies from "universal-cookie";
 
-const serverUrl = "http://localhost:8080";
+const serverUrl = "http://46.41.142.44:8080";
 
 var schema = Joi.object().keys({
   login: Joi.string()

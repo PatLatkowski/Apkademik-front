@@ -16,7 +16,7 @@ function CustomToggle({ children, eventKey }) {
   );
 }
 
-const serverUrl = "http://localhost:8080/";
+const serverUrl = "http://46.41.142.44:8080/";
 const cookies = new Cookies();
 const token = cookies.get("token");
 

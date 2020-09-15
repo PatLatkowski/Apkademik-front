@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card";
 import Cookies from "universal-cookie";
 import axios from "axios";
 
-const serverUrl = "http://localhost:8080";
+const serverUrl = "http://46.41.142.44:8080";
 const cookies = new Cookies();
 const token = cookies.get("token");
 
