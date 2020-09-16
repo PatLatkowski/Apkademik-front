@@ -3,6 +3,7 @@ import axios from "axios";
 import Joi from "@hapi/joi";
 import { useInput } from "../useInput";
 import ErrorMessage from "../ErrorMessage";
+import Cookies from "universal-cookie";
 
 var schema = Joi.object().keys({
   email: Joi.string()
@@ -21,7 +22,7 @@ var schema = Joi.object().keys({
   roomNumber: Joi.number().required().allow(""),
 });
 
-function AccountChangePersonalData() {
+function AccountChangePersonalData(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const { value: email, bind: emailChange, reset: resetEmail } = useInput("");
   const { value: name, bind: nameChange, reset: resetName } = useInput("");
@@ -34,6 +35,32 @@ function AccountChangePersonalData() {
   const { value: roomNum, bind: roomNumChange, reset: resetRoomNum } = useInput(
     ""
   );
+  const {
+    value: password,
+    bind: passwordChange,
+    reset: resetPassword,
+  } = useInput("");
+
+  function sendRequest() {
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    let body = { oldPassword: password, user: {} };
+    if (email !== "") body.user.email = email;
+    if (name !== "") body.user.name = name;
+    if (surname !== "") body.user.surname = surname;
+    axios
+      .put("http://46.41.142.44:8080/user", body, config)
+      .then((response) => {
+        console.log(response);
+        props.refreshAccountDetails();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -49,9 +76,12 @@ function AccountChangePersonalData() {
         if (err) {
           setErrorMessage(err.details[0].message);
           console.log(err);
+        } else {
+          sendRequest();
         }
       }
     );
+    resetPassword();
     resetEmail();
     resetName();
     resetSurname();
@@ -67,6 +97,15 @@ function AccountChangePersonalData() {
       </div>
       <div className="w-75 account-section">
         <form id="changePersonalData" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <input
+              type="password"
+              id="Password"
+              placeholder="Type your password"
+              className="account-input"
+              {...passwordChange}
+            />
+          </div>
           <div className="form-group">
             <input
               type="text"

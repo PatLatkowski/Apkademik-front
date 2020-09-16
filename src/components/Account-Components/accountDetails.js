@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
-function AccountDetails() {
+const AccountDetails = forwardRef((props, ref) => {
   const [name, setName] = useState("null");
   const [surname, setSurname] = useState("null");
   const [email, setEmail] = useState("null");
   const [dormNum, setDormNum] = useState("1");
   const [roomNum, setRoomNum] = useState("1");
+
+  useImperativeHandle(ref, () => ({
+    refreshData() {
+      getAccountInfo();
+    },
+  }));
 
   function getAccountInfo() {
     const cookies = new Cookies();
@@ -23,7 +29,6 @@ function AccountDetails() {
           setSurname(response.data.surname);
           setEmail(response.data.email);
           setName(response.data.name);
-          console.log(response);
         })
         .catch((error) => {
           console.log(error);
@@ -62,5 +67,5 @@ function AccountDetails() {
       </div>
     </div>
   );
-}
+});
 export default AccountDetails;
