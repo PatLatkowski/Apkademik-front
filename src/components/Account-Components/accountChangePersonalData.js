@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Joi from "@hapi/joi";
 import { useInput } from "../useInput";
-import ErrorMessage from "../ErrorMessage";
+import Message from "../Message";
 
 var schema = Joi.object().keys({
   email: Joi.string()
@@ -113,7 +113,7 @@ function AccountChangePersonalData() {
             />
           </div>
           <div class="form-group">
-            <ErrorMessage text={errorMessage} />
+            <Message text={errorMessage} />
           </div>
           <button type="submit" className="account-button">
             Submit

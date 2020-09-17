@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Joi from "@hapi/joi";
 import axios from "axios";
-import ErrorMessage from "./ErrorMessage";
+import Message from "./Message";
 import Cookies from "universal-cookie";
 
 var schema = Joi.object().keys({
@@ -103,7 +103,7 @@ class AddPost extends React.Component {
                 </div>
                 <div className="form-row mb-2">
                   <div className="col">
-                    <ErrorMessage text={this.state.errorMessage} />
+                    <Message text={this.state.errorMessage} />
                   </div>
                 </div>
                 <div className="form-row">

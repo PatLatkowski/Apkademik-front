@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Joi from "@hapi/joi";
 import { useInput } from "../useInput";
-import ErrorMessage from "../ErrorMessage";
+import Message from "../Message";
 import Cookies from "universal-cookie";
 
 var passwordSchema = Joi.object().keys({
@@ -114,7 +114,7 @@ function AccountChangePassword() {
             />
           </div>
           <div class="form-group">
-            <ErrorMessage text={errorMessage} />
+            <Message text={errorMessage} />
           </div>
           <button type="submit" className="account-button">
             Submit

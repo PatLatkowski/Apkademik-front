@@ -4,7 +4,7 @@ import Joi from "@hapi/joi";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./CSS/login.css";
-import ErrorMessage from "./components/ErrorMessage";
+import ErrorMessage from "./components/Message";
 import Cookies from "universal-cookie";
 
 const serverUrl = "http://46.41.142.44:8080";

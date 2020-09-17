@@ -3,7 +3,7 @@ import logo from "./components/logo.png";
 import Joi from "@hapi/joi";
 import axios from "axios";
 import "./CSS/register.css";
-import ErrorMessage from "./components/ErrorMessage";
+import ErrorMessage from "./components/Message";
 import { Link } from "react-router-dom";
 
 var schema = Joi.object().keys({
