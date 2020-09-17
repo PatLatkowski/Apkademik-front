@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import "../CSS/components/schedule.css";
+import MachinePicker from "./Schedule-Components/MachinePicker";
+import Roompicker from "./Schedule-Components/Roompicker";
+import ScheduleTable from "./Schedule-Components/ScheduleTable";
 import axios from "axios";
-import ErrorMessage from "./ErrorMessage";
+import Message from "./Message";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import Cookies from "universal-cookie";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
+
 import { makeStyles, MuiThemeProvider } from "@material-ui/core/styles";
-import { nb } from "date-fns/locale";
-import { set } from "date-fns";
+
 import { findAllByTestId } from "@testing-library/react";
 
 const serverUrl = "http://46.41.142.44:8080";
@@ -36,151 +35,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
 }));
-
-function Square(props) {
-  const [color, setColor] = useState(props.value);
-
-  return (
-    <div
-      onClick={() => props.onClick()}
-      class="col"
-      className="schedule-button"
-      style={{ background: props.value }}
-    >
-      {props.number}
-    </div>
-  );
-}
-
-function Stable(props) {
-  const [res, setRes] = useState(null);
-
-  function renderSquare(n) {
-    return (
-      <Square
-        value={props.reservationColor[n]}
-        onClick={() => props.onClick(n)}
-        number={n}
-      />
-    );
-  }
-
-  function createHours(i) {
-    var result = [];
-    var n;
-    for (var j = 0; j < numOfDays; j++) {
-      n = j + i * numOfDays;
-      result.push(renderSquare(n));
-    }
-    return result;
-  }
-
-  function generateTable() {
-    var result = [];
-    result.push(<div class="row sticky-top">{generateDays()}</div>);
-    for (var i = 0; i < numOfHours; i++) {
-      result.push(
-        <div class="row">
-          {generateHours(i)}
-          {createHours(i)}
-        </div>
-      );
-    }
-    return result;
-  }
-
-  function generateHours(i) {
-    var result = [];
-    var startHour = 7;
-    result.push(
-      <div calss="col" className="hour">
-        {startHour + i}:00
-      </div>
-    );
-    return result;
-  }
-
-  function placeDate(i) {
-    var result = new Date(props.selectedDate);
-    result.setDate(props.selectedDate.getDate() + i);
-
-    return result.getDate() + "." + (result.getMonth() + 1);
-  }
-
-  function generateDays() {
-    var result = [];
-    result.push(
-      <div calss="col" className="hour">
-        GMT{" "}
-        {props.selectedDate.getTimezoneOffset() / 60 > 0
-          ? "-" + props.selectedDate.getTimezoneOffset() / 60
-          : "+" + (props.selectedDate.getTimezoneOffset() / 60) * -1}
-      </div>
-    );
-    for (var i = 0; i < 5; i++) {
-      result.push(
-        <div calss="col" className="date">
-          {placeDate(i - 2)}
-        </div>
-      );
-    }
-    return result;
-  }
-
-  return generateTable();
-}
-
-function Roompicker(props) {
-  const classes = useStyles();
-
-  function menuItems() {
-    var result = [];
-
-    props.items.forEach((element) => {
-      result.push(<MenuItem value={element}>{element}</MenuItem>);
-    });
-
-    return result;
-  }
-
-  return (
-    <FormControl className={classes.formControl}>
-      <InputLabel>{props.name}</InputLabel>
-      <Select value={props.current} onChange={props.onChange}>
-        {menuItems()}
-      </Select>
-    </FormControl>
-  );
-}
-
-function Floorpicker(props) {
-  const classes = useStyles();
-
-  function menuItems() {
-    var result = [];
-    var curroom = [];
-    for (var x = 0; x < props.rooms.length; x++) {
-      if (props.rooms[x] === props.room) curroom = props.items[x];
-    }
-
-    console.log(curroom);
-
-    curroom.forEach((element) => {
-      result.push(<MenuItem value={element}>{element}</MenuItem>);
-    });
-
-    return result;
-  }
-
-  return (
-    <FormControl className={classes.formControl}>
-      <InputLabel>{props.name}</InputLabel>
-      <Select value={props.current} onChange={props.onChange}>
-        {menuItems()}
-      </Select>
-    </FormControl>
-  );
-}
 
 function Schedule() {
   const cookies = new Cookies();
@@ -422,7 +276,7 @@ function Schedule() {
     <div class="wrapper" className="schedule-box">
       <div class="row">
         <div class="col scroll">
-          <Stable
+          <ScheduleTable
             selectedDate={selectedDate}
             reservationColor={reservationColor}
             onClick={(n) => handleClick(n)}
@@ -456,7 +310,7 @@ function Schedule() {
               />
             </div>
             <div class="col mx-auto">
-              <Floorpicker
+              <MachinePicker
                 name="Mashine"
                 onChange={handleChangeFloor}
                 room={currentRoom}
@@ -467,7 +321,7 @@ function Schedule() {
             </div>
           </div>
           <div className="row mx-auto p-3">
-            <ErrorMessage text={errorMessage} />
+            <Message text={errorMessage} />
           </div>
           <div class="row" class="position-relative">
             <div class="col mx-auto">

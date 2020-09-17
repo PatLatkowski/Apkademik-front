@@ -1,0 +1,27 @@
+.error-message {
+  background-color: #fb9898;
+  border-style: solid;
+  border-color: #fc3f3f;
+  border-width: thin;
+  border-radius: 12px;
+  text-align: center;
+  font-size: x-large;
+  width: 100%;
+  opacity: 1;
+  padding: 10px;
+  outline: none;
+}
+
+.success-message {
+  background-color: #89e485;
+  border-style: solid;
+  border-color: #25e81f;
+  border-width: thin;
+  border-radius: 12px;
+  text-align: center;
+  font-size: x-large;
+  width: 100%;
+  opacity: 1;
+  padding: 10px;
+  outline: none;
+}
