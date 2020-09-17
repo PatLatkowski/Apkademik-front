@@ -104,7 +104,7 @@ function ShowPost({ match }) {
   function handlePost(event) {
     console.log(postText);
     axios
-      .patch(
+      .put(
         serverUrl + "/post/" + params.id,
         {
           text: postText,

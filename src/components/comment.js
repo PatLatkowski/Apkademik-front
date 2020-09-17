@@ -30,7 +30,7 @@ function Comment(params) {
 
   function handleComment() {
     axios
-      .patch(
+      .put(
         serverUrl + "/comment/" + data.id,
         {
           text: commentText,
