@@ -20,21 +20,13 @@ function Roompicker(props) {
 
   const classes = useStyles();
 
-  function menuItems() {
-    var result = [];
-
-    props.items.forEach((element) => {
-      result.push(<MenuItem value={element}>{element}</MenuItem>);
-    });
-
-    return result;
-  }
-
   return (
     <FormControl className={classes.formControl}>
       <InputLabel>{props.name}</InputLabel>
       <Select value={props.current} onChange={props.onChange}>
-        {menuItems()}
+        {props.items.map((val) => (
+          <MenuItem value={val.id}>{val.number}</MenuItem>
+        ))}
       </Select>
     </FormControl>
   );
