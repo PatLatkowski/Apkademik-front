@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -6,8 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles, MuiThemeProvider } from "@material-ui/core/styles";
 
 import { findAllByTestId } from "@testing-library/react";
-
-function MachinePicker(props) {
+function FloorPicker(props) {
   const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
@@ -31,4 +31,4 @@ function MachinePicker(props) {
     </FormControl>
   );
 }
-export default MachinePicker;
+export default FloorPicker;
