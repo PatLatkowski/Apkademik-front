@@ -53,8 +53,8 @@ function Login(props) {
               };
               axios
                 .get("http://46.41.142.44:8080/user", config)
-                .then(({ data: { name } }) => {
-                  setUserName(name);
+                .then(({ data: { name, surname } }) => {
+                  setUserName(name + " " + surname);
                 })
                 .catch((error) => {
                   console.log(error);

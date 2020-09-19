@@ -29,23 +29,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AppAdminPanelRooms(props) {
+function AppAdminPanelFloors(props) {
   const classes = useStyles();
-  const [roomName, setroomName] = useState();
-  const [roomSize, setroomSize] = useState();
+  const [floorNumber, setfloorNumber] = useState(0);
   const [dorm, setdorm] = useState("");
   const [dormsArray, setdormsArray] = useState([]);
-  const [floor, setfloor] = useState("");
-  const [floorsArray, setfloorArrays] = useState([]);
-
   useEffect(() => {
     getDorms();
+  }, []);
+  const [floorsArray, setfloorsArray] = useState([]);
+  useEffect(() => {
     getFloors();
   }, [dorm]);
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log("data: " + roomName + " " + roomSize + " " + dorm);
+    /*const cookies = new Cookies();
+    const token = cookies.get("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    axios
+      .post(
+        serverUrl + "/dorm",
+        {
+          name: dormName,
+          address: dormAddress,
+          floorCount: floorCount,
+        },
+        config
+      )
+      .then((response) => {
+        console.log(response);
+        setDormName("");
+        setDormAddress("");
+        setFloorCount(0);
+      })
+      .catch((error) => {
+        console.log(error);
+      });*/
   }
 
   function getDorms() {
@@ -65,35 +87,38 @@ function AppAdminPanelRooms(props) {
   }
 
   function getFloors() {
-    if (dorm !== "") {
-      console.log("dorm is set");
-    } else {
-      console.log("dorm is not set");
+    if (dorm) {
+      const cookies = new Cookies();
+      const token = cookies.get("token");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      axios
+        .get(serverUrl + "/dorm/" + dorm.id + "/floors", config)
+        .then((response) => {
+          setfloorsArray(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   }
 
   return (
-    <div className="appAdminPanelFormContainer ">
+    <div className="appAdminPanelFormContainer">
       <form className={classes.root} onSubmit={handleSubmit}>
         <div className="row justify-content-center">
           <TextField
             required
-            id="room"
-            value={roomName}
-            label="Room name"
-            onChange={(event) => setroomName(event.target.value)}
-          />
-          <TextField
-            required
-            id="size"
-            label="Room size"
+            id="floor"
+            label="Floor number"
             type="number"
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event) => setroomSize(event.target.value)}
+            onChange={(event) => setfloorNumber(event.target.value)}
           />
-          <FormControl required className={classes.formControl}>
+          <FormControl className={classes.formControl}>
             <InputLabel>Dorm</InputLabel>
             <Select
               value={dorm}
@@ -102,22 +127,7 @@ function AppAdminPanelRooms(props) {
               }}
             >
               {dormsArray.map((record) => (
-                <MenuItem key={record.id} value={record.id}>
-                  {record.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl required className={classes.formControl}>
-            <InputLabel>Floor</InputLabel>
-            <Select
-              value={floor}
-              onChange={(event) => {
-                setfloor(event.target.value);
-              }}
-            >
-              {floorsArray.map((record) => (
-                <MenuItem key={record.id} value={record.id}>
+                <MenuItem key={record.id} value={record}>
                   {record.name}
                 </MenuItem>
               ))}
@@ -125,7 +135,7 @@ function AppAdminPanelRooms(props) {
           </FormControl>
           <Button variant="contained" type="submit">
             {" "}
-            Add new room
+            Add new floor
           </Button>
         </div>
       </form>
@@ -134,12 +144,21 @@ function AppAdminPanelRooms(props) {
         <TableHead>
           <TableRow>
             <TableCell>Id</TableCell>
-            <TableCell>Room Number</TableCell>
-            <TableCell>Room Size</TableCell>
+            <TableCell>Floor Number</TableCell>
+            <TableCell>Dorm Name</TableCell>
           </TableRow>
         </TableHead>
+        <TableBody>
+          {floorsArray.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell>{row.id}</TableCell>
+              <TableCell>{row.number}</TableCell>
+              <TableCell>{dorm.name}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
     </div>
   );
 }
-export default AppAdminPanelRooms;
+export default AppAdminPanelFloors;

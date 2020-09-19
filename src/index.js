@@ -13,17 +13,14 @@ import MainPage from "./main-layout";
 import Account from "./account";
 import { checkIfTokenExists } from "./functions";
 import AppAdminPanel from "./appAdminPanel";
-
-const contextInitialState = {
-  user: "User Name",
-};
+import { contextInitialState } from "./consts";
 
 export const UserContext = createContext({
   username: "context",
 });
 
 function App() {
-  const [userName, setUserName] = useState("User");
+  const [userName, setUserName] = useState(contextInitialState);
 
   function changeUserContextData(userName) {
     setUserName(userName);

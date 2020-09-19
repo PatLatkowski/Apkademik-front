@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import { makeStyles } from "@material-ui/core/styles";
@@ -6,6 +6,7 @@ import TopBar from "./components/top-bar";
 import AppAdminPanelDorms from "./components/AppAdminPanel-Components/appAdminPanelDorms";
 import "./CSS/appAdminPanel.css";
 import AppAdminPanelRooms from "./components/AppAdminPanel-Components/appAdminPanelRooms";
+import AppAdminPanelFloors from "./components/AppAdminPanel-Components/appAdminPanelFloors";
 
 const useStyles = makeStyles({
   root: { backgroundColor: "#ffffff" },
@@ -23,7 +24,8 @@ function AppAdminPanel() {
 
   const OPTIONS = {
     0: <AppAdminPanelDorms />,
-    1: <AppAdminPanelRooms />,
+    1: <AppAdminPanelFloors />,
+    2: <AppAdminPanelRooms />,
   };
 
   return (
@@ -43,6 +45,13 @@ function AppAdminPanel() {
           >
             <BottomNavigationAction
               label="Dorms"
+              classes={{
+                root: navActionClasses.root,
+                selected: navActionClasses.selected,
+              }}
+            />
+            <BottomNavigationAction
+              label="Floors"
               classes={{
                 root: navActionClasses.root,
                 selected: navActionClasses.selected,
