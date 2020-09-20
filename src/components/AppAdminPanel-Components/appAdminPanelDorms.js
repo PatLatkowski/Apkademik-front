@@ -125,9 +125,6 @@ function AppAdminPanelDorms(props) {
   }, [selectedDormToDelete]);
 
   const editRecord = () => {
-    console.log(
-      "data: " + editDormName + " " + editDormAddress + " " + editFloorCount
-    );
     const cookies = new Cookies();
     const token = cookies.get("token");
     const config = {

@@ -12,6 +12,13 @@ import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import { serverUrl } from "../../consts";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,41 +40,39 @@ function AppAdminPanelFloors(props) {
   const classes = useStyles();
   const [floorNumber, setfloorNumber] = useState(0);
   const [dorm, setdorm] = useState("");
+  const [editFloorNumber, seteditFloorNumber] = useState(0);
+  const [deleteDialogOpen, setdeleteDialogOpen] = React.useState(false);
+  const [editDialogOpen, seteditDialogOpen] = React.useState(false);
+  const [selectedFloorToDelete, setselectedFloorToDelete] = useState("");
+  const [selectedFloorToEdit, setselectedFloorToEdit] = useState("");
   const [dormsArray, setdormsArray] = useState([]);
   useEffect(() => {
     getDorms();
   }, []);
-  const [floorsArray, setfloorsArray] = useState([]);
-  useEffect(() => {
-    getFloors();
-  }, [dorm]);
 
   function handleSubmit(event) {
     event.preventDefault();
-    /*const cookies = new Cookies();
+    const cookies = new Cookies();
     const token = cookies.get("token");
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
     axios
       .post(
-        serverUrl + "/dorm",
+        serverUrl + "/floor",
         {
-          name: dormName,
-          address: dormAddress,
-          floorCount: floorCount,
+          dormId: dorm.id,
+          number: floorNumber,
         },
         config
       )
       .then((response) => {
         console.log(response);
-        setDormName("");
-        setDormAddress("");
-        setFloorCount(0);
+        setfloorNumber();
       })
       .catch((error) => {
         console.log(error);
-      });*/
+      });
   }
 
   function getDorms() {
@@ -103,6 +108,80 @@ function AppAdminPanelFloors(props) {
         });
     }
   }
+
+  const [floorsArray, setfloorsArray] = useState([]);
+  useEffect(() => {
+    getFloors();
+  }, [dorm, floorsArray]);
+
+  const deleteRecord = () => {
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    axios
+      .delete(serverUrl + "/floor/" + selectedFloorToDelete.id, config)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    handleDeleteDialogClose();
+    getFloors();
+  };
+
+  const handleDeleteDialogClose = () => {
+    setdeleteDialogOpen(false);
+  };
+
+  const handleDeleteDialogClick = (row) => {
+    console.log(row);
+    setselectedFloorToDelete(row);
+    console.log(selectedFloorToDelete);
+  };
+
+  useEffect(() => {
+    if (selectedFloorToDelete) setdeleteDialogOpen(true);
+  }, [selectedFloorToDelete]);
+
+  const editRecord = () => {
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    axios
+      .put(
+        serverUrl + "/floor/" + selectedFloorToEdit.id,
+        {
+          number: editFloorNumber,
+        },
+        config
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    handleEditDialogClose();
+    getFloors();
+  };
+
+  const handleEditDialogClose = () => {
+    seteditDialogOpen(false);
+  };
+
+  const handleEditDialogClick = (row) => {
+    seteditFloorNumber(row.number);
+    setselectedFloorToEdit(row);
+  };
+
+  useEffect(() => {
+    if (selectedFloorToEdit) seteditDialogOpen(true);
+  }, [selectedFloorToEdit]);
 
   return (
     <div className="appAdminPanelFormContainer">
@@ -140,12 +219,69 @@ function AppAdminPanelFloors(props) {
         </div>
       </form>
 
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleDeleteDialogClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Do you want to delete this record?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Item with this properties will be removed: <br />
+            Floor ID: {selectedFloorToDelete.id} <br />
+            Floor number: {selectedFloorToDelete.number} <br />
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={deleteRecord} color="primary" autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={editDialogOpen}
+        onClose={handleEditDialogClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">Edit record</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Record with ID: {selectedFloorToEdit.id} will be edited with these
+            values:
+          </DialogContentText>
+          <TextField
+            required
+            id="editFloorNumber"
+            value={editFloorNumber}
+            label="Floor Number"
+            onChange={(event) => seteditFloorNumber(event.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={editRecord} color="primary">
+            Edit
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>Id</TableCell>
             <TableCell>Floor Number</TableCell>
             <TableCell>Dorm Name</TableCell>
+            <TableCell>Edit</TableCell>
+            <TableCell>Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -154,6 +290,20 @@ function AppAdminPanelFloors(props) {
               <TableCell>{row.id}</TableCell>
               <TableCell>{row.number}</TableCell>
               <TableCell>{dorm.name}</TableCell>
+              <TableCell>
+                <Button>
+                  <EditIcon
+                    onClick={() => handleEditDialogClick(row)}
+                  ></EditIcon>
+                </Button>
+              </TableCell>
+              <TableCell>
+                <Button>
+                  <DeleteIcon
+                    onClick={() => handleDeleteDialogClick(row)}
+                  ></DeleteIcon>
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
