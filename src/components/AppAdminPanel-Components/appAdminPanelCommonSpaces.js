@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: "20ch",
+      width: "25ch",
     },
     "& .MuiButton-root": {
       margin: theme.spacing(1),
@@ -32,25 +32,37 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    width: "20ch",
+    width: "25ch",
   },
 }));
 
-function AppAdminPanelRooms(props) {
+export default function AppAdminPanelCommonSpaces(props) {
   const classes = useStyles();
-  const [roomName, setroomName] = useState(0);
-  const [roomSize, setroomSize] = useState(0);
-  const [editRoomName, seteditRoomName] = useState(0);
-  const [editRoomSize, seteditRoomSize] = useState(0);
-  const [dorm, setdorm] = useState("");
+  const initialState = null;
+  const [commonSpaceName, setcommonSpaceName] = useState(initialState);
+  const [commonSpaceNumber, setcommonSpaceNumber] = useState(initialState);
+  const [commonSpaceSize, setcommonSpaceSize] = useState(initialState);
+  const [commonSpaceType, setcommonSpaceType] = useState(initialState);
+  const [editCommonSpaceName, seteditCommonSpaceName] = useState(initialState);
+  const [editCommonSpaceNumber, seteditCommonSpaceNumber] = useState(
+    initialState
+  );
+  const [editCommonSpaceSize, seteditCommonSpaceSize] = useState(initialState);
+  const [editCommonSpaceType, seteditCommonSpaceType] = useState(initialState);
+  const [dorm, setdorm] = useState(initialState);
   const [dormsArray, setdormsArray] = useState([]);
-  const [floor, setfloor] = useState("");
+  const [floor, setfloor] = useState(initialState);
   const [floorsArray, setfloorsArray] = useState([]);
-  const [roomsArray, setroomsArray] = useState([]);
+  const [commonSpacesArray, setcommonSpacesArray] = useState([]);
   const [deleteDialogOpen, setdeleteDialogOpen] = React.useState(false);
-  const [selectedRoomToDelete, setselectedRoomToDelete] = useState("");
+  const [
+    selectedCommonSpaceToDelete,
+    setselectedCommonSpaceToDelete,
+  ] = useState("");
   const [editDialogOpen, seteditDialogOpen] = React.useState(false);
-  const [selectedRoomToEdit, setselectedRoomToEdit] = useState("");
+  const [selectedCommonSpaceToEdit, setselectedCommonSpaceToEdit] = useState(
+    ""
+  );
 
   useEffect(() => {
     getDorms();
@@ -61,7 +73,7 @@ function AppAdminPanelRooms(props) {
   }, [dorm]);
 
   useEffect(() => {
-    getRooms();
+    getCommonSpaces();
   }, [floor]);
 
   function handleSubmit(event) {
@@ -73,19 +85,23 @@ function AppAdminPanelRooms(props) {
     };
     axios
       .post(
-        serverUrl + "/room",
+        serverUrl + "/commonSpace",
         {
           floorId: floor.id,
-          number: roomName,
-          size: roomSize,
+          name: commonSpaceName,
+          number: commonSpaceNumber,
+          size: commonSpaceSize,
+          type: commonSpaceType,
         },
         config
       )
       .then((response) => {
         console.log(response);
-        setroomName();
-        setroomSize();
-        getRooms();
+        setcommonSpaceName(initialState);
+        setcommonSpaceNumber(initialState);
+        setcommonSpaceSize(initialState);
+        setcommonSpaceType(initialState);
+        getCommonSpaces();
       })
       .catch((error) => {
         console.log(error);
@@ -128,7 +144,7 @@ function AppAdminPanelRooms(props) {
     }
   }
 
-  function getRooms() {
+  function getCommonSpaces() {
     if (floor) {
       const cookies = new Cookies();
       const token = cookies.get("token");
@@ -136,9 +152,9 @@ function AppAdminPanelRooms(props) {
         headers: { Authorization: `Bearer ${token}` },
       };
       axios
-        .get(serverUrl + "/floor/" + floor.id + "/rooms", config)
+        .get(serverUrl + "/floor/" + floor.id + "/commonSpaces", config)
         .then((response) => {
-          setroomsArray(response.data);
+          setcommonSpacesArray(response.data);
         })
         .catch((error) => {
           console.log(error);
@@ -153,15 +169,18 @@ function AppAdminPanelRooms(props) {
       headers: { Authorization: `Bearer ${token}` },
     };
     axios
-      .delete(serverUrl + "/room/" + selectedRoomToDelete.id, config)
+      .delete(
+        serverUrl + "/commonSpace/" + selectedCommonSpaceToDelete.id,
+        config
+      )
       .then((response) => {
         console.log(response);
+        getCommonSpaces();
       })
       .catch((error) => {
         console.log(error);
       });
     handleDeleteDialogClose();
-    getRooms();
   };
 
   const handleDeleteDialogClose = () => {
@@ -169,12 +188,12 @@ function AppAdminPanelRooms(props) {
   };
 
   const handleDeleteDialogClick = (row) => {
-    setselectedRoomToDelete(row);
+    setselectedCommonSpaceToDelete(row);
   };
 
   useEffect(() => {
-    if (selectedRoomToDelete) setdeleteDialogOpen(true);
-  }, [selectedRoomToDelete]);
+    if (selectedCommonSpaceToDelete) setdeleteDialogOpen(true);
+  }, [selectedCommonSpaceToDelete]);
 
   const editRecord = () => {
     const cookies = new Cookies();
@@ -184,16 +203,18 @@ function AppAdminPanelRooms(props) {
     };
     axios
       .put(
-        serverUrl + "/room/" + selectedRoomToEdit.id,
+        serverUrl + "/commonSpace/" + selectedCommonSpaceToEdit.id,
         {
-          number: editRoomName,
-          size: editRoomSize,
+          name: editCommonSpaceName,
+          number: editCommonSpaceNumber,
+          size: editCommonSpaceSize,
+          type: editCommonSpaceType,
         },
         config
       )
       .then((response) => {
         console.log(response);
-        getRooms();
+        getCommonSpaces();
       })
       .catch((error) => {
         console.log(error);
@@ -206,14 +227,16 @@ function AppAdminPanelRooms(props) {
   };
 
   const handleEditDialogClick = (row) => {
-    seteditRoomName(row.number);
-    seteditRoomSize(row.size);
-    setselectedRoomToEdit(row);
+    seteditCommonSpaceName(row.name);
+    seteditCommonSpaceNumber(row.number);
+    seteditCommonSpaceSize(row.size);
+    seteditCommonSpaceType(row.type);
+    setselectedCommonSpaceToEdit(row);
   };
 
   useEffect(() => {
-    if (selectedRoomToEdit) seteditDialogOpen(true);
-  }, [selectedRoomToEdit]);
+    if (selectedCommonSpaceToEdit) seteditDialogOpen(true);
+  }, [selectedCommonSpaceToEdit]);
 
   return (
     <div className="appAdminPanelFormContainer ">
@@ -221,21 +244,43 @@ function AppAdminPanelRooms(props) {
         <div className="row justify-content-center">
           <TextField
             required
-            id="room"
-            value={roomName}
-            label="Room name"
-            onChange={(event) => setroomName(event.target.value)}
+            id="name"
+            value={commonSpaceName}
+            label="Name"
+            onChange={(event) => setcommonSpaceName(event.target.value)}
           />
           <TextField
             required
-            id="size"
-            label="Room size"
+            id="number"
+            label="Number"
             type="number"
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event) => setroomSize(event.target.value)}
+            onChange={(event) => setcommonSpaceNumber(event.target.value)}
           />
+          <TextField
+            required
+            id="size"
+            label="Size"
+            type="number"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(event) => setcommonSpaceSize(event.target.value)}
+          />
+          <FormControl required className={classes.formControl}>
+            <InputLabel>Type</InputLabel>
+            <Select
+              value={commonSpaceType}
+              onChange={(event) => {
+                setcommonSpaceType(event.target.value);
+              }}
+            >
+              <MenuItem value={"LAUNDRY"}>LAUNDRY</MenuItem>
+              <MenuItem value={"GYM"}>GYM</MenuItem>
+            </Select>
+          </FormControl>
           <FormControl required className={classes.formControl}>
             <InputLabel>Dorm</InputLabel>
             <Select
@@ -268,7 +313,7 @@ function AppAdminPanelRooms(props) {
           </FormControl>
           <Button variant="contained" type="submit">
             {" "}
-            Add new room
+            Add new Common Space
           </Button>
         </div>
       </form>
@@ -285,8 +330,11 @@ function AppAdminPanelRooms(props) {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Item with this properties will be removed: <br />
-            Floor ID: {selectedRoomToDelete.id} <br />
-            Floor number: {selectedRoomToDelete.number} <br />
+            Common Space ID: {selectedCommonSpaceToDelete.id} <br />
+            Common Space Name: {selectedCommonSpaceToDelete.name} <br />
+            Common Space Number: {selectedCommonSpaceToDelete.number} <br />
+            Common Space Size: {selectedCommonSpaceToDelete.size} <br />
+            Common Space Type: {selectedCommonSpaceToDelete.type} <br />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -307,26 +355,50 @@ function AppAdminPanelRooms(props) {
         <DialogTitle id="form-dialog-title">Edit record</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Record with ID: {selectedRoomToEdit.id} will be edited with these
-            values:
+            Record with ID: {selectedCommonSpaceToEdit.id} will be edited with
+            these values:
           </DialogContentText>
           <TextField
             required
-            id="room"
-            value={editRoomName}
-            label="Room name"
-            onChange={(event) => seteditRoomName(event.target.value)}
+            id="name"
+            value={editCommonSpaceName}
+            label="Name"
+            onChange={(event) => seteditCommonSpaceName(event.target.value)}
+          />
+          <TextField
+            required
+            id="number"
+            label="Number"
+            type="number"
+            value={editCommonSpaceNumber}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(event) => seteditCommonSpaceNumber(event.target.value)}
           />
           <TextField
             required
             id="size"
-            label="Room size"
+            label="Size"
             type="number"
+            value={editCommonSpaceSize}
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event) => seteditRoomSize(event.target.value)}
+            onChange={(event) => seteditCommonSpaceSize(event.target.value)}
           />
+          <FormControl required className={classes.formControl}>
+            <InputLabel>Type</InputLabel>
+            <Select
+              value={editCommonSpaceType}
+              onChange={(event) => {
+                seteditCommonSpaceType(event.target.value);
+              }}
+            >
+              <MenuItem value={"LAUNDRY"}>LAUNDRY</MenuItem>
+              <MenuItem value={"GYM"}>GYM</MenuItem>
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditDialogClose} color="primary">
@@ -342,19 +414,23 @@ function AppAdminPanelRooms(props) {
         <TableHead>
           <TableRow>
             <TableCell>Id</TableCell>
-            <TableCell>Room Number</TableCell>
-            <TableCell>Room Size</TableCell>
-            <TableCell>Floor number</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Number</TableCell>
+            <TableCell>Size</TableCell>
+            <TableCell>Type</TableCell>
+            <TableCell>Floor</TableCell>
             <TableCell>Edit</TableCell>
             <TableCell>Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {roomsArray.map((row) => (
+          {commonSpacesArray.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.id}</TableCell>
+              <TableCell>{row.name}</TableCell>
               <TableCell>{row.number}</TableCell>
               <TableCell>{row.size}</TableCell>
+              <TableCell>{row.type}</TableCell>
               <TableCell>{floor.number}</TableCell>
               <TableCell>
                 <Button>
@@ -377,4 +453,3 @@ function AppAdminPanelRooms(props) {
     </div>
   );
 }
-export default AppAdminPanelRooms;

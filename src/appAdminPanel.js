@@ -7,6 +7,7 @@ import AppAdminPanelDorms from "./components/AppAdminPanel-Components/appAdminPa
 import "./CSS/appAdminPanel.css";
 import AppAdminPanelRooms from "./components/AppAdminPanel-Components/appAdminPanelRooms";
 import AppAdminPanelFloors from "./components/AppAdminPanel-Components/appAdminPanelFloors";
+import AppAdminPanelCommonSpaces from "./components/AppAdminPanel-Components/appAdminPanelCommonSpaces";
 
 const useStyles = makeStyles({
   root: { backgroundColor: "#ffffff" },
@@ -26,6 +27,7 @@ function AppAdminPanel() {
     0: <AppAdminPanelDorms />,
     1: <AppAdminPanelFloors />,
     2: <AppAdminPanelRooms />,
+    3: <AppAdminPanelCommonSpaces />,
   };
 
   return (

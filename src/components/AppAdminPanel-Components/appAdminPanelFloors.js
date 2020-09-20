@@ -69,6 +69,7 @@ function AppAdminPanelFloors(props) {
       .then((response) => {
         console.log(response);
         setfloorNumber();
+        getFloors();
       })
       .catch((error) => {
         console.log(error);

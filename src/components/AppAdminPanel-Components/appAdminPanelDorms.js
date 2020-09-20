@@ -47,7 +47,7 @@ function AppAdminPanelDorms(props) {
 
   useEffect(() => {
     getDorms();
-  }, [dormsArray]);
+  }, []);
 
   function getDorms() {
     const cookies = new Cookies();
@@ -87,6 +87,7 @@ function AppAdminPanelDorms(props) {
         setDormName("");
         setDormAddress("");
         setFloorCount(0);
+        getDorms();
       })
       .catch((error) => {
         console.log(error);
@@ -103,6 +104,7 @@ function AppAdminPanelDorms(props) {
       .delete(serverUrl + "/dorm/" + selectedDormToDelete.id, config)
       .then((response) => {
         console.log(response);
+        getDorms();
       })
       .catch((error) => {
         console.log(error);
@@ -142,6 +144,7 @@ function AppAdminPanelDorms(props) {
       )
       .then((response) => {
         console.log(response);
+        getDorms();
       })
       .catch((error) => {
         console.log(error);
