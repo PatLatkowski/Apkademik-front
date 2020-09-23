@@ -231,6 +231,7 @@ function AppAdminPanelDorms(props) {
       </Dialog>
 
       <Dialog
+        className={classes.root}
         open={editDialogOpen}
         onClose={handleEditDialogClose}
         aria-labelledby="form-dialog-title"

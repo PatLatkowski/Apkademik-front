@@ -126,7 +126,6 @@ export default function AppAdminPanelCommonSpaces(props) {
 
   function getFloors() {
     if (dorm) {
-      console.log("dorm: " + dorm);
       const cookies = new Cookies();
       const token = cookies.get("token");
       const config = {
@@ -135,7 +134,6 @@ export default function AppAdminPanelCommonSpaces(props) {
       axios
         .get(serverUrl + "/dorm/" + dorm + "/floors", config)
         .then((response) => {
-          console.log(response.data);
           setfloorsArray(response.data);
         })
         .catch((error) => {
@@ -174,7 +172,6 @@ export default function AppAdminPanelCommonSpaces(props) {
         config
       )
       .then((response) => {
-        console.log(response);
         getCommonSpaces();
       })
       .catch((error) => {
@@ -348,6 +345,7 @@ export default function AppAdminPanelCommonSpaces(props) {
       </Dialog>
 
       <Dialog
+        className={classes.root}
         open={editDialogOpen}
         onClose={handleEditDialogClose}
         aria-labelledby="form-dialog-title"

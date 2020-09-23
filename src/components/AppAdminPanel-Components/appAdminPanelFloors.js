@@ -67,7 +67,6 @@ function AppAdminPanelFloors(props) {
         config
       )
       .then((response) => {
-        console.log(response);
         setfloorNumber();
         getFloors();
       })
@@ -113,7 +112,7 @@ function AppAdminPanelFloors(props) {
   const [floorsArray, setfloorsArray] = useState([]);
   useEffect(() => {
     getFloors();
-  }, [dorm, floorsArray]);
+  }, [dorm]);
 
   const deleteRecord = () => {
     const cookies = new Cookies();
@@ -247,6 +246,7 @@ function AppAdminPanelFloors(props) {
       </Dialog>
 
       <Dialog
+        className={classes.root}
         open={editDialogOpen}
         onClose={handleEditDialogClose}
         aria-labelledby="form-dialog-title"
