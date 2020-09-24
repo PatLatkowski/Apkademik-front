@@ -46,6 +46,7 @@ function AppAdminPanelFloors(props) {
   const [selectedFloorToDelete, setselectedFloorToDelete] = useState("");
   const [selectedFloorToEdit, setselectedFloorToEdit] = useState("");
   const [dormsArray, setdormsArray] = useState([]);
+
   useEffect(() => {
     getDorms();
   }, []);
@@ -110,9 +111,8 @@ function AppAdminPanelFloors(props) {
   }
 
   const [floorsArray, setfloorsArray] = useState([]);
-  useEffect(() => {
-    getFloors();
-  }, [dorm]);
+
+  useEffect(getFloors, [dorm]);
 
   const deleteRecord = () => {
     const cookies = new Cookies();

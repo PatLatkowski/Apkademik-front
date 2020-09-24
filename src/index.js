@@ -22,10 +22,6 @@ export const UserContext = createContext({
 function App() {
   const [userName, setUserName] = useState(contextInitialState);
 
-  function changeUserContextData(userName) {
-    setUserName(userName);
-  }
-
   return (
     <UserContext.Provider value={{ userName, setUserName }}>
       <Router>

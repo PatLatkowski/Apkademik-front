@@ -52,18 +52,6 @@ function AppAdminPanelRooms(props) {
   const [editDialogOpen, seteditDialogOpen] = React.useState(false);
   const [selectedRoomToEdit, setselectedRoomToEdit] = useState("");
 
-  useEffect(() => {
-    getDorms();
-  }, []);
-
-  useEffect(() => {
-    getFloors();
-  }, [dorm]);
-
-  useEffect(() => {
-    getRooms();
-  }, [floor]);
-
   function handleSubmit(event) {
     event.preventDefault();
     const cookies = new Cookies();
@@ -214,6 +202,14 @@ function AppAdminPanelRooms(props) {
   useEffect(() => {
     if (selectedRoomToEdit) seteditDialogOpen(true);
   }, [selectedRoomToEdit]);
+
+  useEffect(() => {
+    getDorms();
+  }, []);
+
+  useEffect(getFloors, [dorm]);
+
+  useEffect(getRooms, [floor]);
 
   return (
     <div className="appAdminPanelFormContainer ">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { useInput } from "../useInput";
 import Cookies from "universal-cookie";
@@ -34,6 +34,7 @@ function AccountDeleteAccount() {
           .delete("http://46.41.142.44:8080/user", config)
           .then((response) => {
             console.log(response);
+            resetPassword();
             cookies.remove("token");
             history.push("/login");
           })

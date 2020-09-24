@@ -64,18 +64,6 @@ export default function AppAdminPanelCommonSpaces(props) {
     ""
   );
 
-  useEffect(() => {
-    getDorms();
-  }, []);
-
-  useEffect(() => {
-    getFloors();
-  }, [dorm]);
-
-  useEffect(() => {
-    getCommonSpaces();
-  }, [floor]);
-
   function handleSubmit(event) {
     event.preventDefault();
     const cookies = new Cookies();
@@ -108,39 +96,47 @@ export default function AppAdminPanelCommonSpaces(props) {
       });
   }
 
-  function getDorms() {
-    const cookies = new Cookies();
-    const token = cookies.get("token");
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    axios
-      .get(serverUrl + "/dorms", config)
-      .then((response) => {
-        setdormsArray(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  function getFloors() {
-    if (dorm) {
+  useEffect(() => {
+    function getDorms() {
       const cookies = new Cookies();
       const token = cookies.get("token");
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
       axios
-        .get(serverUrl + "/dorm/" + dorm + "/floors", config)
+        .get(serverUrl + "/dorms", config)
         .then((response) => {
-          setfloorsArray(response.data);
+          setdormsArray(response.data);
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  }
+    getDorms();
+  }, []);
+
+  useEffect(() => {
+    function getFloors() {
+      if (dorm) {
+        const cookies = new Cookies();
+        const token = cookies.get("token");
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+        axios
+          .get(serverUrl + "/dorm/" + dorm + "/floors", config)
+          .then((response) => {
+            setfloorsArray(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+    getFloors();
+  }, [dorm]);
+
+  useEffect(getCommonSpaces, [floor]);
 
   function getCommonSpaces() {
     if (floor) {

@@ -70,22 +70,6 @@ export default function AppAdminPanelWashingMachines(props) {
     setselectedWashingMachineToEdit,
   ] = useState(initialState);
 
-  useEffect(() => {
-    getDorms();
-  }, []);
-
-  useEffect(() => {
-    getFloors();
-  }, [dorm]);
-
-  useEffect(() => {
-    getCommonSpaces();
-  }, [floor]);
-
-  useEffect(() => {
-    getWashingMachines();
-  }, [commonSpace]);
-
   function getDorms() {
     const cookies = new Cookies();
     const token = cookies.get("token");
@@ -158,6 +142,16 @@ export default function AppAdminPanelWashingMachines(props) {
         });
     }
   }
+
+  useEffect(() => {
+    getDorms();
+  }, []);
+
+  useEffect(getFloors, [dorm]);
+
+  useEffect(getCommonSpaces, [floor]);
+
+  useEffect(getWashingMachines, [commonSpace]);
 
   function handleSubmit(event) {
     event.preventDefault();

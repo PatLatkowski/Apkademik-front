@@ -1,7 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import TopBar from "./components/top-bar";
-import axios from "axios";
-import Cookies from "universal-cookie";
 import "./CSS/account.css";
 
 import AccountDetails from "./components/Account-Components/accountDetails";
