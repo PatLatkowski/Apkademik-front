@@ -6,6 +6,8 @@ import "./CSS/register.css";
 import ErrorMessage from "./components/ErrorMessage";
 import { Link, useHistory } from "react-router-dom";
 import { serverUrl } from "./consts";
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
 var schema = Joi.object().keys({
   email: Joi.string()
@@ -24,7 +26,24 @@ var schema = Joi.object().keys({
     .options({ language: { any: { allowOnly: "must match password" } } }),
 });
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& .MuiTextField-root": {
+      margin: theme.spacing(1),
+      width: "20ch",
+    },
+    "& .MuiButton-root": {
+      margin: theme.spacing(1),
+    },
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    width: "20ch",
+  },
+}));
+
 function Register() {
+  const classes = useStyles();
   let history = useHistory();
   const initialState = "";
   const [email, setemail] = useState(initialState);
@@ -33,6 +52,57 @@ function Register() {
   const [password, setpassword] = useState(initialState);
   const [confirmPassword, setconfirmPassword] = useState(initialState);
   const [errorMessage, seterrorMessage] = useState(initialState);
+  const [dorm, setdorm] = useState("");
+  const [dormsArray, setdormsArray] = useState([]);
+  const [floor, setfloor] = useState("");
+  const [floorsArray, setfloorsArray] = useState([]);
+  const [room, setroom] = useState("");
+  const [roomsArray, setroomsArray] = useState([]);
+
+  useEffect(() => {
+    getDorms();
+  }, []);
+
+  useEffect(getFloors, [dorm]);
+
+  useEffect(getRooms, [floor]);
+
+  function getDorms() {
+    axios
+      .get(serverUrl + "/dorms")
+      .then((response) => {
+        setdormsArray(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  function getFloors() {
+    if (dorm) {
+      axios
+        .get(serverUrl + "/dorm/" + dorm.id + "/floors")
+        .then((response) => {
+          setfloorsArray(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
+  function getRooms() {
+    if (floor) {
+      axios
+        .get(serverUrl + "/floor/" + floor.id + "/rooms")
+        .then((response) => {
+          setroomsArray(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
 
   function handleRegister(event) {
     schema.validate(
@@ -54,6 +124,8 @@ function Register() {
               name: name,
               surname: surname,
               email: email,
+              dormId: dorm.id,
+              roomId: room.id,
             })
             .then((response) => {
               console.log(response);
@@ -138,6 +210,57 @@ function Register() {
                 onChange={(event) => setconfirmPassword(event.target.value)}
                 className="register-input"
               />
+            </div>
+            <div className="form-group">
+              <FormControl required className={classes.formControl}>
+                <InputLabel>Dorm</InputLabel>
+                <Select
+                  value={dorm}
+                  onChange={(event) => {
+                    setdorm(event.target.value);
+                  }}
+                >
+                  {dormsArray.map((record) => (
+                    <MenuItem key={record.id} value={record}>
+                      {record.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+            <div className="form-group">
+              <FormControl required className={classes.formControl}>
+                <InputLabel>Floor</InputLabel>
+                <Select
+                  value={floor}
+                  onChange={(event) => {
+                    setfloor(event.target.value);
+                  }}
+                >
+                  {floorsArray.map((record) => (
+                    <MenuItem key={record.id} value={record}>
+                      {record.number}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+            <div className="form-group">
+              <FormControl required className={classes.formControl}>
+                <InputLabel>Room</InputLabel>
+                <Select
+                  value={room}
+                  onChange={(event) => {
+                    setroom(event.target.value);
+                  }}
+                >
+                  {roomsArray.map((record) => (
+                    <MenuItem key={record.id} value={record}>
+                      {record.number}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
             <div class="form-group">
               <ErrorMessage text={errorMessage} />
