@@ -1,9 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import Joi from "@hapi/joi";
 import { useInput } from "../useInput";
 import ErrorMessage from "../ErrorMessage";
 import Cookies from "universal-cookie";
+import { serverUrl } from "../../consts";
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& .MuiTextField-root": {
+      margin: theme.spacing(1),
+      width: "20ch",
+    },
+    "& .MuiButton-root": {
+      margin: theme.spacing(1),
+    },
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    width: "20ch",
+  },
+}));
 
 var schema = Joi.object().keys({
   email: Joi.string()
@@ -18,21 +37,14 @@ var schema = Joi.object().keys({
     .regex(new RegExp("[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*"))
     .required()
     .allow(""),
-  dormNumber: Joi.number().required().allow(""),
-  roomNumber: Joi.number().required().allow(""),
 });
 
 function AccountChangePersonalData(props) {
+  const classes = useStyles();
   const [errorMessage, setErrorMessage] = useState("");
   const { value: email, bind: emailChange, reset: resetEmail } = useInput("");
   const { value: name, bind: nameChange, reset: resetName } = useInput("");
   const { value: surname, bind: surnameChange, reset: resetSurname } = useInput(
-    ""
-  );
-  const { value: dormNum, bind: dormNumChange, reset: resetDormNum } = useInput(
-    ""
-  );
-  const { value: roomNum, bind: roomNumChange, reset: resetRoomNum } = useInput(
     ""
   );
   const {
@@ -40,6 +52,20 @@ function AccountChangePersonalData(props) {
     bind: passwordChange,
     reset: resetPassword,
   } = useInput("");
+  const [dorm, setdorm] = useState("");
+  const [dormsArray, setdormsArray] = useState([]);
+  const [floor, setfloor] = useState("");
+  const [floorsArray, setfloorsArray] = useState([]);
+  const [room, setroom] = useState("");
+  const [roomsArray, setroomsArray] = useState([]);
+
+  useEffect(() => {
+    getDorms();
+  }, []);
+
+  useEffect(getFloors, [dorm]);
+
+  useEffect(getRooms, [floor]);
 
   function sendRequest() {
     const cookies = new Cookies();
@@ -51,15 +77,75 @@ function AccountChangePersonalData(props) {
     if (email !== "") body.user.email = email;
     if (name !== "") body.user.name = name;
     if (surname !== "") body.user.surname = surname;
+    if (dorm !== "" && room !== "") {
+      body.user.dormId = dorm.id;
+      body.user.roomId = room.id;
+    }
+    console.log(body);
     axios
       .put("http://46.41.142.44:8080/user", body, config)
       .then((response) => {
         console.log(response);
         props.refreshAccountDetails();
+        setroom("");
+        setfloor("");
+        setdorm("");
       })
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  function getDorms() {
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    axios
+      .get(serverUrl + "/dorms", config)
+      .then((response) => {
+        setdormsArray(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  function getFloors() {
+    if (dorm) {
+      const cookies = new Cookies();
+      const token = cookies.get("token");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      axios
+        .get(serverUrl + "/dorm/" + dorm.id + "/floors", config)
+        .then((response) => {
+          setfloorsArray(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
+  function getRooms() {
+    if (floor) {
+      const cookies = new Cookies();
+      const token = cookies.get("token");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      axios
+        .get(serverUrl + "/floor/" + floor.id + "/rooms", config)
+        .then((response) => {
+          setroomsArray(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }
 
   const handleSubmit = (event) => {
@@ -69,8 +155,6 @@ function AccountChangePersonalData(props) {
         email: email,
         name: name,
         surname: surname,
-        dormNumber: dormNum,
-        roomNumber: roomNum,
       },
       (err, res) => {
         if (err) {
@@ -85,8 +169,6 @@ function AccountChangePersonalData(props) {
     resetEmail();
     resetName();
     resetSurname();
-    resetDormNum();
-    resetRoomNum();
   };
 
   return (
@@ -133,24 +215,51 @@ function AccountChangePersonalData(props) {
               {...surnameChange}
             />
           </div>
-          <div className="form-group">
-            <input
-              type="text"
-              id="dromNum"
-              placeholder="Type new drom number"
-              className="account-input"
-              {...dormNumChange}
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="text"
-              id="roomNum"
-              placeholder="Type new room number"
-              className="account-input"
-              {...roomNumChange}
-            />
-          </div>
+          <FormControl className={classes.formControl}>
+            <InputLabel>Dorm</InputLabel>
+            <Select
+              value={dorm}
+              onChange={(event) => {
+                setdorm(event.target.value);
+              }}
+            >
+              {dormsArray.map((record) => (
+                <MenuItem key={record.id} value={record}>
+                  {record.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel>Floor</InputLabel>
+            <Select
+              value={floor}
+              onChange={(event) => {
+                setfloor(event.target.value);
+              }}
+            >
+              {floorsArray.map((record) => (
+                <MenuItem key={record.id} value={record}>
+                  {record.number}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel>Room</InputLabel>
+            <Select
+              value={room}
+              onChange={(event) => {
+                setroom(event.target.value);
+              }}
+            >
+              {roomsArray.map((record) => (
+                <MenuItem key={record.id} value={record}>
+                  {record.number}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <div class="form-group">
             <ErrorMessage text={errorMessage} />
           </div>
