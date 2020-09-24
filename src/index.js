@@ -13,6 +13,7 @@ import MainPage from "./main-layout";
 import Account from "./account";
 import { checkIfTokenExists } from "./functions";
 import AppAdminPanel from "./appAdminPanel";
+import DormAdminPanel from "./dormAdminPanel";
 
 class App extends React.Component {
   render() {
@@ -65,6 +66,16 @@ class App extends React.Component {
             render={(props) => {
               if (checkIfTokenExists()) {
                 return <AppAdminPanel {...props} />;
+              } else {
+                return <Redirect to={"/login"} />;
+              }
+            }}
+          />
+          <Route
+            path="/dormAdminPanel"
+            render={(props) => {
+              if (checkIfTokenExists()) {
+                return <DormAdminPanel {...props} />;
               } else {
                 return <Redirect to={"/login"} />;
               }
