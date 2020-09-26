@@ -14,6 +14,8 @@ function ScheduleTable(props) {
         value={props.reservationColor[n]}
         onClick={() => props.onClick(n)}
         number={n}
+        reservationSlots={props.reservationSlots}
+        maxSlots={props.maxSlots}
       />
     );
   }

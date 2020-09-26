@@ -10,7 +10,7 @@ function Square(props) {
       className="schedule-button"
       style={{ background: props.value }}
     >
-      {props.number}
+      {props.reservationSlots[props.number]}/{props.maxSlots}
     </div>
   );
 }

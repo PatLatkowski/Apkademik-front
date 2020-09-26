@@ -35,6 +35,10 @@ function DormAdminPanelUser(props) {
   const classes = useStyles();
 
   useEffect(() => {
+    loadList();
+  }, []);
+
+  function loadList() {
     const options = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -65,7 +69,7 @@ function DormAdminPanelUser(props) {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }
 
   useEffect(() => {
     console.log(roleId);
@@ -92,9 +96,11 @@ function DormAdminPanelUser(props) {
               users[index].id +
               "/role/" +
               roleId,
+            null,
             options
           )
           .then((response) => {
+            loadList();
             console.log(response);
           })
           .catch((error) => {
