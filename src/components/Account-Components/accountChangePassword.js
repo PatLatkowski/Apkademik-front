@@ -70,7 +70,7 @@ function AccountChangePassword() {
         config
       )
       .then((response) => {
-        console.log(response);
+        // TO DO Success message
       })
       .catch((error) => {
         console.log(error);

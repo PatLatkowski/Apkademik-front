@@ -10,11 +10,10 @@ import ShowPost from "./components/showPost";
 import SideBar from "./components/side-bar";
 import BoardContainer from "./boardContainer";
 
-function MainPage(props) {
+function MainPage() {
   const [selectedOption, setSelectedOption] = useState(1);
 
   function getSelectedOption(event, value) {
-    console.log(value);
     setSelectedOption(value);
   }
 
@@ -26,9 +25,7 @@ function MainPage(props) {
   return (
     <div className="container">
       <div className="row">
-        <div className="col" style={{ background: "#EEEEEE" }}>
-          <TopBar />
-        </div>
+        <TopBar />
       </div>
       <div className="row">
         <div className="col-2" style={{ background: "#EEEEEE" }}>
