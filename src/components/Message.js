@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import "../CSS/components/message.css";
 
 function Message(props) {
-  const [text, setText] = useState("");
-
   function formatMessage() {
     var result = props.text.replace(/"/g, "");
 

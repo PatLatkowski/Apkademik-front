@@ -12,9 +12,6 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import Cookies from "universal-cookie";
-import { makeStyles } from "@material-ui/core/styles";
-
-const serverUrl = "http://46.41.142.44:8080";
 
 const rstate = {
   FREE: 1,
@@ -23,16 +20,6 @@ const rstate = {
 };
 const numOfHours = 15;
 const numOfDays = 5;
-
-const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 80,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-}));
 
 function Schedule() {
   const cookies = new Cookies();
@@ -79,7 +66,6 @@ function Schedule() {
 
   //selectedDate
   useEffect(() => {
-    console.log(currentRoomType);
     switch (currentRoomType) {
       case "LAUNDRY":
         scheduleUpdateLaundry();
@@ -87,11 +73,15 @@ function Schedule() {
       case "GYM":
         scheduleUpdateGym();
         break;
+      default:
+        break;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
   //currentMachine
   useEffect(() => {
     scheduleUpdateLaundry();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMachine]);
   //
   useEffect(() => {
@@ -109,6 +99,7 @@ function Schedule() {
       .catch((error) => {
         console.log(error);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   //currentDorm
   useEffect(() => {
@@ -126,6 +117,7 @@ function Schedule() {
       .catch((error) => {
         console.log(error);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDorm]);
   //currentFloor
   useEffect(() => {
@@ -151,10 +143,11 @@ function Schedule() {
           console.log(error);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentFloor]);
   //currentRoom, maxSlots
   useEffect(() => {
-    if (currentRoom != "") {
+    if (currentRoom !== "") {
       console.log(true);
       const options = {
         headers: {
@@ -191,6 +184,7 @@ function Schedule() {
       setReservationColor(Array(numOfHours * numOfDays).fill("white"));
       setReservationState(Array(numOfHours * numOfDays).fill(1));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRoom, maxSlots]);
   //roomType
   useEffect(() => {
@@ -223,7 +217,10 @@ function Schedule() {
         break;
       case "GYM":
         break;
+      default:
+        break;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomType]);
 
   function scheduleUpdateGym() {
@@ -270,7 +267,7 @@ function Schedule() {
                   i + (parseInt(e.start.substring(0, 2)) - 7) * 5
                 ] = rstate.RESERVED;
               } else {
-                if (e.reservationCounter == maxSlots) {
+                if (e.reservationCounter === maxSlots) {
                   reservationColor2[
                     i + (parseInt(e.start.substring(0, 2)) - 7) * 5
                   ] = "gray";
@@ -380,7 +377,7 @@ function Schedule() {
           var dateOffset = 24 * 60 * 60 * 1000 * ((i % 5) - 2);
           mydate.setTime(selectedDate.getTime() + dateOffset);
 
-          if (e == rstate.HOVER) {
+          if (e === rstate.HOVER) {
             body.push({
               date:
                 mydate.getFullYear() +
@@ -476,6 +473,8 @@ function Schedule() {
         setReservationState(reservationState2);
         validateHours2[i % numOfDays]--;
         setValidateHours(validateHours2);
+        break;
+      default:
         break;
     }
   }

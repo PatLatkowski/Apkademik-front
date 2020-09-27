@@ -5,35 +5,20 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Checkbox from "@material-ui/core/Checkbox";
-import { makeStyles } from "@material-ui/core/styles";
 import "../../CSS/appAdminPanel.css";
 import axios from "axios";
 import Cookies from "universal-cookie";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-      width: "25ch",
-    },
-    "& .MuiButton-root": {
-      margin: theme.spacing(1),
-    },
-  },
-}));
 
 function DormAdminPanelUser(props) {
   const cookies = new Cookies();
   const token = cookies.get("token");
   const [users, setUsers] = useState(Array(1).fill(""));
-  const [usersh, setUsersh] = useState(Array(1).fill(""));
   const [selected, setSelected] = useState(Array(1).fill(0));
   const [roleId, setRoleId] = useState(0);
 
-  const classes = useStyles();
-
   useEffect(() => {
     loadList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function loadList() {

@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 function Square(props) {
-  const [color, setColor] = useState(props.value);
-
   return (
     <div
       key={"Square" + props.number.toString()}
