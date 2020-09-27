@@ -1,0 +1,15 @@
+@import "../main.css";
+
+.collapse {
+  width: 100%;
+}
+.collapsing {
+    width: 100%;
+  }
+  form {
+      width:100%;
+  }
+
+.form-control{
+    resize: none;
+  }

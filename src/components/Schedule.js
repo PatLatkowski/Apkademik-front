@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import "../CSS/components/schedule.css";
+import MachinePicker from "./Schedule-Components/MachinePicker";
+import FloorPicker from "./Schedule-Components/FloorPicker";
+import Roompicker from "./Schedule-Components/Roompicker";
+import ScheduleTable from "./Schedule-Components/ScheduleTable";
 import axios from "axios";
-import ErrorMessage from "./ErrorMessage";
+import Message from "./Message";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-
+import Cookies from "universal-cookie";
+import { makeStyles, MuiThemeProvider } from "@material-ui/core/styles";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
+import { findAllByTestId } from "@testing-library/react";
 
 const serverUrl = "http://46.41.142.44:8080";
 
@@ -34,155 +41,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Square(props) {
-  return (
-    <div
-      onClick={() => props.onClick()}
-      class="col"
-      className="schedule-button"
-      style={{ background: props.value }}
-    >
-      {props.number}
-    </div>
-  );
-}
-
-function Stable(props) {
-  function renderSquare(n) {
-    return (
-      <Square
-        value={props.reservationColor[n]}
-        onClick={() => props.onClick(n)}
-        number={n}
-      />
-    );
-  }
-
-  function createHours(i) {
-    var result = [];
-    var n;
-    for (var j = 0; j < numOfDays; j++) {
-      n = j + i * numOfDays;
-      result.push(renderSquare(n));
-    }
-    return result;
-  }
-
-  function generateTable() {
-    var result = [];
-    result.push(<div class="row sticky-top">{generateDays()}</div>);
-    for (var i = 0; i < numOfHours; i++) {
-      result.push(
-        <div class="row">
-          {generateHours(i)}
-          {createHours(i)}
-        </div>
-      );
-    }
-    return result;
-  }
-
-  function generateHours(i) {
-    var result = [];
-    var startHour = 7;
-    result.push(
-      <div calss="col" className="hour">
-        {startHour + i}:00
-      </div>
-    );
-    return result;
-  }
-
-  function placeDate(i) {
-    var result = new Date(props.selectedDate);
-    result.setDate(props.selectedDate.getDate() + i);
-
-    return result.getDate() + "." + (result.getMonth() + 1);
-  }
-
-  function generateDays() {
-    var result = [];
-    result.push(
-      <div calss="col" className="hour">
-        GMT{" "}
-        {props.selectedDate.getTimezoneOffset() / 60 > 0
-          ? "-" + props.selectedDate.getTimezoneOffset() / 60
-          : "+" + (props.selectedDate.getTimezoneOffset() / 60) * -1}
-      </div>
-    );
-    for (var i = 0; i < 5; i++) {
-      result.push(
-        <div calss="col" className="date">
-          {placeDate(i - 2)}
-        </div>
-      );
-    }
-    return result;
-  }
-
-  return generateTable();
-}
-
-function Roompicker(props) {
-  const classes = useStyles();
-
-  function menuItems() {
-    var result = [];
-
-    props.items.forEach((element) => {
-      result.push(<MenuItem value={element}>{element}</MenuItem>);
-    });
-
-    return result;
-  }
-
-  return (
-    <FormControl className={classes.formControl}>
-      <InputLabel>{props.name}</InputLabel>
-      <Select value={props.current} onChange={props.onChange}>
-        {menuItems()}
-      </Select>
-    </FormControl>
-  );
-}
-
-function Floorpicker(props) {
-  const classes = useStyles();
-
-  function menuItems() {
-    var result = [];
-    var curroom = [];
-    for (var x = 0; x < props.rooms.length; x++) {
-      if (props.rooms[x] === props.room) curroom = props.items[x];
-    }
-
-    console.log(curroom);
-
-    curroom.forEach((element) => {
-      result.push(<MenuItem value={element}>{element}</MenuItem>);
-    });
-
-    return result;
-  }
-
-  return (
-    <FormControl className={classes.formControl}>
-      <InputLabel>{props.name}</InputLabel>
-      <Select value={props.current} onChange={props.onChange}>
-        {menuItems()}
-      </Select>
-    </FormControl>
-  );
-}
-
 function Schedule() {
-  const [currentRoom, setCurrentRoom] = useState(1);
-  const [currentMachine, setCurrentMachine] = useState(1);
+  const cookies = new Cookies();
+  const token = cookies.get("token");
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  const [currentDorm, setCurrentDorm] = useState(6);
+  const [currentFloor, setCurrentFloor] = useState(null);
+  const [currentRoom, setCurrentRoom] = useState(null);
+  const [currentMachine, setCurrentMachine] = useState(null);
+  const [machines, setMachines] = useState(Array(1).fill(""));
+  const [rooms, setRooms] = useState(Array(1).fill(""));
+  const [floors, setFloors] = useState(Array(1).fill(""));
+
   const [errorMessage, setErrorMessage] = useState("");
   const [validateHours, setValidateHours] = useState(Array(5).fill(0));
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [machine, setMachine] = useState(Array(1).fill(""));
-  const [rooms, setRooms] = useState(Array(1).fill(""));
+
   const [reservationColor, setReservationColor] = useState(
     Array(numOfHours * numOfDays).fill("white")
   );
@@ -194,15 +70,103 @@ function Schedule() {
     setSelectedDate(date);
   }
 
+  const handleChangeMachine = (event) => {
+    setCurrentMachine(event.target.value);
+  };
+  const handleChangeRoom = (event) => {
+    setCurrentRoom(event.target.value);
+  };
+  const handleChangeFloor = (event) => {
+    setCurrentFloor(event.target.value);
+  };
+
   useEffect(() => {
+    scheduleUpdate();
+  }, [selectedDate, currentMachine, currentFloor, currentRoom]);
+
+  useEffect(() => {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .get("http://46.41.142.44:8080/user", options)
+      .then((response) => {
+        setCurrentDorm(6);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    axios
+      .get("http://46.41.142.44:8080/dorm/" + currentDorm + "/floors", options)
+      .then((response) => {
+        //console.log(response.data);
+        setFloors(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [currentDorm]);
+
+  useEffect(() => {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    axios
+      .get(
+        "http://46.41.142.44:8080/floor/" + currentFloor + "/commonSpaces",
+        options
+      )
+      .then((response) => {
+        //console.log(response.data);
+        setRooms(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [currentFloor]);
+
+  useEffect(() => {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    axios
+      .get(
+        "http://46.41.142.44:8080/commonSpace/" +
+          currentRoom +
+          "/washingMachines",
+        options
+      )
+      .then((response) => {
+        console.log(response.data);
+        setMachines(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [currentRoom]);
+
+  function scheduleUpdate() {
     const reservationColor2 = Array(numOfHours * numOfDays).fill("white");
     const reservationState2 = Array(numOfHours * numOfDays).fill(1);
-    setStartParameters(reservationColor2, reservationState2);
-  }, [selectedDate, currentMachine, currentRoom]);
-
-  function setStartParameters(reservationColor2, reservationState2) {
+    const validateHours2 = Array(5).fill(0);
     const options = {
       params: {
+        commonSpaceNumber: currentRoom,
         date:
           selectedDate.getFullYear() +
           "-" +
@@ -210,48 +174,46 @@ function Schedule() {
             ? "0" + (selectedDate.getMonth() + 1)
             : selectedDate.getMonth() + 1) +
           "-" +
-          (selectedDate.getDate() < 9
+          (selectedDate.getDate() < 10
             ? "0" + selectedDate.getDate()
             : selectedDate.getDate()),
       },
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjekB3cC5wbCIsImV4cCI6MTYwMDEwOTAwMiwiaWF0IjoxNjAwMDkxMDAyfQ.LiCXoKkZA4Utdn_jiSk4oh6d6N9Eaqcjxy5NLFWMBTU5tkFcpu2p4O4jlkdg9IY9XOgkKvQVFjXr6vwxl00vyA`,
+        Authorization: `Bearer ${token}`,
       },
     };
 
     axios
-      .get("http://46.41.142.44:8080/commonSpace/washingReservation", options)
+      .get(
+        "http://46.41.142.44:8080/washingMachine/" +
+          currentMachine +
+          "/washingReservations/fiveDays",
+        options
+      )
       .then((response) => {
-        //console.log(response.data);
-        //console.log(response.data[0].washingMachines[0].washingReservations);
-        var tempMachine = [];
-        var tempRooms = [];
-        console.log(response.data);
-        for (var i = 1; i <= response.data.length; i++) {
-          tempRooms.push(response.data[i - 1].number);
-          var temp = [];
-          for (
-            var j = 1;
-            j <= response.data[i - 1].washingMachines.length;
-            j++
-          ) {
-            temp.push(j);
-          }
-          tempMachine.push(temp);
-        }
+        var i = 0;
+        console.log(response);
+        response.data.forEach((element) => {
+          element.startingHours.forEach((e) => {
+            console.log(e);
 
-        setMachine(tempMachine);
-        setRooms(tempRooms);
-        response.data[0].washingMachines[0].washingReservations.forEach(
-          (element) => {
-            console.log(element);
-            console.log(parseInt(element.start.substring(0, 2))); //hour
-            reservationColor2[parseInt(element.start.substring(0, 2)) - 7] =
-              "gray";
-            reservationState2[parseInt(element.start.substring(0, 2)) - 7] =
-              rstate.RESERVED;
-          }
-        );
+            reservationState2[
+              i + (parseInt(e.startingHour.substring(0, 2)) - 7) * 5
+            ] = rstate.RESERVED;
+            if (e.mine) {
+              validateHours2[i % numOfDays]++;
+              reservationColor2[
+                i + (parseInt(e.startingHour.substring(0, 2)) - 7) * 5
+              ] = "#1e6e28";
+            } else {
+              reservationColor2[
+                i + (parseInt(e.startingHour.substring(0, 2)) - 7) * 5
+              ] = "gray";
+            }
+          });
+          i++;
+        });
+        setValidateHours(validateHours2);
         setReservationState(reservationState2);
         setReservationColor(reservationColor2);
       })
@@ -261,17 +223,73 @@ function Schedule() {
   }
 
   function handleSubmit() {
+    const mydate = new Date(selectedDate);
+    var op;
+    var body = [];
+    //return result.getDate() + "." + (result.getMonth() + 1);
+
     if (Math.max.apply(null, validateHours) > 3)
       setErrorMessage("You can reserve max 3 hour in single day");
-    else setErrorMessage("");
-  }
+    else {
+      setErrorMessage("");
 
-  const handleChangeFloor = (event) => {
-    setCurrentMachine(event.target.value);
-  };
-  const handleChangeRoom = (event) => {
-    setCurrentRoom(event.target.value);
-  };
+      var i = 0;
+      reservationState.forEach((e) => {
+        var dateOffset = 24 * 60 * 60 * 1000 * ((i % 5) - 2);
+        mydate.setTime(selectedDate.getTime() + dateOffset);
+
+        if (e == rstate.HOVER) {
+          body.push({
+            date:
+              mydate.getFullYear() +
+              "-" +
+              (mydate.getMonth() < 9
+                ? "0" + (mydate.getMonth() + 1)
+                : mydate.getMonth() + 1) +
+              "-" +
+              (mydate.getDate() < 10
+                ? "0" + mydate.getDate()
+                : mydate.getDate()),
+            end:
+              7 + Math.floor(i / 5) + 1 < 10
+                ? "0" + (7 + Math.floor(i / 5) + 1) + ":00"
+                : 7 + Math.floor(i / 5) + 1 + ":00",
+            id: 0,
+            start:
+              7 + Math.floor(i / 5) < 10
+                ? "0" + (7 + Math.floor(i / 5)) + ":00"
+                : 7 + Math.floor(i / 5) + ":00",
+            status: "OK",
+          });
+        }
+        i++;
+      });
+
+      op = {
+        params: {
+          commonSpaceNumber: currentMachine,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+    }
+    const options = op;
+    const bd = {
+      washingMachineId: currentMachine,
+      washingReservations: body,
+    };
+
+    axios
+      .post("http://46.41.142.44:8080/washingReservation", bd, options)
+      .then((response) => {
+        scheduleUpdate();
+        //console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   function handleClick(i) {
     const reservationColor2 = reservationColor.slice();
@@ -279,6 +297,8 @@ function Schedule() {
     const validateHours2 = validateHours.slice();
     switch (reservationState[i]) {
       case rstate.RESERVED:
+        validateHours2[i % numOfDays]++;
+        setValidateHours(validateHours2);
         break;
       case rstate.FREE:
         reservationColor2[i] = "#25e81f";
@@ -299,15 +319,11 @@ function Schedule() {
     }
   }
 
-  function handleReservation() {
-    axios.post(serverUrl + "/authenticate", {});
-  }
-
   return (
     <div class="wrapper" className="schedule-box">
       <div class="row">
         <div class="col scroll">
-          <Stable
+          <ScheduleTable
             selectedDate={selectedDate}
             reservationColor={reservationColor}
             onClick={(n) => handleClick(n)}
@@ -333,6 +349,14 @@ function Schedule() {
 
           <div class="row">
             <div class="col mx-auto">
+              <FloorPicker
+                name="Floor"
+                onChange={handleChangeFloor}
+                items={floors}
+                current={currentFloor}
+              />
+            </div>
+            <div class="col mx-auto">
               <Roompicker
                 name="Room"
                 onChange={handleChangeRoom}
@@ -341,18 +365,18 @@ function Schedule() {
               />
             </div>
             <div class="col mx-auto">
-              <Floorpicker
+              <MachinePicker
                 name="Mashine"
-                onChange={handleChangeFloor}
+                onChange={handleChangeMachine}
                 room={currentRoom}
-                items={machine}
+                items={machines}
                 current={currentMachine}
                 rooms={rooms}
               />
             </div>
           </div>
           <div className="row mx-auto p-3">
-            <ErrorMessage text={errorMessage} />
+            <Message text={errorMessage} />
           </div>
           <div class="row" class="position-relative">
             <div class="col mx-auto">

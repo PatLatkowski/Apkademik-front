@@ -1,0 +1,20 @@
+@import "../main.css";
+
+.accordion {
+  width: 100%;
+}
+
+.text-truncate {
+  display: block;
+}
+.card-text{
+  width: 100%;
+}
+a{
+  color:black;
+}
+a:hover{
+  color:black;
+  text-decoration-line: none;
+
+}

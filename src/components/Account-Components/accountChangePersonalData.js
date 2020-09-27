@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
     width: "20ch",
   },
 }));
+import Message from "../Message";
 
 var schema = Joi.object().keys({
   email: Joi.string()
@@ -259,7 +260,25 @@ function AccountChangePersonalData(props) {
             </Select>
           </FormControl>
           <div className="form-group">
-            <ErrorMessage text={errorMessage} />
+            <input
+              type="text"
+              id="dromNum"
+              placeholder="Type new drom number"
+              className="account-input"
+              {...dormNumChange}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              id="roomNum"
+              placeholder="Type new room number"
+              className="account-input"
+              {...roomNumChange}
+            />
+          </div>
+          <div class="form-group">
+            <Message text={errorMessage} />
           </div>
           <button type="submit" className="account-button">
             Submit

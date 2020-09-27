@@ -4,7 +4,7 @@ import Joi from "@hapi/joi";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import "./CSS/login.css";
-import ErrorMessage from "./components/ErrorMessage";
+import ErrorMessage from "./components/Message";
 import Cookies from "universal-cookie";
 import { UserContext } from "./index";
 import { useInput } from "./components/useInput";
@@ -60,6 +60,7 @@ function Login(props) {
                   console.log(error);
                 });
               history.push("/");
+              this.props.history.push("/");
             })
             .catch((error) => {
               if (error.request.status === 401)

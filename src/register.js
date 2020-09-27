@@ -3,11 +3,12 @@ import logo from "./components/logo.png";
 import Joi from "@hapi/joi";
 import axios from "axios";
 import "./CSS/register.css";
-import ErrorMessage from "./components/ErrorMessage";
 import { Link, useHistory } from "react-router-dom";
 import { serverUrl } from "./consts";
 import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import ErrorMessage from "./components/Message";
+import { Link } from "react-router-dom";
 
 var schema = Joi.object().keys({
   email: Joi.string()
