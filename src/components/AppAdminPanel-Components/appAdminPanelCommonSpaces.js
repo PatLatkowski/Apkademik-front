@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AppAdminPanelCommonSpaces(props) {
   const classes = useStyles();
-  const initialState = null;
+  const initialState = "";
   const [commonSpaceName, setcommonSpaceName] = useState(initialState);
   const [commonSpaceNumber, setcommonSpaceNumber] = useState(initialState);
   const [commonSpaceSize, setcommonSpaceSize] = useState(initialState);
@@ -84,7 +84,6 @@ export default function AppAdminPanelCommonSpaces(props) {
         config
       )
       .then((response) => {
-        console.log(response);
         setcommonSpaceName(initialState);
         setcommonSpaceNumber(initialState);
         setcommonSpaceSize(initialState);
@@ -206,7 +205,6 @@ export default function AppAdminPanelCommonSpaces(props) {
         config
       )
       .then((response) => {
-        console.log(response);
         getCommonSpaces();
       })
       .catch((error) => {

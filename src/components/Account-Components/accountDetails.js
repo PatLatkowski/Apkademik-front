@@ -56,7 +56,6 @@ const AccountDetails = forwardRef((props, ref) => {
       axios
         .get(serverUrl + "/dorm", config)
         .then((response) => {
-          console.log(response);
           setDormNum(response.data.name);
         })
         .catch((error) => {
@@ -77,7 +76,6 @@ const AccountDetails = forwardRef((props, ref) => {
       axios
         .get(serverUrl + "/room", config)
         .then((response) => {
-          console.log(response);
           setRoomNum(response.data.number);
         })
         .catch((error) => {

@@ -123,7 +123,7 @@ function AppAdminPanelFloors(props) {
     axios
       .delete(serverUrl + "/floor/" + selectedFloorToDelete.id, config)
       .then((response) => {
-        console.log(response);
+        getFloors();
       })
       .catch((error) => {
         console.log(error);
@@ -137,9 +137,7 @@ function AppAdminPanelFloors(props) {
   };
 
   const handleDeleteDialogClick = (row) => {
-    console.log(row);
     setselectedFloorToDelete(row);
-    console.log(selectedFloorToDelete);
   };
 
   useEffect(() => {
@@ -161,7 +159,7 @@ function AppAdminPanelFloors(props) {
         config
       )
       .then((response) => {
-        console.log(response);
+        getFloors();
       })
       .catch((error) => {
         console.log(error);

@@ -83,7 +83,6 @@ function AppAdminPanelDorms(props) {
         config
       )
       .then((response) => {
-        console.log(response);
         setDormName("");
         setDormAddress("");
         setFloorCount(0);
@@ -103,7 +102,6 @@ function AppAdminPanelDorms(props) {
     axios
       .delete(serverUrl + "/dorm/" + selectedDormToDelete.id, config)
       .then((response) => {
-        console.log(response);
         getDorms();
       })
       .catch((error) => {
@@ -117,9 +115,7 @@ function AppAdminPanelDorms(props) {
   };
 
   const handleDeleteDialogClick = (row) => {
-    console.log(row);
     setselectedDormToDelete(row);
-    console.log(selectedDormToDelete);
   };
 
   useEffect(() => {
@@ -143,7 +139,6 @@ function AppAdminPanelDorms(props) {
         config
       )
       .then((response) => {
-        console.log(response);
         getDorms();
       })
       .catch((error) => {

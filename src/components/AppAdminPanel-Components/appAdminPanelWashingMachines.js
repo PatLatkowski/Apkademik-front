@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: "20ch",
+      width: "25ch",
     },
     "& .MuiButton-root": {
       margin: theme.spacing(1),
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    width: "20ch",
+    width: "25ch",
   },
 }));
 
@@ -171,7 +171,6 @@ export default function AppAdminPanelWashingMachines(props) {
         config
       )
       .then((response) => {
-        console.log(response);
         setwashingMachineNumber();
         setwashingMachineStatus(initialState);
         getWashingMachines();

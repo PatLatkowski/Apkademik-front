@@ -81,11 +81,9 @@ function AccountChangePersonalData(props) {
       body.user.dormId = dorm.id;
       body.user.roomId = room.id;
     }
-    console.log(body);
     axios
       .put("http://46.41.142.44:8080/user", body, config)
       .then((response) => {
-        console.log(response);
         props.refreshAccountDetails();
         setroom("");
         setfloor("");
@@ -260,7 +258,7 @@ function AccountChangePersonalData(props) {
               ))}
             </Select>
           </FormControl>
-          <div class="form-group">
+          <div className="form-group">
             <ErrorMessage text={errorMessage} />
           </div>
           <button type="submit" className="account-button">

@@ -70,7 +70,6 @@ function AppAdminPanelRooms(props) {
         config
       )
       .then((response) => {
-        console.log(response);
         setroomName();
         setroomSize();
         getRooms();
@@ -107,7 +106,6 @@ function AppAdminPanelRooms(props) {
       axios
         .get(serverUrl + "/dorm/" + dorm + "/floors", config)
         .then((response) => {
-          console.log(response.data);
           setfloorsArray(response.data);
         })
         .catch((error) => {
@@ -142,8 +140,8 @@ function AppAdminPanelRooms(props) {
     };
     axios
       .delete(serverUrl + "/room/" + selectedRoomToDelete.id, config)
-      .then((response) => {
-        console.log(response);
+      .then(() => {
+        //TO DO: success message
       })
       .catch((error) => {
         console.log(error);
@@ -180,7 +178,6 @@ function AppAdminPanelRooms(props) {
         config
       )
       .then((response) => {
-        console.log(response);
         getRooms();
       })
       .catch((error) => {

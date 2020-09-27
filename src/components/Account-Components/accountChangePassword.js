@@ -70,7 +70,7 @@ function AccountChangePassword() {
         config
       )
       .then((response) => {
-        console.log(response);
+        // TO DO Success message
       })
       .catch((error) => {
         console.log(error);
@@ -113,7 +113,7 @@ function AccountChangePassword() {
               {...confirmNewPasswordChange}
             />
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <ErrorMessage text={errorMessage} />
           </div>
           <button type="submit" className="account-button">

@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
       width: "20ch",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
     },
     "& .MuiButton-root": {
       margin: theme.spacing(1),
@@ -38,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    width: "20ch",
+    width: "90%",
   },
 }));
 
@@ -127,14 +130,12 @@ function Register() {
               dormId: dorm.id,
               roomId: room.id,
             })
-            .then((response) => {
-              console.log(response);
+            .then(() => {
               history.push("/login");
-              console.log("Ok");
             })
             .catch((error) => {
               if (error.request.status === 409)
-                this.setState({ errorMessage: "User already exists" });
+                seterrorMessage("User already exists");
               console.log(error);
             });
         }
@@ -211,56 +212,58 @@ function Register() {
                 className="register-input"
               />
             </div>
-            <div className="form-group">
-              <FormControl required className={classes.formControl}>
-                <InputLabel>Dorm</InputLabel>
-                <Select
-                  value={dorm}
-                  onChange={(event) => {
-                    setdorm(event.target.value);
-                  }}
-                >
-                  {dormsArray.map((record) => (
-                    <MenuItem key={record.id} value={record}>
-                      {record.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            <div className="form-group">
-              <FormControl required className={classes.formControl}>
-                <InputLabel>Floor</InputLabel>
-                <Select
-                  value={floor}
-                  onChange={(event) => {
-                    setfloor(event.target.value);
-                  }}
-                >
-                  {floorsArray.map((record) => (
-                    <MenuItem key={record.id} value={record}>
-                      {record.number}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            <div className="form-group">
-              <FormControl required className={classes.formControl}>
-                <InputLabel>Room</InputLabel>
-                <Select
-                  value={room}
-                  onChange={(event) => {
-                    setroom(event.target.value);
-                  }}
-                >
-                  {roomsArray.map((record) => (
-                    <MenuItem key={record.id} value={record}>
-                      {record.number}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            <div className="row">
+              <div className="col">
+                <FormControl required className={classes.formControl}>
+                  <InputLabel>Dorm</InputLabel>
+                  <Select
+                    value={dorm}
+                    onChange={(event) => {
+                      setdorm(event.target.value);
+                    }}
+                  >
+                    {dormsArray.map((record) => (
+                      <MenuItem key={record.id} value={record}>
+                        {record.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="col">
+                <FormControl required className={classes.formControl}>
+                  <InputLabel>Floor</InputLabel>
+                  <Select
+                    value={floor}
+                    onChange={(event) => {
+                      setfloor(event.target.value);
+                    }}
+                  >
+                    {floorsArray.map((record) => (
+                      <MenuItem key={record.id} value={record}>
+                        {record.number}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="col">
+                <FormControl required className={classes.formControl}>
+                  <InputLabel>Room</InputLabel>
+                  <Select
+                    value={room}
+                    onChange={(event) => {
+                      setroom(event.target.value);
+                    }}
+                  >
+                    {roomsArray.map((record) => (
+                      <MenuItem key={record.id} value={record}>
+                        {record.number}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
             </div>
             <div class="form-group">
               <ErrorMessage text={errorMessage} />

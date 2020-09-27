@@ -6,11 +6,10 @@ import "./CSS/main-layout.css";
 import TopBar from "./components/top-bar";
 import SideBar from "./components/side-bar";
 
-function MainPage(props) {
+function MainPage() {
   const [selectedOption, setSelectedOption] = useState(1);
 
   function getSelectedOption(event, value) {
-    console.log(value);
     setSelectedOption(value);
   }
 

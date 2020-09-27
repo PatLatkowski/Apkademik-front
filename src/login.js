@@ -64,9 +64,7 @@ function Login(props) {
             .catch((error) => {
               if (error.request.status === 401)
                 setErrorMessage("Incorrect email or password");
-              console.log(error);
             });
-          console.log("Ok");
         }
       }
     );

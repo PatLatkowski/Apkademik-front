@@ -19,6 +19,7 @@ function AccountDeleteAccount() {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
+    //Check if password is correct
     axios
       .put(
         "http://46.41.142.44:8080/user",
@@ -28,8 +29,7 @@ function AccountDeleteAccount() {
         },
         config
       )
-      .then((response) => {
-        console.log(response);
+      .then(() => {
         axios
           .delete("http://46.41.142.44:8080/user", config)
           .then((response) => {
