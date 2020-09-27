@@ -19,12 +19,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import "../../CSS/appAdminPanel.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: "20ch",
+      width: "25ch",
     },
     "& .MuiButton-root": {
       margin: theme.spacing(1),
@@ -32,52 +33,42 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    width: "20ch",
+    width: "25ch",
   },
 }));
 
-function AppAdminPanelRooms(props) {
+export default function AppAdminPanelWashingMachines(props) {
   const classes = useStyles();
-  const [roomName, setroomName] = useState(0);
-  const [roomSize, setroomSize] = useState(0);
-  const [editRoomName, seteditRoomName] = useState(0);
-  const [editRoomSize, seteditRoomSize] = useState(0);
-  const [dorm, setdorm] = useState("");
+  const initialState = "";
+  const [washingMachineNumber, setwashingMachineNumber] = useState(
+    initialState
+  );
+  const [washingMachineStatus, setwashingMachineStatus] = useState(
+    initialState
+  );
+  const [editWashingMachineNumber, seteditWashingMachineNumber] = useState(
+    initialState
+  );
+  const [editWashingMachineStatus, seteditWashingMachineStatus] = useState(
+    initialState
+  );
+  const [dorm, setdorm] = useState(initialState);
   const [dormsArray, setdormsArray] = useState([]);
-  const [floor, setfloor] = useState("");
+  const [floor, setfloor] = useState(initialState);
   const [floorsArray, setfloorsArray] = useState([]);
-  const [roomsArray, setroomsArray] = useState([]);
+  const [commonSpace, setcommonSpace] = useState(initialState);
+  const [commonSpacesArray, setcommonSpacesArray] = useState([]);
+  const [washingMachinesArray, setwashingMachinesArray] = useState([]);
   const [deleteDialogOpen, setdeleteDialogOpen] = React.useState(false);
-  const [selectedRoomToDelete, setselectedRoomToDelete] = useState("");
+  const [
+    selectedWashingMachineToDelete,
+    setselectedWashingMachineToDelete,
+  ] = useState(initialState);
   const [editDialogOpen, seteditDialogOpen] = React.useState(false);
-  const [selectedRoomToEdit, setselectedRoomToEdit] = useState("");
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    const cookies = new Cookies();
-    const token = cookies.get("token");
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    axios
-      .post(
-        serverUrl + "/room",
-        {
-          floorId: floor.id,
-          number: roomName,
-          size: roomSize,
-        },
-        config
-      )
-      .then((response) => {
-        setroomName();
-        setroomSize();
-        getRooms();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  const [
+    selectedWashingMachineToEdit,
+    setselectedWashingMachineToEdit,
+  ] = useState(initialState);
 
   function getDorms() {
     const cookies = new Cookies();
@@ -97,7 +88,6 @@ function AppAdminPanelRooms(props) {
 
   function getFloors() {
     if (dorm) {
-      console.log("dorm: " + dorm);
       const cookies = new Cookies();
       const token = cookies.get("token");
       const config = {
@@ -114,7 +104,7 @@ function AppAdminPanelRooms(props) {
     }
   }
 
-  function getRooms() {
+  function getCommonSpaces() {
     if (floor) {
       const cookies = new Cookies();
       const token = cookies.get("token");
@@ -122,14 +112,72 @@ function AppAdminPanelRooms(props) {
         headers: { Authorization: `Bearer ${token}` },
       };
       axios
-        .get(serverUrl + "/floor/" + floor.id + "/rooms", config)
+        .get(serverUrl + "/floor/" + floor.id + "/commonSpaces", config)
         .then((response) => {
-          setroomsArray(response.data);
+          setcommonSpacesArray(response.data);
         })
         .catch((error) => {
           console.log(error);
         });
     }
+  }
+
+  function getWashingMachines() {
+    if (commonSpace) {
+      const cookies = new Cookies();
+      const token = cookies.get("token");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      axios
+        .get(
+          serverUrl + "/commonSpace/" + commonSpace.id + "/washingMachines",
+          config
+        )
+        .then((response) => {
+          setwashingMachinesArray(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
+  useEffect(() => {
+    getDorms();
+  }, []);
+
+  useEffect(getFloors, [dorm]);
+
+  useEffect(getCommonSpaces, [floor]);
+
+  useEffect(getWashingMachines, [commonSpace]);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    axios
+      .post(
+        serverUrl + "/washingMachine",
+        {
+          commonSpaceId: commonSpace.id,
+          number: washingMachineNumber,
+          status: washingMachineStatus,
+        },
+        config
+      )
+      .then((response) => {
+        setwashingMachineNumber();
+        setwashingMachineStatus(initialState);
+        getWashingMachines();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   const deleteRecord = () => {
@@ -139,15 +187,17 @@ function AppAdminPanelRooms(props) {
       headers: { Authorization: `Bearer ${token}` },
     };
     axios
-      .delete(serverUrl + "/room/" + selectedRoomToDelete.id, config)
+      .delete(
+        serverUrl + "/washingMachine/" + selectedWashingMachineToDelete.id,
+        config
+      )
       .then(() => {
-        //TO DO: success message
+        getWashingMachines();
       })
       .catch((error) => {
         console.log(error);
       });
     handleDeleteDialogClose();
-    getRooms();
   };
 
   const handleDeleteDialogClose = () => {
@@ -155,12 +205,12 @@ function AppAdminPanelRooms(props) {
   };
 
   const handleDeleteDialogClick = (row) => {
-    setselectedRoomToDelete(row);
+    setselectedWashingMachineToDelete(row);
   };
 
   useEffect(() => {
-    if (selectedRoomToDelete) setdeleteDialogOpen(true);
-  }, [selectedRoomToDelete]);
+    if (selectedWashingMachineToDelete) setdeleteDialogOpen(true);
+  }, [selectedWashingMachineToDelete]);
 
   const editRecord = () => {
     const cookies = new Cookies();
@@ -170,15 +220,15 @@ function AppAdminPanelRooms(props) {
     };
     axios
       .put(
-        serverUrl + "/room/" + selectedRoomToEdit.id,
+        serverUrl + "/washingMachine/" + selectedWashingMachineToEdit.id,
         {
-          number: editRoomName,
-          size: editRoomSize,
+          number: editWashingMachineNumber,
+          status: editWashingMachineStatus,
         },
         config
       )
       .then((response) => {
-        getRooms();
+        getWashingMachines();
       })
       .catch((error) => {
         console.log(error);
@@ -191,22 +241,14 @@ function AppAdminPanelRooms(props) {
   };
 
   const handleEditDialogClick = (row) => {
-    seteditRoomName(row.number);
-    seteditRoomSize(row.size);
-    setselectedRoomToEdit(row);
+    seteditWashingMachineNumber(row.number);
+    seteditWashingMachineStatus(row.status);
+    setselectedWashingMachineToEdit(row);
   };
 
   useEffect(() => {
-    if (selectedRoomToEdit) seteditDialogOpen(true);
-  }, [selectedRoomToEdit]);
-
-  useEffect(() => {
-    getDorms();
-  }, []);
-
-  useEffect(getFloors, [dorm]);
-
-  useEffect(getRooms, [floor]);
+    if (selectedWashingMachineToEdit) seteditDialogOpen(true);
+  }, [selectedWashingMachineToEdit]);
 
   return (
     <div className="appAdminPanelFormContainer ">
@@ -214,21 +256,26 @@ function AppAdminPanelRooms(props) {
         <div className="row justify-content-center">
           <TextField
             required
-            id="room"
-            value={roomName}
-            label="Room name"
-            onChange={(event) => setroomName(event.target.value)}
-          />
-          <TextField
-            required
-            id="size"
-            label="Room size"
+            id="number"
+            label="Number"
             type="number"
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event) => setroomSize(event.target.value)}
+            onChange={(event) => setwashingMachineNumber(event.target.value)}
           />
+          <FormControl required className={classes.formControl}>
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={washingMachineStatus}
+              onChange={(event) => {
+                setwashingMachineStatus(event.target.value);
+              }}
+            >
+              <MenuItem value={"FREE"}>FREE</MenuItem>
+              <MenuItem value={"NOTWORKING"}>NOTWORKING</MenuItem>
+            </Select>
+          </FormControl>
           <FormControl required className={classes.formControl}>
             <InputLabel>Dorm</InputLabel>
             <Select
@@ -259,9 +306,24 @@ function AppAdminPanelRooms(props) {
               ))}
             </Select>
           </FormControl>
+          <FormControl required className={classes.formControl}>
+            <InputLabel>Common Space</InputLabel>
+            <Select
+              value={commonSpace}
+              onChange={(event) => {
+                setcommonSpace(event.target.value);
+              }}
+            >
+              {commonSpacesArray.map((record) => (
+                <MenuItem key={record.id} value={record}>
+                  {record.number}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           <Button variant="contained" type="submit">
             {" "}
-            Add new room
+            Add new Washing Machine
           </Button>
         </div>
       </form>
@@ -278,8 +340,11 @@ function AppAdminPanelRooms(props) {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Item with this properties will be removed: <br />
-            Floor ID: {selectedRoomToDelete.id} <br />
-            Floor number: {selectedRoomToDelete.number} <br />
+            Washing Machine ID: {selectedWashingMachineToDelete.id} <br />
+            Washing Machine Number: {selectedWashingMachineToDelete.number}{" "}
+            <br />
+            Washing Machine Status: {selectedWashingMachineToDelete.status}{" "}
+            <br />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -300,27 +365,41 @@ function AppAdminPanelRooms(props) {
       >
         <DialogTitle id="form-dialog-title">Edit record</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Record with ID: {selectedRoomToEdit.id} will be edited with these
-            values:
-          </DialogContentText>
-          <TextField
-            required
-            id="room"
-            value={editRoomName}
-            label="Room name"
-            onChange={(event) => seteditRoomName(event.target.value)}
-          />
-          <TextField
-            required
-            id="size"
-            label="Room size"
-            type="number"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onChange={(event) => seteditRoomSize(event.target.value)}
-          />
+          <div className="row">
+            <DialogContentText>
+              Record with ID: {selectedWashingMachineToEdit.id} will be edited
+              with these values:
+            </DialogContentText>
+          </div>
+          <div className="row">
+            <TextField
+              required
+              id="number"
+              label="Number"
+              type="number"
+              value={editWashingMachineNumber}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={(event) =>
+                seteditWashingMachineNumber(event.target.value)
+              }
+            />
+          </div>
+          <div className="row">
+            <FormControl required className={classes.formControl}>
+              <InputLabel>Status</InputLabel>
+              <Select
+                value={editWashingMachineStatus}
+                onChange={(event) => {
+                  seteditWashingMachineStatus(event.target.value);
+                }}
+              >
+                <MenuItem value={"FREE"}>FREE</MenuItem>
+                <MenuItem value={"NOTWORKING"}>NOTWORKING</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditDialogClose} color="primary">
@@ -336,20 +415,20 @@ function AppAdminPanelRooms(props) {
         <TableHead>
           <TableRow>
             <TableCell>Id</TableCell>
-            <TableCell>Room Number</TableCell>
-            <TableCell>Room Size</TableCell>
-            <TableCell>Floor number</TableCell>
+            <TableCell>Number</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Common Space</TableCell>
             <TableCell>Edit</TableCell>
             <TableCell>Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {roomsArray.map((row) => (
+          {washingMachinesArray.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.id}</TableCell>
               <TableCell>{row.number}</TableCell>
-              <TableCell>{row.size}</TableCell>
-              <TableCell>{floor.number}</TableCell>
+              <TableCell>{row.status}</TableCell>
+              <TableCell>{commonSpace.name}</TableCell>
               <TableCell>
                 <Button>
                   <EditIcon
@@ -371,4 +450,3 @@ function AppAdminPanelRooms(props) {
     </div>
   );
 }
-export default AppAdminPanelRooms;

@@ -36,21 +36,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AppAdminPanelRooms(props) {
+function AppAdminPanelFloors(props) {
   const classes = useStyles();
-  const [roomName, setroomName] = useState(0);
-  const [roomSize, setroomSize] = useState(0);
-  const [editRoomName, seteditRoomName] = useState(0);
-  const [editRoomSize, seteditRoomSize] = useState(0);
+  const [floorNumber, setfloorNumber] = useState(0);
   const [dorm, setdorm] = useState("");
-  const [dormsArray, setdormsArray] = useState([]);
-  const [floor, setfloor] = useState("");
-  const [floorsArray, setfloorsArray] = useState([]);
-  const [roomsArray, setroomsArray] = useState([]);
+  const [editFloorNumber, seteditFloorNumber] = useState(0);
   const [deleteDialogOpen, setdeleteDialogOpen] = React.useState(false);
-  const [selectedRoomToDelete, setselectedRoomToDelete] = useState("");
   const [editDialogOpen, seteditDialogOpen] = React.useState(false);
-  const [selectedRoomToEdit, setselectedRoomToEdit] = useState("");
+  const [selectedFloorToDelete, setselectedFloorToDelete] = useState("");
+  const [selectedFloorToEdit, setselectedFloorToEdit] = useState("");
+  const [dormsArray, setdormsArray] = useState([]);
+
+  useEffect(() => {
+    getDorms();
+  }, []);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -61,18 +60,16 @@ function AppAdminPanelRooms(props) {
     };
     axios
       .post(
-        serverUrl + "/room",
+        serverUrl + "/floor",
         {
-          floorId: floor.id,
-          number: roomName,
-          size: roomSize,
+          dormId: dorm.id,
+          number: floorNumber,
         },
         config
       )
       .then((response) => {
-        setroomName();
-        setroomSize();
-        getRooms();
+        setfloorNumber();
+        getFloors();
       })
       .catch((error) => {
         console.log(error);
@@ -97,14 +94,13 @@ function AppAdminPanelRooms(props) {
 
   function getFloors() {
     if (dorm) {
-      console.log("dorm: " + dorm);
       const cookies = new Cookies();
       const token = cookies.get("token");
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
       axios
-        .get(serverUrl + "/dorm/" + dorm + "/floors", config)
+        .get(serverUrl + "/dorm/" + dorm.id + "/floors", config)
         .then((response) => {
           setfloorsArray(response.data);
         })
@@ -114,23 +110,9 @@ function AppAdminPanelRooms(props) {
     }
   }
 
-  function getRooms() {
-    if (floor) {
-      const cookies = new Cookies();
-      const token = cookies.get("token");
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-      axios
-        .get(serverUrl + "/floor/" + floor.id + "/rooms", config)
-        .then((response) => {
-          setroomsArray(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }
+  const [floorsArray, setfloorsArray] = useState([]);
+
+  useEffect(getFloors, [dorm]);
 
   const deleteRecord = () => {
     const cookies = new Cookies();
@@ -139,15 +121,15 @@ function AppAdminPanelRooms(props) {
       headers: { Authorization: `Bearer ${token}` },
     };
     axios
-      .delete(serverUrl + "/room/" + selectedRoomToDelete.id, config)
-      .then(() => {
-        //TO DO: success message
+      .delete(serverUrl + "/floor/" + selectedFloorToDelete.id, config)
+      .then((response) => {
+        getFloors();
       })
       .catch((error) => {
         console.log(error);
       });
     handleDeleteDialogClose();
-    getRooms();
+    getFloors();
   };
 
   const handleDeleteDialogClose = () => {
@@ -155,12 +137,12 @@ function AppAdminPanelRooms(props) {
   };
 
   const handleDeleteDialogClick = (row) => {
-    setselectedRoomToDelete(row);
+    setselectedFloorToDelete(row);
   };
 
   useEffect(() => {
-    if (selectedRoomToDelete) setdeleteDialogOpen(true);
-  }, [selectedRoomToDelete]);
+    if (selectedFloorToDelete) setdeleteDialogOpen(true);
+  }, [selectedFloorToDelete]);
 
   const editRecord = () => {
     const cookies = new Cookies();
@@ -170,20 +152,20 @@ function AppAdminPanelRooms(props) {
     };
     axios
       .put(
-        serverUrl + "/room/" + selectedRoomToEdit.id,
+        serverUrl + "/floor/" + selectedFloorToEdit.id,
         {
-          number: editRoomName,
-          size: editRoomSize,
+          number: editFloorNumber,
         },
         config
       )
       .then((response) => {
-        getRooms();
+        getFloors();
       })
       .catch((error) => {
         console.log(error);
       });
     handleEditDialogClose();
+    getFloors();
   };
 
   const handleEditDialogClose = () => {
@@ -191,45 +173,29 @@ function AppAdminPanelRooms(props) {
   };
 
   const handleEditDialogClick = (row) => {
-    seteditRoomName(row.number);
-    seteditRoomSize(row.size);
-    setselectedRoomToEdit(row);
+    seteditFloorNumber(row.number);
+    setselectedFloorToEdit(row);
   };
 
   useEffect(() => {
-    if (selectedRoomToEdit) seteditDialogOpen(true);
-  }, [selectedRoomToEdit]);
-
-  useEffect(() => {
-    getDorms();
-  }, []);
-
-  useEffect(getFloors, [dorm]);
-
-  useEffect(getRooms, [floor]);
+    if (selectedFloorToEdit) seteditDialogOpen(true);
+  }, [selectedFloorToEdit]);
 
   return (
-    <div className="appAdminPanelFormContainer ">
+    <div className="appAdminPanelFormContainer">
       <form className={classes.root} onSubmit={handleSubmit}>
         <div className="row justify-content-center">
           <TextField
             required
-            id="room"
-            value={roomName}
-            label="Room name"
-            onChange={(event) => setroomName(event.target.value)}
-          />
-          <TextField
-            required
-            id="size"
-            label="Room size"
+            id="floor"
+            label="Floor number"
             type="number"
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event) => setroomSize(event.target.value)}
+            onChange={(event) => setfloorNumber(event.target.value)}
           />
-          <FormControl required className={classes.formControl}>
+          <FormControl className={classes.formControl}>
             <InputLabel>Dorm</InputLabel>
             <Select
               value={dorm}
@@ -238,30 +204,15 @@ function AppAdminPanelRooms(props) {
               }}
             >
               {dormsArray.map((record) => (
-                <MenuItem key={record.id} value={record.id}>
-                  {record.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl required className={classes.formControl}>
-            <InputLabel>Floor</InputLabel>
-            <Select
-              value={floor}
-              onChange={(event) => {
-                setfloor(event.target.value);
-              }}
-            >
-              {floorsArray.map((record) => (
                 <MenuItem key={record.id} value={record}>
-                  {record.number}
+                  {record.name}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
           <Button variant="contained" type="submit">
             {" "}
-            Add new room
+            Add new floor
           </Button>
         </div>
       </form>
@@ -278,8 +229,8 @@ function AppAdminPanelRooms(props) {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Item with this properties will be removed: <br />
-            Floor ID: {selectedRoomToDelete.id} <br />
-            Floor number: {selectedRoomToDelete.number} <br />
+            Floor ID: {selectedFloorToDelete.id} <br />
+            Floor number: {selectedFloorToDelete.number} <br />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -301,25 +252,15 @@ function AppAdminPanelRooms(props) {
         <DialogTitle id="form-dialog-title">Edit record</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Record with ID: {selectedRoomToEdit.id} will be edited with these
+            Record with ID: {selectedFloorToEdit.id} will be edited with these
             values:
           </DialogContentText>
           <TextField
             required
-            id="room"
-            value={editRoomName}
-            label="Room name"
-            onChange={(event) => seteditRoomName(event.target.value)}
-          />
-          <TextField
-            required
-            id="size"
-            label="Room size"
-            type="number"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onChange={(event) => seteditRoomSize(event.target.value)}
+            id="editFloorNumber"
+            value={editFloorNumber}
+            label="Floor Number"
+            onChange={(event) => seteditFloorNumber(event.target.value)}
           />
         </DialogContent>
         <DialogActions>
@@ -336,20 +277,18 @@ function AppAdminPanelRooms(props) {
         <TableHead>
           <TableRow>
             <TableCell>Id</TableCell>
-            <TableCell>Room Number</TableCell>
-            <TableCell>Room Size</TableCell>
-            <TableCell>Floor number</TableCell>
+            <TableCell>Floor Number</TableCell>
+            <TableCell>Dorm Name</TableCell>
             <TableCell>Edit</TableCell>
             <TableCell>Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {roomsArray.map((row) => (
+          {floorsArray.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.id}</TableCell>
               <TableCell>{row.number}</TableCell>
-              <TableCell>{row.size}</TableCell>
-              <TableCell>{floor.number}</TableCell>
+              <TableCell>{dorm.name}</TableCell>
               <TableCell>
                 <Button>
                   <EditIcon
@@ -371,4 +310,4 @@ function AppAdminPanelRooms(props) {
     </div>
   );
 }
-export default AppAdminPanelRooms;
+export default AppAdminPanelFloors;

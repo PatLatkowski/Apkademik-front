@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
-import React from "react";
+import React, { createContext, useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -13,10 +13,17 @@ import MainPage from "./main-layout";
 import Account from "./account";
 import { checkIfTokenExists } from "./functions";
 import AppAdminPanel from "./appAdminPanel";
+import { contextInitialState } from "./consts";
 
-class App extends React.Component {
-  render() {
-    return (
+export const UserContext = createContext({
+  username: "context",
+});
+
+function App() {
+  const [userName, setUserName] = useState(contextInitialState);
+
+  return (
+    <UserContext.Provider value={{ userName, setUserName }}>
       <Router>
         <Switch>
           <Route
@@ -72,7 +79,7 @@ class App extends React.Component {
           />
         </Switch>
       </Router>
-    );
-  }
+    </UserContext.Provider>
+  );
 }
 ReactDOM.render(<App />, document.getElementById("root"));

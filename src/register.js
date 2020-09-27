@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import logo from "./components/logo.png";
 import Joi from "@hapi/joi";
 import axios from "axios";
 import "./CSS/register.css";
+import { Link, useHistory } from "react-router-dom";
+import { serverUrl } from "./consts";
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import ErrorMessage from "./components/Message";
 import { Link } from "react-router-dom";
 
@@ -10,10 +14,10 @@ var schema = Joi.object().keys({
   email: Joi.string()
     .required()
     .email({ tlds: { allow: ["com", "net", "pl"] } }), //FIXME: allow: false always returns error for some reason
-  firstName: Joi.string()
+  name: Joi.string()
     .regex(new RegExp("[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*"))
     .required(),
-  lastName: Joi.string()
+  surname: Joi.string()
     .regex(new RegExp("[A-Za-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*"))
     .required(),
   password: Joi.string().min(8).required(),
@@ -23,56 +27,116 @@ var schema = Joi.object().keys({
     .options({ language: { any: { allowOnly: "must match password" } } }),
 });
 
-const serverUrl = "http://46.41.142.44:8080";
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& .MuiTextField-root": {
+      margin: theme.spacing(1),
+      width: "20ch",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+    },
+    "& .MuiButton-root": {
+      margin: theme.spacing(1),
+    },
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    width: "90%",
+  },
+}));
 
-class Register extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { email: "" };
-    this.state = { firstName: "" };
-    this.state = { lastName: "" };
-    this.state = { dormNumber: "" };
-    this.state = { roomNumber: "" };
-    this.state = { password: "" };
-    this.state = { confirmPassword: "" };
-    this.state = { errorMessage: "" };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleRegister = this.handleRegister.bind(this);
+function Register() {
+  const classes = useStyles();
+  let history = useHistory();
+  const initialState = "";
+  const [email, setemail] = useState(initialState);
+  const [name, setname] = useState(initialState);
+  const [surname, setsurname] = useState(initialState);
+  const [password, setpassword] = useState(initialState);
+  const [confirmPassword, setconfirmPassword] = useState(initialState);
+  const [errorMessage, seterrorMessage] = useState(initialState);
+  const [dorm, setdorm] = useState("");
+  const [dormsArray, setdormsArray] = useState([]);
+  const [floor, setfloor] = useState("");
+  const [floorsArray, setfloorsArray] = useState([]);
+  const [room, setroom] = useState("");
+  const [roomsArray, setroomsArray] = useState([]);
+
+  useEffect(() => {
+    getDorms();
+  }, []);
+
+  useEffect(getFloors, [dorm]);
+
+  useEffect(getRooms, [floor]);
+
+  function getDorms() {
+    axios
+      .get(serverUrl + "/dorms")
+      .then((response) => {
+        setdormsArray(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+  function getFloors() {
+    if (dorm) {
+      axios
+        .get(serverUrl + "/dorm/" + dorm.id + "/floors")
+        .then((response) => {
+          setfloorsArray(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }
 
-  handleRegister(event) {
+  function getRooms() {
+    if (floor) {
+      axios
+        .get(serverUrl + "/floor/" + floor.id + "/rooms")
+        .then((response) => {
+          setroomsArray(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
+  function handleRegister(event) {
     schema.validate(
       {
-        email: this.state.email,
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        password: this.state.password,
-        confirmPassword: this.state.confirmPassword,
+        email: email,
+        name: name,
+        surname: surname,
+        password: password,
+        confirmPassword: confirmPassword,
       },
       (err, res) => {
         if (err) {
-          this.setState({ errorMessage: err.details[0].message });
+          seterrorMessage(err.details[0].message);
           console.log(err);
         } else {
           axios
             .post(serverUrl + "/register", {
-              password: this.state.password,
-              name: this.state.firstName,
-              surname: this.state.lastName,
-              email: this.state.email,
+              password: password,
+              name: name,
+              surname: surname,
+              email: email,
+              dormId: dorm.id,
+              roomId: room.id,
             })
-            .then((response) => {
-              console.log(response);
-              this.props.history.push("/login");
-              console.log("Ok");
+            .then(() => {
+              history.push("/login");
             })
             .catch((error) => {
               if (error.request.status === 409)
-                this.setState({ errorMessage: "User already exists" });
+                seterrorMessage("User already exists");
               console.log(error);
             });
         }
@@ -82,112 +146,143 @@ class Register extends React.Component {
     event.preventDefault();
   }
 
-  render() {
-    return (
-      <div class="conteiner register-container">
-        <div class="row m-2">
-          <div class="col-6">
-            <Link to="/">
-              <img src={logo} alt="logo" class="rounded float-right" />
-            </Link>
-          </div>
-          <div class="col-6">
-            <h1 class="font-weight-bold register-header">Register</h1>
-          </div>
+  return (
+    <div class="conteiner register-container">
+      <div class="row m-2">
+        <div class="col-6">
+          <Link to="/">
+            <img src={logo} alt="logo" class="rounded float-right" />
+          </Link>
         </div>
-        <div class="row">
-          <div class="col-6 mx-auto">
-            <form id="register" onSubmit={this.handleRegister}>
-              <div class="form-group">
-                <input
-                  type="text"
-                  id="email"
-                  name="email"
-                  placeholder="Email"
-                  onChange={this.handleChange}
-                  className="register-input"
-                />
-              </div>
-              <div class="form-row">
-                <div class="form-group col">
-                  <input
-                    type="text"
-                    id="firstName"
-                    name="firstName"
-                    placeholder="First name"
-                    onChange={this.handleChange}
-                    className="register-input"
-                  />
-                </div>
-                <div class="form-group col">
-                  <input
-                    type="text"
-                    id="lastName"
-                    name="lastName"
-                    placeholder="Last name"
-                    onChange={this.handleChange}
-                    className="register-input"
-                  />
-                </div>
-              </div>
-              <div class="form-group">
-                <input
-                  type="text"
-                  id="dormNumber"
-                  name="dormNumber"
-                  placeholder="Dorm number"
-                  onChange={this.handleChange}
-                  className="register-input"
-                />
-              </div>
-              <div class="form-group">
-                <input
-                  type="text"
-                  id="roomNumber"
-                  name="roomNumber"
-                  placeholder="Room number"
-                  onChange={this.handleChange}
-                  className="register-input"
-                />
-              </div>
-              <div class="form-group">
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Password"
-                  onChange={this.handleChange}
-                  className="register-input"
-                />
-              </div>
-              <div class="form-group">
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  placeholder="Confirm password"
-                  onChange={this.handleChange}
-                  className="register-input"
-                />
-              </div>
-              <div class="form-group">
-                <ErrorMessage text={this.state.errorMessage} />
-              </div>
-              <div class="form-group">
-                <input
-                  form="register"
-                  type="submit"
-                  name="Confirm"
-                  value="Confirm"
-                  className="register-input"
-                />
-              </div>
-            </form>
-          </div>
+        <div class="col-6">
+          <h1 class="font-weight-bold register-header">Register</h1>
         </div>
       </div>
-    );
-  }
+      <div class="row">
+        <div class="col-6 mx-auto">
+          <form id="register" onSubmit={handleRegister}>
+            <div class="form-group">
+              <input
+                type="text"
+                id="email"
+                name="email"
+                placeholder="Email"
+                onChange={(event) => setemail(event.target.value)}
+                className="register-input"
+              />
+            </div>
+            <div class="form-row">
+              <div class="form-group col">
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="First name"
+                  onChange={(event) => setname(event.target.value)}
+                  className="register-input"
+                />
+              </div>
+              <div class="form-group col">
+                <input
+                  type="text"
+                  id="surname"
+                  name="surname"
+                  placeholder="Last name"
+                  onChange={(event) => setsurname(event.target.value)}
+                  className="register-input"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                onChange={(event) => setpassword(event.target.value)}
+                className="register-input"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                placeholder="Confirm password"
+                onChange={(event) => setconfirmPassword(event.target.value)}
+                className="register-input"
+              />
+            </div>
+            <div className="row">
+              <div className="col">
+                <FormControl required className={classes.formControl}>
+                  <InputLabel>Dorm</InputLabel>
+                  <Select
+                    value={dorm}
+                    onChange={(event) => {
+                      setdorm(event.target.value);
+                    }}
+                  >
+                    {dormsArray.map((record) => (
+                      <MenuItem key={record.id} value={record}>
+                        {record.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="col">
+                <FormControl required className={classes.formControl}>
+                  <InputLabel>Floor</InputLabel>
+                  <Select
+                    value={floor}
+                    onChange={(event) => {
+                      setfloor(event.target.value);
+                    }}
+                  >
+                    {floorsArray.map((record) => (
+                      <MenuItem key={record.id} value={record}>
+                        {record.number}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="col">
+                <FormControl required className={classes.formControl}>
+                  <InputLabel>Room</InputLabel>
+                  <Select
+                    value={room}
+                    onChange={(event) => {
+                      setroom(event.target.value);
+                    }}
+                  >
+                    {roomsArray.map((record) => (
+                      <MenuItem key={record.id} value={record}>
+                        {record.number}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
+            <div class="form-group">
+              <ErrorMessage text={errorMessage} />
+            </div>
+            <div class="form-group">
+              <input
+                form="register"
+                type="submit"
+                name="Confirm"
+                value="Confirm"
+                className="register-input"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Register;
