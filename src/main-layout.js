@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Schedule from "./components/Schedule";
-import TestComponent from "./components/testComponent";
 import "./CSS/main-layout.css";
 import TopBar from "./components/top-bar";
-import Board from "./components/board";
-import { Switch, Route, matchPath } from "react-router-dom";
-import ShowPost from "./components/showPost";
 import SideBar from "./components/side-bar";
 import BoardContainer from "./boardContainer";
 
