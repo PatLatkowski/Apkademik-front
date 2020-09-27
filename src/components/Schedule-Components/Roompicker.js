@@ -25,7 +25,9 @@ function Roompicker(props) {
       <InputLabel>{props.name}</InputLabel>
       <Select value={props.current} onChange={props.onChange}>
         {props.items.map((val) => (
-          <MenuItem value={val.id}>{val.number}</MenuItem>
+          <MenuItem key={val.id} value={val.id}>
+            {val.number}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>

@@ -3,14 +3,13 @@ import React, { useEffect, useState } from "react";
 import Square from "./Square";
 
 function ScheduleTable(props) {
-  const [res, setRes] = useState(null);
-
   const numOfHours = 15;
   const numOfDays = 5;
 
   function renderSquare(n) {
     return (
       <Square
+        key={n.toString()}
         value={props.reservationColor[n]}
         onClick={() => props.onClick(n)}
         number={n}
@@ -32,10 +31,14 @@ function ScheduleTable(props) {
 
   function generateTable() {
     var result = [];
-    result.push(<div class="row sticky-top">{generateDays()}</div>);
+    result.push(
+      <div key={"hourtop"} className="row sticky-top">
+        {generateDays()}
+      </div>
+    );
     for (var i = 0; i < numOfHours; i++) {
       result.push(
-        <div class="row">
+        <div key={i} className="row">
           {generateHours(i)}
           {createHours(i)}
         </div>
@@ -48,7 +51,7 @@ function ScheduleTable(props) {
     var result = [];
     var startHour = 7;
     result.push(
-      <div calss="col" className="hour">
+      <div key={"hour" + startHour + i} className="col hour">
         {startHour + i}:00
       </div>
     );
@@ -65,7 +68,7 @@ function ScheduleTable(props) {
   function generateDays() {
     var result = [];
     result.push(
-      <div calss="col" className="hour">
+      <div key="GMT" className="col hour">
         GMT{" "}
         {props.selectedDate.getTimezoneOffset() / 60 > 0
           ? "-" + props.selectedDate.getTimezoneOffset() / 60
@@ -74,7 +77,7 @@ function ScheduleTable(props) {
     );
     for (var i = 0; i < 5; i++) {
       result.push(
-        <div calss="col" className="date">
+        <div key={"date" + i} className="col, date">
           {placeDate(i - 2)}
         </div>
       );

@@ -134,14 +134,14 @@ function DormAdminPanelUser(props) {
                   </TableCell>
                 </TableRow>
               ) : (
-                ""
+                <div></div>
               )
             )}
           </TableBody>
         </Table>
       </div>
       <div className="row">
-        <div class="col-3 mx-auto">
+        <div className="col-3 mx-auto">
           <button
             type="submit"
             name="Register"
