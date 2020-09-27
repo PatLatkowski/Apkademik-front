@@ -55,8 +55,8 @@ const TopBar = () => {
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item href="/account">Account</Dropdown.Item>
-                <Dropdown.Item href="/">
-                  Dorm Adminitrator's Panel (TODO)
+                <Dropdown.Item href="/dormAdminPanel">
+                  Dorm Adminitrator's Panel
                 </Dropdown.Item>
                 <Dropdown.Item href="/appAdminPanel">
                   App Adminitrator's Panel

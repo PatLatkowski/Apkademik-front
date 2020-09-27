@@ -13,7 +13,9 @@ import MainPage from "./main-layout";
 import Account from "./account";
 import { checkIfTokenExists } from "./functions";
 import AppAdminPanel from "./appAdminPanel";
+import DormAdminPanel from "./dormAdminPanel";
 import { contextInitialState } from "./consts";
+
 
 export const UserContext = createContext({
   username: "context",
@@ -72,6 +74,16 @@ function App() {
             render={(props) => {
               if (checkIfTokenExists()) {
                 return <AppAdminPanel {...props} />;
+              } else {
+                return <Redirect to={"/login"} />;
+              }
+            }}
+          />
+          <Route
+            path="/dormAdminPanel"
+            render={(props) => {
+              if (checkIfTokenExists()) {
+                return <DormAdminPanel {...props} />;
               } else {
                 return <Redirect to={"/login"} />;
               }

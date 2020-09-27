@@ -44,16 +44,17 @@ const useStyles = makeStyles((theme) => ({
 function Schedule() {
   const cookies = new Cookies();
   const token = cookies.get("token");
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
+
   const [currentDorm, setCurrentDorm] = useState(6);
-  const [currentFloor, setCurrentFloor] = useState(null);
-  const [currentRoom, setCurrentRoom] = useState(null);
-  const [currentMachine, setCurrentMachine] = useState(null);
-  const [machines, setMachines] = useState(Array(1).fill(""));
-  const [rooms, setRooms] = useState(Array(1).fill(""));
-  const [floors, setFloors] = useState(Array(1).fill(""));
+  const [maxSlots, setMaxSlots] = useState(0);
+  const [currentFloor, setCurrentFloor] = useState("");
+  const [currentRoom, setCurrentRoom] = useState("");
+  const [currentMachine, setCurrentMachine] = useState("");
+  const [machines, setMachines] = useState(Array(0));
+  const [rooms, setRooms] = useState(Array(0));
+  const [floors, setFloors] = useState(Array(0));
+  const [roomType, setRoomType] = useState("");
+  const [currentRoomType, setCurrentRoomType] = useState("");
 
   const [errorMessage, setErrorMessage] = useState("");
   const [validateHours, setValidateHours] = useState(Array(5).fill(0));
@@ -64,6 +65,9 @@ function Schedule() {
   );
   const [reservationState, setReservationState] = useState(
     Array(numOfHours * numOfDays).fill(1)
+  );
+  const [reservationSlots, setReservationSlots] = useState(
+    Array(numOfHours * numOfDays).fill(0)
   );
 
   function handleDateChange(date) {
@@ -80,10 +84,23 @@ function Schedule() {
     setCurrentFloor(event.target.value);
   };
 
+  //selectedDate
   useEffect(() => {
-    scheduleUpdate();
-  }, [selectedDate, currentMachine, currentFloor, currentRoom]);
-
+    console.log(currentRoomType);
+    switch (currentRoomType) {
+      case "LAUNDRY":
+        scheduleUpdateLaundry();
+        break;
+      case "GYM":
+        scheduleUpdateGym();
+        break;
+    }
+  }, [selectedDate]);
+  //currentMachine
+  useEffect(() => {
+    scheduleUpdateLaundry();
+  }, [currentMachine]);
+  //
   useEffect(() => {
     const options = {
       headers: {
@@ -100,7 +117,7 @@ function Schedule() {
         console.log(error);
       });
   }, []);
-
+  //currentDorm
   useEffect(() => {
     const options = {
       headers: {
@@ -117,178 +134,329 @@ function Schedule() {
         console.log(error);
       });
   }, [currentDorm]);
-
+  //currentFloor
   useEffect(() => {
-    const options = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    axios
-      .get(
-        "http://46.41.142.44:8080/floor/" + currentFloor + "/commonSpaces",
-        options
-      )
-      .then((response) => {
-        //console.log(response.data);
-        setRooms(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [currentFloor]);
-
-  useEffect(() => {
-    const options = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    axios
-      .get(
-        "http://46.41.142.44:8080/commonSpace/" +
-          currentRoom +
-          "/washingMachines",
-        options
-      )
-      .then((response) => {
-        console.log(response.data);
-        setMachines(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [currentRoom]);
-
-  function scheduleUpdate() {
-    const reservationColor2 = Array(numOfHours * numOfDays).fill("white");
-    const reservationState2 = Array(numOfHours * numOfDays).fill(1);
-    const validateHours2 = Array(5).fill(0);
-    const options = {
-      params: {
-        commonSpaceNumber: currentRoom,
-        date:
-          selectedDate.getFullYear() +
-          "-" +
-          (selectedDate.getMonth() < 9
-            ? "0" + (selectedDate.getMonth() + 1)
-            : selectedDate.getMonth() + 1) +
-          "-" +
-          (selectedDate.getDate() < 10
-            ? "0" + selectedDate.getDate()
-            : selectedDate.getDate()),
-      },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    axios
-      .get(
-        "http://46.41.142.44:8080/washingMachine/" +
-          currentMachine +
-          "/washingReservations/fiveDays",
-        options
-      )
-      .then((response) => {
-        var i = 0;
-        console.log(response);
-        response.data.forEach((element) => {
-          element.startingHours.forEach((e) => {
-            console.log(e);
-
-            reservationState2[
-              i + (parseInt(e.startingHour.substring(0, 2)) - 7) * 5
-            ] = rstate.RESERVED;
-            if (e.mine) {
-              validateHours2[i % numOfDays]++;
-              reservationColor2[
-                i + (parseInt(e.startingHour.substring(0, 2)) - 7) * 5
-              ] = "#1e6e28";
-            } else {
-              reservationColor2[
-                i + (parseInt(e.startingHour.substring(0, 2)) - 7) * 5
-              ] = "gray";
-            }
-          });
-          i++;
+    if (currentFloor !== "") {
+      const options = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      axios
+        .get(
+          "http://46.41.142.44:8080/floor/" + currentFloor + "/commonSpaces",
+          options
+        )
+        .then((response) => {
+          setCurrentRoom("");
+          setCurrentMachine("");
+          setMaxSlots(0);
+          setReservationSlots(Array(numOfHours * numOfDays).fill(0));
+          setRooms(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
         });
-        setValidateHours(validateHours2);
-        setReservationState(reservationState2);
-        setReservationColor(reservationColor2);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  function handleSubmit() {
-    const mydate = new Date(selectedDate);
-    var op;
-    var body = [];
-    //return result.getDate() + "." + (result.getMonth() + 1);
-
-    if (Math.max.apply(null, validateHours) > 3)
-      setErrorMessage("You can reserve max 3 hour in single day");
-    else {
-      setErrorMessage("");
-
-      var i = 0;
-      reservationState.forEach((e) => {
-        var dateOffset = 24 * 60 * 60 * 1000 * ((i % 5) - 2);
-        mydate.setTime(selectedDate.getTime() + dateOffset);
-
-        if (e == rstate.HOVER) {
-          body.push({
-            date:
-              mydate.getFullYear() +
-              "-" +
-              (mydate.getMonth() < 9
-                ? "0" + (mydate.getMonth() + 1)
-                : mydate.getMonth() + 1) +
-              "-" +
-              (mydate.getDate() < 10
-                ? "0" + mydate.getDate()
-                : mydate.getDate()),
-            end:
-              7 + Math.floor(i / 5) + 1 < 10
-                ? "0" + (7 + Math.floor(i / 5) + 1) + ":00"
-                : 7 + Math.floor(i / 5) + 1 + ":00",
-            id: 0,
-            start:
-              7 + Math.floor(i / 5) < 10
-                ? "0" + (7 + Math.floor(i / 5)) + ":00"
-                : 7 + Math.floor(i / 5) + ":00",
-            status: "OK",
+    }
+  }, [currentFloor]);
+  //currentRoom, maxSlots
+  useEffect(() => {
+    if (currentRoom != "") {
+      console.log(true);
+      const options = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      axios
+        .get("http://46.41.142.44:8080/commonSpace/" + currentRoom, options)
+        .then((response) => {
+          setRoomType(response.data.type);
+          if (response.data.type === "GYM") {
+            setMaxSlots(response.data.size);
+            setMachines(Array(0));
+            setCurrentMachine("");
+            scheduleUpdateGym();
+            setRoomType("GYM");
+            setCurrentRoomType("GYM");
+          }
+          if (response.data.type === "LAUNDRY") {
+            setCurrentMachine("");
+            setValidateHours(Array(5).fill(0));
+            setReservationColor(Array(numOfHours * numOfDays).fill("white"));
+            setReservationState(Array(numOfHours * numOfDays).fill(1));
+            setRoomType("LAUNDRY");
+            setCurrentRoomType("LAUNDRY");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      setCurrentMachine("");
+      setValidateHours(Array(5).fill(0));
+      setReservationColor(Array(numOfHours * numOfDays).fill("white"));
+      setReservationState(Array(numOfHours * numOfDays).fill(1));
+    }
+  }, [currentRoom, maxSlots]);
+  //roomType
+  useEffect(() => {
+    const reservationSlots2 = Array(numOfHours * numOfDays).fill(0);
+    switch (roomType) {
+      case "":
+        break;
+      case "LAUNDRY":
+        const options = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        axios
+          .get(
+            "http://46.41.142.44:8080/commonSpace/" +
+              currentRoom +
+              "/washingMachines",
+            options
+          )
+          .then((response) => {
+            setRoomType("");
+            setMachines(response.data);
+            setReservationSlots(reservationSlots2);
+            setMaxSlots(1);
+          })
+          .catch((error) => {
+            console.log(error);
           });
-        }
-        i++;
-      });
+        break;
+      case "GYM":
+        break;
+    }
+  }, [roomType]);
 
-      op = {
+  function scheduleUpdateGym() {
+    if (currentRoom !== "") {
+      const optionsgym = {
         params: {
-          commonSpaceNumber: currentMachine,
+          commonSpaceNumber: currentRoom,
+          date:
+            selectedDate.getFullYear() +
+            "-" +
+            (selectedDate.getMonth() < 9
+              ? "0" + (selectedDate.getMonth() + 1)
+              : selectedDate.getMonth() + 1) +
+            "-" +
+            (selectedDate.getDate() < 10
+              ? "0" + selectedDate.getDate()
+              : selectedDate.getDate()),
         },
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
+      axios
+        .get(
+          "http://46.41.142.44:8080/commonSpace/" +
+            currentRoom +
+            "/commonSpaceReservations/fiveDays",
+          optionsgym
+        )
+        .then((response) => {
+          const reservationColor2 = Array(numOfHours * numOfDays).fill("white");
+          const reservationState2 = Array(numOfHours * numOfDays).fill(1);
+          const validateHours2 = Array(5).fill(0);
+          const reservationSlots2 = Array(numOfHours * numOfDays).fill(0);
+          var i = 0;
+          response.data.forEach((element) => {
+            element.reservations.forEach((e) => {
+              if (e.mine) {
+                validateHours2[i % numOfDays]++;
+                reservationColor2[
+                  i + (parseInt(e.start.substring(0, 2)) - 7) * 5
+                ] = "#1e6e28";
+                reservationState2[
+                  i + (parseInt(e.start.substring(0, 2)) - 7) * 5
+                ] = rstate.RESERVED;
+              } else {
+                if (e.reservationCounter == maxSlots) {
+                  reservationColor2[
+                    i + (parseInt(e.start.substring(0, 2)) - 7) * 5
+                  ] = "gray";
+                  reservationState2[
+                    i + (parseInt(e.start.substring(0, 2)) - 7) * 5
+                  ] = rstate.RESERVED;
+                }
+              }
+              reservationSlots2[
+                i + (parseInt(e.start.substring(0, 2)) - 7) * 5
+              ] = e.reservationCounter;
+            });
+            i++;
+          });
+          setValidateHours(validateHours2);
+          setReservationSlots(reservationSlots2);
+          setReservationState(reservationState2);
+          setReservationColor(reservationColor2);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-    const options = op;
-    const bd = {
-      washingMachineId: currentMachine,
-      washingReservations: body,
-    };
+  }
 
-    axios
-      .post("http://46.41.142.44:8080/washingReservation", bd, options)
-      .then((response) => {
-        scheduleUpdate();
-        //console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  function scheduleUpdateLaundry() {
+    if (currentRoom !== "" && currentMachine !== "") {
+      const reservationColor2 = Array(numOfHours * numOfDays).fill("white");
+      const reservationState2 = Array(numOfHours * numOfDays).fill(1);
+      const validateHours2 = Array(5).fill(0);
+      const reservationSlots2 = Array(numOfHours * numOfDays).fill(0);
+
+      const options = {
+        params: {
+          commonSpaceNumber: currentRoom,
+          date:
+            selectedDate.getFullYear() +
+            "-" +
+            (selectedDate.getMonth() < 9
+              ? "0" + (selectedDate.getMonth() + 1)
+              : selectedDate.getMonth() + 1) +
+            "-" +
+            (selectedDate.getDate() < 10
+              ? "0" + selectedDate.getDate()
+              : selectedDate.getDate()),
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      axios
+        .get(
+          "http://46.41.142.44:8080/washingMachine/" +
+            currentMachine +
+            "/washingReservations/fiveDays",
+          options
+        )
+        .then((response) => {
+          var i = 0;
+          response.data.forEach((element) => {
+            element.startingHours.forEach((e) => {
+              reservationState2[
+                i + (parseInt(e.startingHour.substring(0, 2)) - 7) * 5
+              ] = rstate.RESERVED;
+              reservationSlots2[
+                i + (parseInt(e.startingHour.substring(0, 2)) - 7) * 5
+              ] = 1;
+              if (e.mine) {
+                validateHours2[i % numOfDays]++;
+                reservationColor2[
+                  i + (parseInt(e.startingHour.substring(0, 2)) - 7) * 5
+                ] = "#1e6e28";
+              } else {
+                reservationColor2[
+                  i + (parseInt(e.startingHour.substring(0, 2)) - 7) * 5
+                ] = "gray";
+              }
+            });
+            i++;
+          });
+          setValidateHours(validateHours2);
+          setReservationSlots(reservationSlots2);
+          setReservationState(reservationState2);
+          setReservationColor(reservationColor2);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
+  function handleSubmit() {
+    if (currentFloor !== "" && currentRoom !== "") {
+      setErrorMessage("");
+      const mydate = new Date(selectedDate);
+      var op;
+      var body = [];
+
+      if (Math.max.apply(null, validateHours) > 3)
+        setErrorMessage("You can reserve max 3 hour in single day");
+      else {
+        setErrorMessage("");
+
+        var i = 0;
+        reservationState.forEach((e) => {
+          var dateOffset = 24 * 60 * 60 * 1000 * ((i % 5) - 2);
+          mydate.setTime(selectedDate.getTime() + dateOffset);
+
+          if (e == rstate.HOVER) {
+            body.push({
+              date:
+                mydate.getFullYear() +
+                "-" +
+                (mydate.getMonth() < 9
+                  ? "0" + (mydate.getMonth() + 1)
+                  : mydate.getMonth() + 1) +
+                "-" +
+                (mydate.getDate() < 10
+                  ? "0" + mydate.getDate()
+                  : mydate.getDate()),
+              end:
+                7 + Math.floor(i / 5) + 1 < 10
+                  ? "0" + (7 + Math.floor(i / 5) + 1) + ":00"
+                  : 7 + Math.floor(i / 5) + 1 + ":00",
+              id: 0,
+              start:
+                7 + Math.floor(i / 5) < 10
+                  ? "0" + (7 + Math.floor(i / 5)) + ":00"
+                  : 7 + Math.floor(i / 5) + ":00",
+              status: "OK",
+            });
+          }
+          i++;
+        });
+
+        op = {
+          params: {
+            commonSpaceNumber: currentMachine,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      }
+      if (currentRoomType === "LAUNDRY" && currentMachine !== "") {
+        const options = op;
+        const bd = {
+          washingMachineId: currentMachine,
+          washingReservations: body,
+        };
+
+        axios
+          .post("http://46.41.142.44:8080/washingReservation", bd, options)
+          .then((response) => {
+            scheduleUpdateLaundry();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        const options = op;
+        const bd = {
+          commonSpaceId: currentRoom,
+          commonSpaceReservations: body,
+        };
+
+        axios
+          .post("http://46.41.142.44:8080/commonSpaceReservation", bd, options)
+          .then((response) => {
+            scheduleUpdateGym();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    } else {
+      setErrorMessage(" You have to choose machine or common space");
+    }
   }
 
   function handleClick(i) {
@@ -320,18 +488,20 @@ function Schedule() {
   }
 
   return (
-    <div class="wrapper" className="schedule-box">
-      <div class="row">
-        <div class="col scroll">
+    <div className="wrapper, schedule-box">
+      <div className="row">
+        <div className="col scroll">
           <ScheduleTable
             selectedDate={selectedDate}
             reservationColor={reservationColor}
             onClick={(n) => handleClick(n)}
+            reservationSlots={reservationSlots}
+            maxSlots={maxSlots}
           />
         </div>
-        <div class="col-2 rightcol">
-          <div class="row">
-            <div class="col mx-auto">
+        <div className="col-2 rightcol">
+          <div className="row">
+            <div className="col mx-auto">
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   margin="normal"
@@ -347,8 +517,8 @@ function Schedule() {
             </div>
           </div>
 
-          <div class="row">
-            <div class="col mx-auto">
+          <div className="row">
+            <div className="col mx-auto">
               <FloorPicker
                 name="Floor"
                 onChange={handleChangeFloor}
@@ -356,7 +526,7 @@ function Schedule() {
                 current={currentFloor}
               />
             </div>
-            <div class="col mx-auto">
+            <div className="col mx-auto">
               <Roompicker
                 name="Room"
                 onChange={handleChangeRoom}
@@ -364,22 +534,26 @@ function Schedule() {
                 current={currentRoom}
               />
             </div>
-            <div class="col mx-auto">
-              <MachinePicker
-                name="Mashine"
-                onChange={handleChangeMachine}
-                room={currentRoom}
-                items={machines}
-                current={currentMachine}
-                rooms={rooms}
-              />
+            <div className="col mx-auto">
+              {Array.isArray(machines) && machines.length ? (
+                <MachinePicker
+                  name="Mashine"
+                  onChange={handleChangeMachine}
+                  room={currentRoom}
+                  items={machines}
+                  current={currentMachine}
+                  rooms={rooms}
+                />
+              ) : (
+                ""
+              )}
             </div>
           </div>
           <div className="row mx-auto p-3">
             <Message text={errorMessage} />
           </div>
-          <div class="row" class="position-relative">
-            <div class="col mx-auto">
+          <div className="row, position-relative">
+            <div className="col mx-auto">
               <button
                 type="submit"
                 name="Register"

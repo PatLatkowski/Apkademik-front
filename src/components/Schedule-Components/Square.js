@@ -5,12 +5,12 @@ function Square(props) {
 
   return (
     <div
+      key={"Square" + props.number.toString()}
       onClick={() => props.onClick()}
-      class="col"
-      className="schedule-button"
+      className="col schedule-button"
       style={{ background: props.value }}
     >
-      {props.number}
+      {props.reservationSlots[props.number]}/{props.maxSlots}
     </div>
   );
 }
