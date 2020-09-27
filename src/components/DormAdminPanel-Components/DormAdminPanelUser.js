@@ -125,16 +125,19 @@ function DormAdminPanelUser(props) {
             {users.map((row, index) =>
               Array.isArray(row.roles) && !row.roles.length ? (
                 <TableRow key={row.id}>
-                  <TableCell>{row.id}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.surname}</TableCell>
-                  <TableCell padding="checkbox">
-                    <Checkbox onChange={(n) => handleCheckBox(index)} />
+                  <TableCell key={"id" + row.id}>{row.id}</TableCell>
+                  <TableCell key={"email" + row.id}>{row.email}</TableCell>
+                  <TableCell key={"name" + row.id}>{row.name}</TableCell>
+                  <TableCell key={"surname" + row.id}>{row.surname}</TableCell>
+                  <TableCell key={"check" + row.id} padding="checkbox">
+                    <Checkbox
+                      key={"checkbox" + row.id}
+                      onChange={(n) => handleCheckBox(index)}
+                    />
                   </TableCell>
                 </TableRow>
               ) : (
-                <div></div>
+                <div key={"empty" + row.id}></div>
               )
             )}
           </TableBody>
