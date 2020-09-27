@@ -115,11 +115,13 @@ function DormAdminPanelUser(props) {
       <div className="row">
         <Table>
           <TableHead>
-            <TableCell>Id</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Surname</TableCell>
-            <TableCell>Add</TableCell>
+            <TableRow>
+              <TableCell>Id</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Surname</TableCell>
+              <TableCell>Add</TableCell>
+            </TableRow>
           </TableHead>
           <TableBody>
             {users.map((row, index) =>
@@ -137,7 +139,7 @@ function DormAdminPanelUser(props) {
                   </TableCell>
                 </TableRow>
               ) : (
-                <div key={"empty" + row.id}></div>
+                <TableRow key={"empty" + row.id}></TableRow>
               )
             )}
           </TableBody>
