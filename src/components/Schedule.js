@@ -599,26 +599,30 @@ function Schedule() {
           </div>
           <div className="row, position-relative">
             <div className="col mx-auto">
-              <button
-                type="submit"
-                name="Register"
-                className="submit-button"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
-              {currentMachine !== "" ? (
+              <div className="p-2">
                 <button
                   type="submit"
                   name="Register"
                   className="submit-button"
-                  onClick={handleReport}
+                  onClick={handleSubmit}
                 >
-                  Report
+                  Submit
                 </button>
-              ) : (
-                <div></div>
-              )}
+              </div>
+              <div className="p-2">
+                {currentMachine !== "" ? (
+                  <button
+                    type="submit"
+                    name="Register"
+                    className="submit-button"
+                    onClick={handleReport}
+                  >
+                    Report
+                  </button>
+                ) : (
+                  <div></div>
+                )}
+              </div>
             </div>
           </div>
         </div>

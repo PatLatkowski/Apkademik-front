@@ -4,25 +4,10 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import "../../CSS/appAdminPanel.css";
 import axios from "axios";
 import Cookies from "universal-cookie";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-      width: "25ch",
-    },
-    "& .MuiButton-root": {
-      margin: theme.spacing(1),
-    },
-  },
-}));
 
 function DormAdminPanelPost(props) {
   const cookies = new Cookies();
@@ -30,7 +15,6 @@ function DormAdminPanelPost(props) {
   const [reports, setReports] = useState(Array(1).fill(""));
   const [selected, setSelected] = useState(Array(1).fill(0));
   const [selectedSolved, setSelectedSolved] = useState(Array(1).fill(0));
-  const classes = useStyles();
 
   function handleInProgress(n) {
     const selected2 = selected.slice();
@@ -117,7 +101,7 @@ function DormAdminPanelPost(props) {
             <TableCell>Id</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>washingMachine</TableCell>
-            <TableCell>Floors</TableCell>
+            <TableCell>User</TableCell>
             <TableCell>In progress</TableCell>
             <TableCell>Solved</TableCell>
           </TableRow>
@@ -159,7 +143,7 @@ function DormAdminPanelPost(props) {
         </TableBody>
       </Table>
       <div className="row">
-        <div className="col-3 mx-auto">
+        <div className="col-3 mx-auto p-3">
           <button
             type="submit"
             name="Register"
