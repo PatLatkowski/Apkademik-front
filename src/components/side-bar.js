@@ -49,20 +49,23 @@ function SideBar(props) {
       defaultEndIcon={<div style={{ width: 24 }} />}
       onNodeSelect={(event, value) => props.onNodeSelect(event, value)}
     >
-      <StyledTreeItem
-        nodeId="0"
-        name="Reservation"
-        labelText="Reservations"
-        labelIcon={CalendarTodayIcon}
-      />
+      <a href="/mainPage/reservation">
+        <StyledTreeItem
+          nodeId="0"
+          name="Reservation"
+          labelText="Reservations"
+          labelIcon={CalendarTodayIcon}
+        />
+      </a>
 
       {noticeBoards.map((noticeBoard) => (
-        <StyledTreeItem
-          key={noticeBoard.id}
-          nodeId={noticeBoard.id + ""}
-          labelText={noticeBoard.name}
-          labelIcon={HouseIcon}
-        />
+        <a href={"/mainPage/" + noticeBoard.name} key={noticeBoard.id}>
+          <StyledTreeItem
+            nodeId={noticeBoard.id + ""}
+            labelText={noticeBoard.name}
+            labelIcon={HouseIcon}
+          />
+        </a>
       ))}
     </TreeView>
   );

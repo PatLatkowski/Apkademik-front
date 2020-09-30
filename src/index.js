@@ -16,7 +16,6 @@ import AppAdminPanel from "./appAdminPanel";
 import DormAdminPanel from "./dormAdminPanel";
 import { contextInitialState } from "./consts";
 
-
 export const UserContext = createContext({
   username: "context",
 });
@@ -32,6 +31,12 @@ function App() {
             exact
             path="/"
             render={(props) => {
+              return <Redirect to={"/mainPage"} />;
+            }}
+          />
+          <Route
+            path="/mainPage"
+            render={(props) => {
               if (checkIfTokenExists()) {
                 return <MainPage {...props} />;
               } else {
@@ -43,7 +48,7 @@ function App() {
             path="/register"
             render={(props) => {
               if (checkIfTokenExists()) {
-                return <Redirect to={"/"} />;
+                return <Redirect to={"/mainPage"} />;
               } else {
                 return <Register {...props} />;
               }
@@ -53,7 +58,7 @@ function App() {
             path="/login"
             render={(props) => {
               if (checkIfTokenExists()) {
-                return <Redirect to={"/"} />;
+                return <Redirect to={"/mainPage"} />;
               } else {
                 return <Login {...props} />;
               }

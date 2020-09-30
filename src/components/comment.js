@@ -5,8 +5,7 @@ import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import Cookies from "universal-cookie";
 import axios from "axios";
-
-const serverUrl = "http://46.41.142.44:8080";
+import { serverUrl } from "../consts";
 const cookies = new Cookies();
 const token = cookies.get("token");
 
@@ -37,7 +36,7 @@ function Comment(params) {
         },
         {
           headers: {
-            Authorization: `Bearer ${token.token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )

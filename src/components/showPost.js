@@ -1,14 +1,13 @@
-import "../CSS/components/post.css";
 import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import { serverUrl } from "../consts";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import Cookies from "universal-cookie";
 
 import Comment from "./comment";
 
-const serverUrl = "http://46.41.142.44:8080";
 const cookies = new Cookies();
 const token = cookies.get("token");
 
@@ -24,7 +23,7 @@ function ShowPost({ match }) {
     room: "",
   });
   const [commentsData, setCommentsData] = useState([]);
-  const [postText, setPostText] = useState([]);
+  const [postText, setPostText] = useState("");
 
   useEffect(() => {
     let mounted = true;
@@ -33,35 +32,35 @@ function ShowPost({ match }) {
         serverUrl + "/noticeBoard/" + params.boardTitle + "/post/" + params.id,
         {
           headers: {
-            Authorization: `Bearer ${token.token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )
       .then((response) => {
         if (mounted) {
+          setPostText(response.data.text);
           setPostData(response.data);
-          setPostText("edycja");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    axios
-      .get(serverUrl + "/post/" + params.id + "/comments", {
-        headers: {
-          Authorization: `Bearer ${token.token}`,
-        },
-      })
-      .then((response) => {
-        if (mounted) {
-          setCommentsData(response.data);
         }
       })
       .catch((error) => {
         console.log(error);
       });
     return () => (mounted = false);
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(serverUrl + "/post/" + params.id + "/comments", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setCommentsData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   function formatDate(string) {
@@ -89,7 +88,7 @@ function ShowPost({ match }) {
         },
         {
           headers: {
-            Authorization: `Bearer ${token.token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )
@@ -111,7 +110,7 @@ function ShowPost({ match }) {
         },
         {
           headers: {
-            Authorization: `Bearer ${token.token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )

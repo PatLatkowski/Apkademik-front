@@ -20,15 +20,14 @@ function CustomToggle({ eventKey }) {
   );
 }
 
-function Table(params) {
-  const [noticeBoardName, setNoticeBoardName] = useState(params.title);
+function Table({ match }) {
+  let params = match.params;
   const [pageMax, setPageMax] = useState(0);
   var [page, setPage] = useState(0);
   const [listItems, setListItems] = useState([]);
-  console.log(noticeBoardName);
   useEffect(() => {
     axios
-      .get(serverUrl + "/noticeBoard/" + noticeBoardName + "/pages", {
+      .get(serverUrl + "/noticeBoard/" + params.boardTitle + "/pages", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -44,11 +43,14 @@ function Table(params) {
 
   useEffect(() => {
     axios
-      .get(serverUrl + "/noticeBoard/" + noticeBoardName + "/page=" + pageMax, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(
+        serverUrl + "/noticeBoard/" + params.boardTitle + "/page=" + pageMax,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         setListItems(response.data);
         if (response.data.length < 5) {
@@ -75,7 +77,7 @@ function Table(params) {
     console.log("Fetch more list items!");
 
     axios
-      .get(serverUrl + "/noticeBoard/" + noticeBoardName + "/page=" + page, {
+      .get(serverUrl + "/noticeBoard/" + params.boardTitle + "/page=" + page, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -96,7 +98,9 @@ function Table(params) {
       <div className="container-table">
         <div className="row m-3">
           <div className="col-10">
-            <h1 className="font-weight-bold font-italic">{noticeBoardName}</h1>
+            <h1 className="font-weight-bold font-italic">
+              {params.boardTitle}
+            </h1>
           </div>
           <div className="col-2 m-auto text-center">
             <CustomToggle eventKey="1" />
@@ -105,7 +109,7 @@ function Table(params) {
         <div className="row m-2">
           <div className="col ">
             <Accordion.Collapse eventKey="1">
-              <AddPost boardTitle={noticeBoardName} />
+              <AddPost boardTitle={params.boardTitle} />
             </Accordion.Collapse>
           </div>
         </div>
@@ -114,7 +118,7 @@ function Table(params) {
             {listItems.map((listItem) => (
               <div className="row" key={listItem.id}>
                 <div className="col m-1">
-                  <Post post={listItem} boardTitle={noticeBoardName} />
+                  <Post post={listItem} boardTitle={params.boardTitle} />
                 </div>
               </div>
             ))}

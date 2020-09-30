@@ -5,6 +5,8 @@ import "./CSS/main-layout.css";
 import TopBar from "./components/top-bar";
 import SideBar from "./components/side-bar";
 import Board from "./components/board";
+import { Switch, Route } from "react-router-dom";
+import ShowPost from "./components/showPost";
 
 function MainPage() {
   const [selectedOption, setSelectedOption] = useState(1);
@@ -12,11 +14,6 @@ function MainPage() {
   function getSelectedOption(event, value) {
     setSelectedOption(value);
   }
-
-  const OPTIONS = {
-    0: <Schedule />,
-    1: <Board title="dorm1" />,
-  };
 
   return (
     <div className="container">
@@ -29,7 +26,13 @@ function MainPage() {
             onNodeSelect={(event, value) => getSelectedOption(event, value)}
           />
         </div>
-        <div className="col-10 bg-secondary">{OPTIONS[selectedOption]}</div>
+        <div className="col-10 bg-secondary">
+          <Switch>
+            <Route path="/mainPage/reservation" component={Schedule} />
+            <Route exact path="/mainPage/:boardTitle" component={Board} />
+            <Route path="/mainPage/:boardTitle/post/:id" component={ShowPost} />
+          </Switch>
+        </div>
       </div>
     </div>
   );
