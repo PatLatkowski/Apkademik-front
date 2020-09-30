@@ -80,7 +80,26 @@ function Schedule() {
   }, [selectedDate]);
   //currentMachine
   useEffect(() => {
-    scheduleUpdateLaundry();
+    if (currentMachine !== "") {
+      const options = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      axios
+        .get(
+          "http://46.41.142.44:8080/washingMachine/" + currentMachine,
+          options
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.data.status !== "UNAVAILABLE") scheduleUpdateLaundry();
+          else scheduleBlocked();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMachine]);
   //
@@ -360,6 +379,18 @@ function Schedule() {
     }
   }
 
+  function scheduleBlocked() {
+    const reservationColor2 = Array(numOfHours * numOfDays).fill("gray");
+    const reservationState2 = Array(numOfHours * numOfDays).fill(3);
+    const validateHours2 = Array(5).fill(0);
+    const reservationSlots2 = Array(numOfHours * numOfDays).fill("Unavailable");
+
+    setValidateHours(validateHours2);
+    setReservationSlots(reservationSlots2);
+    setReservationState(reservationState2);
+    setReservationColor(reservationColor2);
+  }
+
   function handleSubmit() {
     if (currentFloor !== "" && currentRoom !== "") {
       setErrorMessage("");
@@ -447,6 +478,28 @@ function Schedule() {
     } else {
       setErrorMessage(" You have to choose machine or common space");
     }
+  }
+
+  function handleReport() {
+    const options = {
+      params: {
+        description: "broken",
+        failureStatus: "REPORTED",
+        washingMachineId: currentMachine,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .post("http://46.41.142.44:8080/washingMachineFailure", "", options)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function handleClick(i) {
@@ -546,14 +599,30 @@ function Schedule() {
           </div>
           <div className="row, position-relative">
             <div className="col mx-auto">
-              <button
-                type="submit"
-                name="Register"
-                className="submit-button"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
+              <div className="p-2">
+                <button
+                  type="submit"
+                  name="Register"
+                  className="submit-button"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </button>
+              </div>
+              <div className="p-2">
+                {currentMachine !== "" ? (
+                  <button
+                    type="submit"
+                    name="Register"
+                    className="submit-button"
+                    onClick={handleReport}
+                  >
+                    Report
+                  </button>
+                ) : (
+                  <div></div>
+                )}
+              </div>
             </div>
           </div>
         </div>
