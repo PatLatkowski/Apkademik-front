@@ -52,7 +52,7 @@ function Login(props) {
                 headers: { Authorization: `Bearer ${response.data["token"]}` },
               };
               axios
-                .get("http://46.41.142.44:8080/user", config)
+                .get(serverUrl + "/user", config)
                 .then(({ data: { name, surname } }) => {
                   setUserName(name + " " + surname);
                 })

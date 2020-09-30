@@ -4,7 +4,7 @@ import Schedule from "./components/Schedule";
 import "./CSS/main-layout.css";
 import TopBar from "./components/top-bar";
 import SideBar from "./components/side-bar";
-import BoardContainer from "./boardContainer";
+import Board from "./components/board";
 
 function MainPage() {
   const [selectedOption, setSelectedOption] = useState(1);
@@ -14,8 +14,8 @@ function MainPage() {
   }
 
   const OPTIONS = {
-    1: <Schedule />,
-    2: <BoardContainer />,
+    0: <Schedule />,
+    1: <Board title="dorm1" />,
   };
 
   return (
