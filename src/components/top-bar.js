@@ -26,7 +26,11 @@ const TopBar = () => {
             setUserName(name + " " + surname);
           })
           .catch((error) => {
-            console.log(error);
+            if (error.request.status === 401) {
+              const cookies = new Cookies();
+              cookies.remove("token");
+              history.push("/login");
+            }
           });
       } catch (e) {
         console.log(e);
@@ -50,7 +54,7 @@ const TopBar = () => {
         <div className="col-10 second-column">
           <div className="account-topbar">
             <Dropdown>
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
+              <Dropdown.Toggle id="dropdown-basic" className="dropdown">
                 {userName}
               </Dropdown.Toggle>
               <Dropdown.Menu>

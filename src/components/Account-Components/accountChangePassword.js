@@ -15,6 +15,7 @@ var passwordSchema = Joi.object().keys({
 
 function AccountChangePassword() {
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setsuccessMessage] = useState("");
   const {
     value: oldPassword,
     bind: oldPasswordChange,
@@ -41,8 +42,10 @@ function AccountChangePassword() {
       (err, res) => {
         if (err) {
           setErrorMessage(err.details[0].message);
+          setsuccessMessage("Your password has been changed");
           console.log(err);
         } else {
+          setErrorMessage("");
           sendRequest();
         }
       }
@@ -70,10 +73,10 @@ function AccountChangePassword() {
         config
       )
       .then((response) => {
-        // TO DO Success message
+        setsuccessMessage("Your password has been changed");
       })
       .catch((error) => {
-        console.log(error);
+        if (error.request.status === 401) setErrorMessage("Wrong password");
       });
   }
 
@@ -115,6 +118,7 @@ function AccountChangePassword() {
           </div>
           <div class="form-group">
             <Message text={errorMessage} />
+            <Message text={successMessage} type="success" />
           </div>
           <button type="submit" className="account-button">
             Submit

@@ -18,6 +18,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Message from "../Message";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,6 +45,7 @@ function AppAdminPanelDorms(props) {
   const [editDialogOpen, seteditDialogOpen] = React.useState(false);
   const [selectedDormToDelete, setselectedDormToDelete] = useState("");
   const [selectedDormToEdit, setselectedDormToEdit] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     getDorms();
@@ -87,9 +89,11 @@ function AppAdminPanelDorms(props) {
         setDormAddress("");
         setFloorCount(0);
         getDorms();
+        setErrorMessage("");
       })
       .catch((error) => {
-        console.log(error);
+        if (error.request.status === 409)
+          setErrorMessage("Dorm with given name already exists");
       });
   };
 
@@ -197,6 +201,7 @@ function AppAdminPanelDorms(props) {
           </Button>
         </div>
       </form>
+      <Message text={errorMessage} />
 
       <Dialog
         open={deleteDialogOpen}
@@ -276,29 +281,29 @@ function AppAdminPanelDorms(props) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Id</TableCell>
-            <TableCell>Dorm Name</TableCell>
-            <TableCell>Dorm Address</TableCell>
-            <TableCell>Floors</TableCell>
-            <TableCell>Edit</TableCell>
-            <TableCell>Delete</TableCell>
+            <TableCell align="left">Id</TableCell>
+            <TableCell align="left">Dorm Name</TableCell>
+            <TableCell align="left">Dorm Address</TableCell>
+            <TableCell align="center">Floors</TableCell>
+            <TableCell align="center">Edit</TableCell>
+            <TableCell align="center">Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {dormsArray.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.address}</TableCell>
-              <TableCell>{row.floorCount}</TableCell>
-              <TableCell>
+              <TableCell align="left">{row.id}</TableCell>
+              <TableCell align="left">{row.name}</TableCell>
+              <TableCell align="left">{row.address}</TableCell>
+              <TableCell align="center">{row.floorCount}</TableCell>
+              <TableCell align="center">
                 <Button>
                   <EditIcon
                     onClick={() => handleEditDialogClick(row)}
                   ></EditIcon>
                 </Button>
               </TableCell>
-              <TableCell>
+              <TableCell align="center">
                 <Button>
                   <DeleteIcon
                     onClick={() => handleDeleteDialogClick(row)}

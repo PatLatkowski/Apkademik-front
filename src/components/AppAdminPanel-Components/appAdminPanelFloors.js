@@ -19,6 +19,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Message from "../Message";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +47,7 @@ function AppAdminPanelFloors(props) {
   const [selectedFloorToDelete, setselectedFloorToDelete] = useState("");
   const [selectedFloorToEdit, setselectedFloorToEdit] = useState("");
   const [dormsArray, setdormsArray] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     getDorms();
@@ -70,9 +72,13 @@ function AppAdminPanelFloors(props) {
       .then((response) => {
         setfloorNumber();
         getFloors();
+        setErrorMessage("");
       })
       .catch((error) => {
-        console.log(error);
+        if (error.request.status === 409)
+          setErrorMessage(
+            "Floor with given number already exists in this dorm"
+          );
       });
   }
 
@@ -217,6 +223,8 @@ function AppAdminPanelFloors(props) {
         </div>
       </form>
 
+      <Message text={errorMessage} />
+
       <Dialog
         open={deleteDialogOpen}
         onClose={handleDeleteDialogClose}
@@ -276,27 +284,27 @@ function AppAdminPanelFloors(props) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Id</TableCell>
-            <TableCell>Floor Number</TableCell>
-            <TableCell>Dorm Name</TableCell>
-            <TableCell>Edit</TableCell>
-            <TableCell>Delete</TableCell>
+            <TableCell align="left">Id</TableCell>
+            <TableCell align="left">Floor Number</TableCell>
+            <TableCell align="left">Dorm Name</TableCell>
+            <TableCell align="center">Edit</TableCell>
+            <TableCell align="center">Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {floorsArray.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.number}</TableCell>
-              <TableCell>{dorm.name}</TableCell>
-              <TableCell>
+              <TableCell align="left">{row.id}</TableCell>
+              <TableCell align="left">{row.number}</TableCell>
+              <TableCell align="left">{dorm.name}</TableCell>
+              <TableCell align="center">
                 <Button>
                   <EditIcon
                     onClick={() => handleEditDialogClick(row)}
                   ></EditIcon>
                 </Button>
               </TableCell>
-              <TableCell>
+              <TableCell align="center">
                 <Button>
                   <DeleteIcon
                     onClick={() => handleDeleteDialogClick(row)}
