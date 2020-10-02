@@ -111,9 +111,9 @@ function Schedule() {
     };
 
     axios
-      .get("http://46.41.142.44:8080/user", options)
+      .get("http://46.41.142.44:8080/dorm", options)
       .then((response) => {
-        setCurrentDorm(6);
+        setCurrentDorm(response.data.id);
       })
       .catch((error) => {
         console.log(error);
@@ -154,6 +154,7 @@ function Schedule() {
         .then((response) => {
           setCurrentRoom("");
           setCurrentMachine("");
+          setMachines(Array(0));
           setMaxSlots(0);
           setReservationSlots(Array(numOfHours * numOfDays).fill(0));
           setRooms(response.data);
