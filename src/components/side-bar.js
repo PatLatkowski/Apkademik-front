@@ -28,8 +28,9 @@ function SideBar(props) {
   const [noticeBoards, setNoticeBoards] = useState([]);
 
   useEffect(() => {
+    console.log(token);
     axios
-      .get(serverUrl + "/user/noticeBoards", {
+      .get(serverUrl + "/dorm/noticeBoards", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

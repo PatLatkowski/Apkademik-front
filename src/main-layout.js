@@ -20,7 +20,7 @@ function MainPage() {
       <div className="row">
         <TopBar />
       </div>
-      <div className="row">
+      <div className="row" id="main">
         <div className="col-2" style={{ background: "#EEEEEE" }}>
           <SideBar
             onNodeSelect={(event, value) => getSelectedOption(event, value)}
