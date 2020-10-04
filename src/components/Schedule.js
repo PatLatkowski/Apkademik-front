@@ -25,7 +25,7 @@ function Schedule() {
   const cookies = new Cookies();
   const token = cookies.get("token");
 
-  const [currentDorm, setCurrentDorm] = useState(6);
+  const [currentDorm, setCurrentDorm] = useState("");
   const [maxSlots, setMaxSlots] = useState(0);
   const [currentFloor, setCurrentFloor] = useState("");
   const [currentRoom, setCurrentRoom] = useState("");
