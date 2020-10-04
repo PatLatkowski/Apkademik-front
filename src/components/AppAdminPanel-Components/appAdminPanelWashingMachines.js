@@ -279,7 +279,9 @@ export default function AppAdminPanelWashingMachines(props) {
               }}
             >
               <MenuItem value={"FREE"}>FREE</MenuItem>
-              <MenuItem value={"NOTWORKING"}>NOTWORKING</MenuItem>
+              <MenuItem value={"BUSY"}>BUSY</MenuItem>
+              <MenuItem value={"UNAVAILABLE"}>UNAVAILABLE</MenuItem>
+              <MenuItem value={"OK"}>OK</MenuItem>
             </Select>
           </FormControl>
           <FormControl required className={classes.formControl}>

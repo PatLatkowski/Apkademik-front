@@ -38,6 +38,26 @@ const TopBar = () => {
     }
   });
 
+  useEffect(() => {
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    axios
+      .get("http://46.41.142.44:8080/user", config)
+      .then(({ data: { name, surname } }) => {
+        setUserName(name + " " + surname);
+      })
+      .catch((error) => {
+        if (error.request.status === 401) {
+          const cookies = new Cookies();
+          cookies.remove("token");
+          history.push("/login");
+        }
+      });
+  });
+
   const handleLogout = (event) => {
     const cookies = new Cookies();
     cookies.remove("token");
