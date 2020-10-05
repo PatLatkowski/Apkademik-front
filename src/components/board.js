@@ -99,7 +99,7 @@ function Table({ match }) {
   const handleScroll = () => {
     if (
       window.innerHeight + document.documentElement.scrollTop <
-      document.documentElement.offsetHeight
+      document.documentElement.scrollHeight
     )
       return;
     if (page === 0) return;
