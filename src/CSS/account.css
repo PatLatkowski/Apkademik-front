@@ -8,7 +8,7 @@
 .section-header {
   padding: 40px 20px 20px 20px;
   font-size: xx-large;
-  color: #25e81f;
+  color: #15c31e;
 }
 
 .account-input {
@@ -29,7 +29,7 @@ hr {
 }
 
 .account-button {
-  background-color: #25e81f;
+  background-color: #15c31e;
   border: none;
   border-radius: 12px;
   font-size: xx-large;

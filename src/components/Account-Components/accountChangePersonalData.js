@@ -42,6 +42,7 @@ var schema = Joi.object().keys({
 function AccountChangePersonalData(props) {
   const classes = useStyles();
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setsuccessMessage] = useState("");
   const { value: email, bind: emailChange, reset: resetEmail } = useInput("");
   const { value: name, bind: nameChange, reset: resetName } = useInput("");
   const { value: surname, bind: surnameChange, reset: resetSurname } = useInput(
@@ -88,9 +89,10 @@ function AccountChangePersonalData(props) {
         setroom("");
         setfloor("");
         setdorm("");
+        setsuccessMessage("Your personal data has been changed");
       })
       .catch((error) => {
-        console.log(error);
+        if (error.request.status === 401) setErrorMessage("Wrong password");
       });
   }
 
@@ -157,8 +159,10 @@ function AccountChangePersonalData(props) {
       (err, res) => {
         if (err) {
           setErrorMessage(err.details[0].message);
+          setsuccessMessage("");
           console.log(err);
         } else {
+          setErrorMessage("");
           sendRequest();
         }
       }
@@ -172,7 +176,7 @@ function AccountChangePersonalData(props) {
   return (
     <div className="elementContainer">
       <div className="w-100 section-header font-weight-bold">
-        Change personal data <br /> (Require administrator's verification)
+        Change personal data
         <hr />
       </div>
       <div className="w-75 account-section">
@@ -260,6 +264,7 @@ function AccountChangePersonalData(props) {
           </FormControl>
           <div class="form-group">
             <Message text={errorMessage} />
+            <Message text={successMessage} type="success" />
           </div>
           <button type="submit" className="account-button">
             Submit

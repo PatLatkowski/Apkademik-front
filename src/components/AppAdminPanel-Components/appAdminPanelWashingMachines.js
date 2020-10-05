@@ -20,6 +20,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import "../../CSS/appAdminPanel.css";
+import Message from "../Message";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,6 +70,7 @@ export default function AppAdminPanelWashingMachines(props) {
     selectedWashingMachineToEdit,
     setselectedWashingMachineToEdit,
   ] = useState(initialState);
+  const [errorMessage, setErrorMessage] = useState("");
 
   function getDorms() {
     const cookies = new Cookies();
@@ -174,9 +176,13 @@ export default function AppAdminPanelWashingMachines(props) {
         setwashingMachineNumber();
         setwashingMachineStatus(initialState);
         getWashingMachines();
+        setErrorMessage("");
       })
       .catch((error) => {
-        console.log(error);
+        if (error.request.status === 409)
+          setErrorMessage(
+            "Washing Machine with given number already exists in this common space"
+          );
       });
   }
 
@@ -273,7 +279,9 @@ export default function AppAdminPanelWashingMachines(props) {
               }}
             >
               <MenuItem value={"FREE"}>FREE</MenuItem>
-              <MenuItem value={"NOTWORKING"}>NOTWORKING</MenuItem>
+              <MenuItem value={"BUSY"}>BUSY</MenuItem>
+              <MenuItem value={"UNAVAILABLE"}>UNAVAILABLE</MenuItem>
+              <MenuItem value={"OK"}>OK</MenuItem>
             </Select>
           </FormControl>
           <FormControl required className={classes.formControl}>
@@ -327,6 +335,8 @@ export default function AppAdminPanelWashingMachines(props) {
           </Button>
         </div>
       </form>
+
+      <Message text={errorMessage} />
 
       <Dialog
         open={deleteDialogOpen}
@@ -414,29 +424,29 @@ export default function AppAdminPanelWashingMachines(props) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Id</TableCell>
-            <TableCell>Number</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Common Space</TableCell>
-            <TableCell>Edit</TableCell>
-            <TableCell>Delete</TableCell>
+            <TableCell align="left">Id</TableCell>
+            <TableCell align="left">Number</TableCell>
+            <TableCell align="left">Status</TableCell>
+            <TableCell align="left">Common Space</TableCell>
+            <TableCell align="center">Edit</TableCell>
+            <TableCell align="center">Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {washingMachinesArray.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.number}</TableCell>
-              <TableCell>{row.status}</TableCell>
-              <TableCell>{commonSpace.name}</TableCell>
-              <TableCell>
+              <TableCell align="left">{row.id}</TableCell>
+              <TableCell align="left">{row.number}</TableCell>
+              <TableCell align="left">{row.status}</TableCell>
+              <TableCell align="left">{commonSpace.name}</TableCell>
+              <TableCell align="center">
                 <Button>
                   <EditIcon
                     onClick={() => handleEditDialogClick(row)}
                   ></EditIcon>
                 </Button>
               </TableCell>
-              <TableCell>
+              <TableCell align="center">
                 <Button>
                   <DeleteIcon
                     onClick={() => handleDeleteDialogClick(row)}

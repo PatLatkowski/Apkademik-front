@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TopBar from "./components/top-bar";
 import DormAdminPanelPost from "./components/DormAdminPanel-Components/DormAdminPanelPost";
 import DormAdminPanelUser from "./components/DormAdminPanel-Components/DormAdminPanelUser";
+import DormAdminPanelNoticeBoard from "./components/DormAdminPanel-Components/DormAdminPanelNoticeBoard";
 
 const useStyles = makeStyles({
   root: { backgroundColor: "#ffffff" },
@@ -23,6 +24,7 @@ function DormAdminPanel() {
   const OPTIONS = {
     0: <DormAdminPanelUser />,
     1: <DormAdminPanelPost />,
+    2: <DormAdminPanelNoticeBoard />,
   };
 
   return (
@@ -49,6 +51,13 @@ function DormAdminPanel() {
             />
             <BottomNavigationAction
               label="Post Acceptance"
+              classes={{
+                root: navActionClasses.root,
+                selected: navActionClasses.selected,
+              }}
+            />
+            <BottomNavigationAction
+              label="Notice Boards Management"
               classes={{
                 root: navActionClasses.root,
                 selected: navActionClasses.selected,
