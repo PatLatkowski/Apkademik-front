@@ -29,7 +29,11 @@ const TopBar = () => {
             setUserID(id);
           })
           .catch((error) => {
-            console.log(error);
+            if (error.request.status === 401) {
+              const cookies = new Cookies();
+              cookies.remove("token");
+              history.push("/login");
+            }
           });
       } catch (e) {
         console.log(e);
@@ -69,6 +73,26 @@ const TopBar = () => {
     }
   }, [userID]);
 
+  useEffect(() => {
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    axios
+      .get("http://46.41.142.44:8080/user", config)
+      .then(({ data: { name, surname } }) => {
+        setUserName(name + " " + surname);
+      })
+      .catch((error) => {
+        if (error.request.status === 401) {
+          const cookies = new Cookies();
+          cookies.remove("token");
+          history.push("/login");
+        }
+      });
+  });
+
   const handleLogout = (event) => {
     const cookies = new Cookies();
     setUserName(contextInitialState);
@@ -86,7 +110,7 @@ const TopBar = () => {
         <div className="col-10 second-column">
           <div className="account-topbar">
             <Dropdown>
-              <Dropdown.Toggle variant="success" id="dropdown-basic">
+              <Dropdown.Toggle id="dropdown-basic" className="dropdown">
                 {userName}
               </Dropdown.Toggle>
               <Dropdown.Menu>

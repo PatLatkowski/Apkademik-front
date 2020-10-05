@@ -19,6 +19,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Message from "../Message";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,6 +64,7 @@ export default function AppAdminPanelCommonSpaces(props) {
   const [selectedCommonSpaceToEdit, setselectedCommonSpaceToEdit] = useState(
     ""
   );
+  const [errorMessage, setErrorMessage] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -89,9 +91,13 @@ export default function AppAdminPanelCommonSpaces(props) {
         setcommonSpaceSize(initialState);
         setcommonSpaceType(initialState);
         getCommonSpaces();
+        setErrorMessage("");
       })
       .catch((error) => {
-        console.log(error);
+        if (error.request.status === 409)
+          setErrorMessage(
+            "Common Space with given number already exists on this floor"
+          );
       });
   }
 
@@ -309,6 +315,8 @@ export default function AppAdminPanelCommonSpaces(props) {
         </div>
       </form>
 
+      <Message text={errorMessage} />
+
       <Dialog
         open={deleteDialogOpen}
         onClose={handleDeleteDialogClose}
@@ -405,33 +413,33 @@ export default function AppAdminPanelCommonSpaces(props) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Id</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Number</TableCell>
-            <TableCell>Size</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell>Floor</TableCell>
-            <TableCell>Edit</TableCell>
-            <TableCell>Delete</TableCell>
+            <TableCell align="left">Id</TableCell>
+            <TableCell align="left">Name</TableCell>
+            <TableCell align="left">Number</TableCell>
+            <TableCell align="left">Size</TableCell>
+            <TableCell align="left">Type</TableCell>
+            <TableCell align="left">Floor</TableCell>
+            <TableCell align="center">Edit</TableCell>
+            <TableCell align="center">Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {commonSpacesArray.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.number}</TableCell>
-              <TableCell>{row.size}</TableCell>
-              <TableCell>{row.type}</TableCell>
-              <TableCell>{floor.number}</TableCell>
-              <TableCell>
+              <TableCell align="left">{row.id}</TableCell>
+              <TableCell align="left">{row.name}</TableCell>
+              <TableCell align="left">{row.number}</TableCell>
+              <TableCell align="left">{row.size}</TableCell>
+              <TableCell align="left">{row.type}</TableCell>
+              <TableCell align="left">{floor.number}</TableCell>
+              <TableCell align="center">
                 <Button>
                   <EditIcon
                     onClick={() => handleEditDialogClick(row)}
                   ></EditIcon>
                 </Button>
               </TableCell>
-              <TableCell>
+              <TableCell align="center">
                 <Button>
                   <DeleteIcon
                     onClick={() => handleDeleteDialogClick(row)}

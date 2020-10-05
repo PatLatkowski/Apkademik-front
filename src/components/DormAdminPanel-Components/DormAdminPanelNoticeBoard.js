@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -8,7 +8,6 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import "../../CSS/appAdminPanel.css";
-import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import { serverUrl } from "../../consts";
@@ -25,33 +24,72 @@ const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: "20ch",
+      width: "25ch",
     },
     "& .MuiButton-root": {
       margin: theme.spacing(1),
     },
   },
-  formControl: {
-    margin: theme.spacing(1),
-    width: "20ch",
-  },
 }));
 
-function AppAdminPanelFloors(props) {
-  const classes = useStyles();
-  const [floorNumber, setfloorNumber] = useState(0);
-  const [dorm, setdorm] = useState("");
-  const [editFloorNumber, seteditFloorNumber] = useState(0);
-  const [deleteDialogOpen, setdeleteDialogOpen] = React.useState(false);
-  const [editDialogOpen, seteditDialogOpen] = React.useState(false);
-  const [selectedFloorToDelete, setselectedFloorToDelete] = useState("");
-  const [selectedFloorToEdit, setselectedFloorToEdit] = useState("");
-  const [dormsArray, setdormsArray] = useState([]);
+export default function DormAdminPanelNoticeBoard() {
   const [errorMessage, setErrorMessage] = useState("");
+  const classes = useStyles();
+  const [dorm, setdorm] = useState();
+  const [noticeBoardName, setnoticeBoardName] = useState("");
+  const [noticeBoardArray, setnoticeBoardArray] = useState([]);
+  const [deleteDialogOpen, setdeleteDialogOpen] = React.useState(false);
+  const [
+    selectedNoticeBoardToDelete,
+    setselectedNoticeBoardToDelete,
+  ] = useState("");
+  const [editNoticeBoardName, seteditNoticeBoardName] = useState("");
+  const [editDialogOpen, seteditDialogOpen] = React.useState(false);
+  const [selectedNoticeBoardToEdit, setselectedNoticeBoardToEdit] = useState(
+    ""
+  );
 
   useEffect(() => {
-    getDorms();
+    getDorm();
   }, []);
+
+  function getDorm() {
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    axios
+      .get(serverUrl + "/dorm", config)
+      .then((response) => {
+        setdorm(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  function getNoticeBoards() {
+    if (dorm) {
+      const cookies = new Cookies();
+      const token = cookies.get("token");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+      axios
+        .get(serverUrl + "/dorm/" + dorm.id + "/noticeBoards", config)
+        .then((response) => {
+          setnoticeBoardArray(response.data);
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
+  useEffect(getNoticeBoards, [dorm]);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -62,63 +100,25 @@ function AppAdminPanelFloors(props) {
     };
     axios
       .post(
-        serverUrl + "/floor",
+        serverUrl + "/noticeBoard",
         {
           dormId: dorm.id,
-          number: floorNumber,
+          name: noticeBoardName,
         },
         config
       )
       .then((response) => {
-        setfloorNumber();
-        getFloors();
+        setnoticeBoardName("");
+        getNoticeBoards();
         setErrorMessage("");
       })
       .catch((error) => {
         if (error.request.status === 409)
           setErrorMessage(
-            "Floor with given number already exists in this dorm"
+            "Notice Board with given name already exists in this dorm"
           );
       });
   }
-
-  function getDorms() {
-    const cookies = new Cookies();
-    const token = cookies.get("token");
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    axios
-      .get(serverUrl + "/dorms", config)
-      .then((response) => {
-        setdormsArray(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  function getFloors() {
-    if (dorm) {
-      const cookies = new Cookies();
-      const token = cookies.get("token");
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-      axios
-        .get(serverUrl + "/dorm/" + dorm.id + "/floors", config)
-        .then((response) => {
-          setfloorsArray(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }
-
-  const [floorsArray, setfloorsArray] = useState([]);
-
-  useEffect(getFloors, [dorm]);
 
   const deleteRecord = () => {
     const cookies = new Cookies();
@@ -127,15 +127,17 @@ function AppAdminPanelFloors(props) {
       headers: { Authorization: `Bearer ${token}` },
     };
     axios
-      .delete(serverUrl + "/floor/" + selectedFloorToDelete.id, config)
+      .delete(
+        serverUrl + "/noticeBoard/" + selectedNoticeBoardToDelete.id,
+        config
+      )
       .then((response) => {
-        getFloors();
+        getNoticeBoards();
       })
       .catch((error) => {
         console.log(error);
       });
     handleDeleteDialogClose();
-    getFloors();
   };
 
   const handleDeleteDialogClose = () => {
@@ -143,12 +145,12 @@ function AppAdminPanelFloors(props) {
   };
 
   const handleDeleteDialogClick = (row) => {
-    setselectedFloorToDelete(row);
+    setselectedNoticeBoardToDelete(row);
   };
 
   useEffect(() => {
-    if (selectedFloorToDelete) setdeleteDialogOpen(true);
-  }, [selectedFloorToDelete]);
+    if (selectedNoticeBoardToDelete) setdeleteDialogOpen(true);
+  }, [selectedNoticeBoardToDelete]);
 
   const editRecord = () => {
     const cookies = new Cookies();
@@ -158,20 +160,19 @@ function AppAdminPanelFloors(props) {
     };
     axios
       .put(
-        serverUrl + "/floor/" + selectedFloorToEdit.id,
+        serverUrl + "/noticeBoard/" + selectedNoticeBoardToEdit.id,
         {
-          number: editFloorNumber,
+          name: editNoticeBoardName,
         },
         config
       )
       .then((response) => {
-        getFloors();
+        getNoticeBoards();
       })
       .catch((error) => {
         console.log(error);
       });
     handleEditDialogClose();
-    getFloors();
   };
 
   const handleEditDialogClose = () => {
@@ -179,50 +180,31 @@ function AppAdminPanelFloors(props) {
   };
 
   const handleEditDialogClick = (row) => {
-    seteditFloorNumber(row.number);
-    setselectedFloorToEdit(row);
+    seteditNoticeBoardName(row.name);
+    setselectedNoticeBoardToEdit(row);
   };
 
   useEffect(() => {
-    if (selectedFloorToEdit) seteditDialogOpen(true);
-  }, [selectedFloorToEdit]);
+    if (selectedNoticeBoardToEdit) seteditDialogOpen(true);
+  }, [selectedNoticeBoardToEdit]);
 
   return (
-    <div className="appAdminPanelFormContainer">
+    <div className="appAdminPanelFormContainer ">
       <form className={classes.root} onSubmit={handleSubmit}>
         <div className="row justify-content-center">
           <TextField
             required
-            id="floor"
-            label="Floor number"
-            type="number"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onChange={(event) => setfloorNumber(event.target.value)}
+            id="name"
+            value={noticeBoardName}
+            label="Notice Board Name"
+            onChange={(event) => setnoticeBoardName(event.target.value)}
           />
-          <FormControl className={classes.formControl}>
-            <InputLabel>Dorm</InputLabel>
-            <Select
-              value={dorm}
-              onChange={(event) => {
-                setdorm(event.target.value);
-              }}
-            >
-              {dormsArray.map((record) => (
-                <MenuItem key={record.id} value={record}>
-                  {record.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
           <Button variant="contained" type="submit">
             {" "}
-            Add new floor
+            Add new notice board
           </Button>
         </div>
       </form>
-
       <Message text={errorMessage} />
 
       <Dialog
@@ -237,8 +219,8 @@ function AppAdminPanelFloors(props) {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Item with this properties will be removed: <br />
-            Floor ID: {selectedFloorToDelete.id} <br />
-            Floor number: {selectedFloorToDelete.number} <br />
+            Notice Board ID: {selectedNoticeBoardToDelete.id} <br />
+            Notice Board name: {selectedNoticeBoardToDelete.name} <br />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -260,15 +242,15 @@ function AppAdminPanelFloors(props) {
         <DialogTitle id="form-dialog-title">Edit record</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Record with ID: {selectedFloorToEdit.id} will be edited with these
-            values:
+            Record with ID: {selectedNoticeBoardToEdit.id} will be edited with
+            these values:
           </DialogContentText>
           <TextField
             required
-            id="editFloorNumber"
-            value={editFloorNumber}
-            label="Floor Number"
-            onChange={(event) => seteditFloorNumber(event.target.value)}
+            id="editNoticeBoardName"
+            value={editNoticeBoardName}
+            label="Notice Board Name"
+            onChange={(event) => seteditNoticeBoardName(event.target.value)}
           />
         </DialogContent>
         <DialogActions>
@@ -285,18 +267,16 @@ function AppAdminPanelFloors(props) {
         <TableHead>
           <TableRow>
             <TableCell align="left">Id</TableCell>
-            <TableCell align="left">Floor Number</TableCell>
-            <TableCell align="left">Dorm Name</TableCell>
+            <TableCell align="left">Notice Board Name</TableCell>
             <TableCell align="center">Edit</TableCell>
             <TableCell align="center">Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {floorsArray.map((row) => (
+          {noticeBoardArray.map((row) => (
             <TableRow key={row.id}>
               <TableCell align="left">{row.id}</TableCell>
-              <TableCell align="left">{row.number}</TableCell>
-              <TableCell align="left">{dorm.name}</TableCell>
+              <TableCell align="left">{row.name}</TableCell>
               <TableCell align="center">
                 <Button>
                   <EditIcon
@@ -318,4 +298,3 @@ function AppAdminPanelFloors(props) {
     </div>
   );
 }
-export default AppAdminPanelFloors;

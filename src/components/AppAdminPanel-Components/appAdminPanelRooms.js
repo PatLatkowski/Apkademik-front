@@ -19,6 +19,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Message from "../Message";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,6 +52,7 @@ function AppAdminPanelRooms(props) {
   const [selectedRoomToDelete, setselectedRoomToDelete] = useState("");
   const [editDialogOpen, seteditDialogOpen] = React.useState(false);
   const [selectedRoomToEdit, setselectedRoomToEdit] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -73,9 +75,11 @@ function AppAdminPanelRooms(props) {
         setroomName();
         setroomSize();
         getRooms();
+        setErrorMessage("");
       })
       .catch((error) => {
-        console.log(error);
+        if (error.request.status === 409)
+          setErrorMessage("Room with given name already exists on this floor");
       });
   }
 
@@ -266,6 +270,8 @@ function AppAdminPanelRooms(props) {
         </div>
       </form>
 
+      <Message text={errorMessage} />
+
       <Dialog
         open={deleteDialogOpen}
         onClose={handleDeleteDialogClose}
@@ -335,29 +341,29 @@ function AppAdminPanelRooms(props) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Id</TableCell>
-            <TableCell>Room Number</TableCell>
-            <TableCell>Room Size</TableCell>
-            <TableCell>Floor number</TableCell>
-            <TableCell>Edit</TableCell>
-            <TableCell>Delete</TableCell>
+            <TableCell align="left">Id</TableCell>
+            <TableCell align="left">Room Number</TableCell>
+            <TableCell align="left">Room Size</TableCell>
+            <TableCell align="left">Floor number</TableCell>
+            <TableCell align="center">Edit</TableCell>
+            <TableCell align="center">Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {roomsArray.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.number}</TableCell>
-              <TableCell>{row.size}</TableCell>
-              <TableCell>{floor.number}</TableCell>
-              <TableCell>
+              <TableCell align="left">{row.id}</TableCell>
+              <TableCell align="left">{row.number}</TableCell>
+              <TableCell align="left">{row.size}</TableCell>
+              <TableCell align="left">{floor.number}</TableCell>
+              <TableCell align="center">
                 <Button>
                   <EditIcon
                     onClick={() => handleEditDialogClick(row)}
                   ></EditIcon>
                 </Button>
               </TableCell>
-              <TableCell>
+              <TableCell align="center">
                 <Button>
                   <DeleteIcon
                     onClick={() => handleDeleteDialogClick(row)}

@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 
 const useStylesAction = makeStyles({
   root: { backgroundColor: "#eeeeee" },
-  selected: { backgroundColor: "#f6f6f6", color: "#111111" },
+  selected: { backgroundColor: "#15c31e", color: "#111111" },
 });
 
 function AppAdminPanel() {

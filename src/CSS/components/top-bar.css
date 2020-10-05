@@ -18,4 +18,43 @@
 
 .account-topbar {
   height: 100%;
+  float: right;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.btn-primary {
+  background-color: #15c31e;
+  border-color: #15c31e;
+}
+
+.btn-primary:focus {
+  background-color: #15c31e;
+  border-color: #15c31e;
+  box-shadow: 0 0 0 0.2rem #79d27e;
+}
+
+.btn-primary:hover {
+  background-color: #15c31e;
+  border-color: #15c31e;
+}
+
+.show > .btn-primary:focus {
+  box-shadow: 0 0 0 0.2rem #79d27e;
+}
+
+.btn-primary:not(:disabled):not(.disabled).active,
+.btn-primary:not(:disabled):not(.disabled):active,
+.show > .btn-primary.dropdown-toggle {
+  background-color: #15c31e;
+  border-color: #15c31e;
+  box-shadow: 0 0 0 0.2rem #79d27e;
+}
+
+.show > .btn-primary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem #79d27e;
+}
+
+toggle:focus {
+  box-shadow: 0 0 0 0.2rem #79d27e;
 }

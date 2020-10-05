@@ -21,7 +21,7 @@
 
 .register-input[type="submit"] {
   display: block;
-  background-color: #25e81f;
+  background-color: #15c31e;
   border: none;
   cursor: pointer;
   width: 20%;
@@ -39,7 +39,7 @@
 }
 
 .register-header {
-  color: #25e81f;
+  color: #15c31e;
   height: 100%;
   width: 100%;
   font-size: 8vw;
