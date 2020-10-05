@@ -16,7 +16,6 @@ import AppAdminPanel from "./appAdminPanel";
 import DormAdminPanel from "./dormAdminPanel";
 import { contextInitialState } from "./consts";
 
-
 export const UserContext = createContext({
   username: "context",
 });
