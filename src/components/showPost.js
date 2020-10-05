@@ -80,6 +80,7 @@ function ShowPost({ match }) {
   }
 
   function handleComment(event) {
+    event.preventDefault();
     axios
       .post(
         serverUrl + "/post/" + params.id + "/comment",
