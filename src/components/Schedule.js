@@ -460,7 +460,7 @@ function Schedule() {
           .catch((error) => {
             console.log(error);
           });
-      } else {
+      } else if (currentRoomType === "GYM") {
         const options = op;
         const bd = {
           commonSpaceId: currentRoom,
