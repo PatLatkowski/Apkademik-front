@@ -22,6 +22,7 @@ function CustomToggle({ eventKey }) {
 
 function Table({ match }) {
   let params = match.params;
+  const [boardTitle, setBoardTitle] = useState("");
   const [pageMax, setPageMax] = useState(0);
   var [page, setPage] = useState(0);
   const [listItems, setListItems] = useState([]);
@@ -29,7 +30,22 @@ function Table({ match }) {
 
   useEffect(() => {
     axios
-      .get(serverUrl + "/noticeBoard/" + params.boardTitle + "/member", {
+      .get(serverUrl + "/noticeBoard/" + params.boardId, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setBoardTitle(response.data.name);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(serverUrl + "/noticeBoard/" + params.boardId + "/member", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,7 +61,7 @@ function Table({ match }) {
   useEffect(() => {
     if (member == false) return;
     axios
-      .get(serverUrl + "/noticeBoard/" + params.boardTitle + "/pages", {
+      .get(serverUrl + "/noticeBoard/" + params.boardId + "/pages", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -62,14 +78,11 @@ function Table({ match }) {
   useEffect(() => {
     if (member == false) return;
     axios
-      .get(
-        serverUrl + "/noticeBoard/" + params.boardTitle + "/page=" + pageMax,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .get(serverUrl + "/noticeBoard/" + params.boardId + "/page=" + pageMax, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         setListItems(response.data);
         if (response.data.length < 5) {
@@ -96,7 +109,7 @@ function Table({ match }) {
     console.log("Fetch more list items!");
 
     axios
-      .get(serverUrl + "/noticeBoard/" + params.boardTitle + "/page=" + page, {
+      .get(serverUrl + "/noticeBoard/" + params.boardId + "/page=" + page, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -119,9 +132,7 @@ function Table({ match }) {
           <div className="container-table">
             <div className="row m-3">
               <div className="col-10">
-                <h1 className="font-weight-bold font-italic">
-                  {params.boardTitle}
-                </h1>
+                <h1 className="font-weight-bold font-italic">{boardTitle}</h1>
               </div>
               <div className="col-2 m-auto text-center">
                 <CustomToggle eventKey="1" />
@@ -130,7 +141,7 @@ function Table({ match }) {
             <div className="row m-2">
               <div className="col ">
                 <Accordion.Collapse eventKey="1">
-                  <AddPost boardTitle={params.boardTitle} />
+                  <AddPost boardId={params.boardId} />
                 </Accordion.Collapse>
               </div>
             </div>
@@ -139,7 +150,7 @@ function Table({ match }) {
                 {listItems.map((listItem) => (
                   <div className="row" key={listItem.id}>
                     <div className="col m-1">
-                      <Post post={listItem} boardTitle={params.boardTitle} />
+                      <Post post={listItem} boardId={params.boardId} />
                     </div>
                   </div>
                 ))}

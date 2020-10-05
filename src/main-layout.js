@@ -29,10 +29,10 @@ function MainPage() {
         <div className="col-10 bg-secondary">
           <Switch>
             <Route exact path="/mainPage/reservation" component={Schedule} />
-            <Route exact path="/mainPage/:boardTitle" component={Board} />
+            <Route exact path="/mainPage/:boardId" component={Board} />
             <Route
               exact
-              path="/mainPage/:boardTitle/post/:id"
+              path="/mainPage/:boardId/post/:id"
               component={ShowPost}
             />
           </Switch>

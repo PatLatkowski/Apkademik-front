@@ -53,7 +53,7 @@ function SideBar(props) {
       </a>
 
       {noticeBoards.map((noticeBoard) => (
-        <a href={"/mainPage/" + noticeBoard.name} key={noticeBoard.id}>
+        <a href={"/mainPage/" + noticeBoard.id} key={noticeBoard.id}>
           <StyledTreeItem
             nodeId={noticeBoard.id + ""}
             labelText={noticeBoard.name}

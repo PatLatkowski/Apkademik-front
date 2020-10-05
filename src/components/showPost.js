@@ -29,7 +29,7 @@ function ShowPost({ match }) {
     let mounted = true;
     axios
       .get(
-        serverUrl + "/noticeBoard/" + params.boardTitle + "/post/" + params.id,
+        serverUrl + "/noticeBoard/" + params.boardId + "/post/" + params.id,
         {
           headers: {
             Authorization: `Bearer ${token}`,
