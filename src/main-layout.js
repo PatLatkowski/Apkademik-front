@@ -26,7 +26,7 @@ function MainPage() {
             onNodeSelect={(event, value) => getSelectedOption(event, value)}
           />
         </div>
-        <div className="col-10 bg-secondary">
+        <div className="col-10">
           <Switch>
             <Route exact path="/mainPage/reservation" component={Schedule} />
             <Route exact path="/mainPage/:boardTitle" component={Board} />
