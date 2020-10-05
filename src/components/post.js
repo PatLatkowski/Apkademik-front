@@ -15,7 +15,7 @@ function formatTime(string) {
 }
 
 function Post(params) {
-  const [boardTitle, setBoardTitle] = useState(params.boardTitle);
+  const [boardId, setboardId] = useState(params.boardId);
   const [postData, setpostData] = useState(params.post);
 
   return (
@@ -24,7 +24,7 @@ function Post(params) {
         <Card.Body>
           <div className="row">
             <div className="col-10">
-              <Card as={Link} to={boardTitle + "/post/" + postData.id}>
+              <Card as={Link} to={boardId + "/post/" + postData.id}>
                 <Card.Body>
                   <Card.Title>{postData.title}</Card.Title>
                   <hr />

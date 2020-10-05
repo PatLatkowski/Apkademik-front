@@ -42,7 +42,7 @@ function AccountChangePassword() {
       (err, res) => {
         if (err) {
           setErrorMessage(err.details[0].message);
-          setsuccessMessage("Your password has been changed");
+          setsuccessMessage("");
           console.log(err);
         } else {
           setErrorMessage("");
