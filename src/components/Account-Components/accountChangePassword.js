@@ -116,7 +116,7 @@ function AccountChangePassword() {
               {...confirmNewPasswordChange}
             />
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <Message text={errorMessage} />
             <Message text={successMessage} type="success" />
           </div>
