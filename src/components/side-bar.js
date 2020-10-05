@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TreeView from "@material-ui/lab/TreeView";
 import StyledTreeItem from "./StyledTreeItem";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
@@ -8,6 +8,9 @@ import InfoIcon from "@material-ui/icons/Info";
 import SubjectIcon from "@material-ui/icons/Subject";
 import SpeakerIcon from "@material-ui/icons/Speaker";
 import LocationCityIcon from "@material-ui/icons/LocationCity";
+import axios from "axios";
+import { serverUrl } from "../consts";
+import Cookies from "universal-cookie";
 
 const useStyles = makeStyles({
   root: {
@@ -17,8 +20,28 @@ const useStyles = makeStyles({
   },
 });
 
+const cookies = new Cookies();
+const token = cookies.get("token");
+
 function SideBar(props) {
   const classes = useStyles();
+  const [noticeBoards, setNoticeBoards] = useState([]);
+
+  useEffect(() => {
+    console.log(token);
+    axios
+      .get(serverUrl + "/dorm/noticeBoards", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setNoticeBoards(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <TreeView
@@ -27,29 +50,24 @@ function SideBar(props) {
       defaultEndIcon={<div style={{ width: 24 }} />}
       onNodeSelect={(event, value) => props.onNodeSelect(event, value)}
     >
-      <StyledTreeItem
-        nodeId="1"
-        labelText="Reservations"
-        labelIcon={CalendarTodayIcon}
-      />
-      <StyledTreeItem nodeId="2" labelText="Notice board" labelIcon={HouseIcon}>
+      <a href="/mainPage/reservation">
         <StyledTreeItem
-          nodeId="3"
-          labelText="General"
-          labelIcon={SubjectIcon}
+          nodeId="0"
+          name="Reservation"
+          labelText="Reservations"
+          labelIcon={CalendarTodayIcon}
         />
-        <StyledTreeItem nodeId="4" labelText="Other" labelIcon={SpeakerIcon} />
-        <StyledTreeItem
-          nodeId="5"
-          labelText="Administration"
-          labelIcon={InfoIcon}
-        />
-      </StyledTreeItem>
-      <StyledTreeItem
-        nodeId="6"
-        labelText="Common announcement"
-        labelIcon={LocationCityIcon}
-      />
+      </a>
+
+      {noticeBoards.map((noticeBoard) => (
+        <a href={"/mainPage/" + noticeBoard.name} key={noticeBoard.id}>
+          <StyledTreeItem
+            nodeId={noticeBoard.id + ""}
+            labelText={noticeBoard.name}
+            labelIcon={HouseIcon}
+          />
+        </a>
+      ))}
     </TreeView>
   );
 }

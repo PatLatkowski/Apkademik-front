@@ -7,13 +7,13 @@ import Joi from "@hapi/joi";
 import axios from "axios";
 import Message from "./Message";
 import Cookies from "universal-cookie";
+import { serverUrl } from "../consts";
 
 var schema = Joi.object().keys({
   title: Joi.string().required(),
   text: Joi.string().required(),
 });
 
-const serverUrl = "http://46.41.142.44:8080/";
 const cookies = new Cookies();
 const token = cookies.get("token");
 
@@ -44,14 +44,14 @@ class AddPost extends React.Component {
         } else {
           axios
             .post(
-              serverUrl + "noticeBoard/" + this.props.boardTitle + "/post",
+              serverUrl + "/noticeBoard/" + this.props.boardTitle + "/post",
               {
                 title: this.state.title,
                 text: this.state.text,
               },
               {
                 headers: {
-                  Authorization: `Bearer ${token.token}`,
+                  Authorization: `Bearer ${token}`,
                 },
               }
             )

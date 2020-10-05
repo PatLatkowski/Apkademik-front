@@ -6,6 +6,7 @@ import FloorPicker from "./Schedule-Components/FloorPicker";
 import Roompicker from "./Schedule-Components/Roompicker";
 import ScheduleTable from "./Schedule-Components/ScheduleTable";
 import axios from "axios";
+import { serverUrl } from "../consts";
 import Message from "./Message";
 import {
   MuiPickersUtilsProvider,
@@ -128,7 +129,7 @@ function Schedule() {
       },
     };
     axios
-      .get("http://46.41.142.44:8080/dorm/" + currentDorm + "/floors", options)
+      .get(serverUrl + "/dorm/" + currentDorm + "/floors", options)
       .then((response) => {
         //console.log(response.data);
         setFloors(response.data);
@@ -147,10 +148,7 @@ function Schedule() {
         },
       };
       axios
-        .get(
-          "http://46.41.142.44:8080/floor/" + currentFloor + "/commonSpaces",
-          options
-        )
+        .get(serverUrl + "/floor/" + currentFloor + "/commonSpaces", options)
         .then((response) => {
           setCurrentRoom("");
           setCurrentMachine("");
@@ -175,7 +173,7 @@ function Schedule() {
         },
       };
       axios
-        .get("http://46.41.142.44:8080/commonSpace/" + currentRoom, options)
+        .get(serverUrl + "/commonSpace/" + currentRoom, options)
         .then((response) => {
           setRoomType(response.data.type);
           if (response.data.type === "GYM") {
@@ -220,9 +218,7 @@ function Schedule() {
         };
         axios
           .get(
-            "http://46.41.142.44:8080/commonSpace/" +
-              currentRoom +
-              "/washingMachines",
+            serverUrl + "/commonSpace/" + currentRoom + "/washingMachines",
             options
           )
           .then((response) => {
@@ -265,7 +261,8 @@ function Schedule() {
       };
       axios
         .get(
-          "http://46.41.142.44:8080/commonSpace/" +
+          serverUrl +
+            "/commonSpace/" +
             currentRoom +
             "/commonSpaceReservations/fiveDays",
           optionsgym
@@ -341,7 +338,8 @@ function Schedule() {
 
       axios
         .get(
-          "http://46.41.142.44:8080/washingMachine/" +
+          serverUrl +
+            "/washingMachine/" +
             currentMachine +
             "/washingReservations/fiveDays",
           options
@@ -453,7 +451,7 @@ function Schedule() {
         };
 
         axios
-          .post("http://46.41.142.44:8080/washingReservation", bd, options)
+          .post(serverUrl + "/washingReservation", bd, options)
           .then((response) => {
             scheduleUpdateLaundry();
           })
@@ -468,7 +466,7 @@ function Schedule() {
         };
 
         axios
-          .post("http://46.41.142.44:8080/commonSpaceReservation", bd, options)
+          .post(serverUrl + "/commonSpaceReservation", bd, options)
           .then((response) => {
             scheduleUpdateGym();
           })

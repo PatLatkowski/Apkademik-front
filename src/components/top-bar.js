@@ -6,6 +6,7 @@ import { Link, useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { UserContext } from "../index";
 import { contextInitialState } from "../consts";
+import { serverUrl } from "../consts";
 import axios from "axios";
 
 const TopBar = () => {
