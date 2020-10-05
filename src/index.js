@@ -31,7 +31,11 @@ function App() {
             exact
             path="/"
             render={(props) => {
-              return <Redirect to={"/mainPage"} />;
+              if (checkIfTokenExists()) {
+                return <Redirect to={"/mainPage/reservation"} />;
+              } else {
+                return <Redirect to={"/login"} />;
+              }
             }}
           />
           <Route
@@ -48,7 +52,7 @@ function App() {
             path="/register"
             render={(props) => {
               if (checkIfTokenExists()) {
-                return <Redirect to={"/mainPage"} />;
+                return <Redirect to={"/"} />;
               } else {
                 return <Register {...props} />;
               }
@@ -58,7 +62,7 @@ function App() {
             path="/login"
             render={(props) => {
               if (checkIfTokenExists()) {
-                return <Redirect to={"/mainPage"} />;
+                return <Redirect to={"/"} />;
               } else {
                 return <Login {...props} />;
               }
