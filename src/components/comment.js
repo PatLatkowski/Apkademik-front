@@ -27,7 +27,8 @@ function Comment(params) {
     setCommentText(event.target.value);
   }
 
-  function handleComment() {
+  function handleComment(event) {
+    event.preventDefault();
     axios
       .put(
         serverUrl + "/comment/" + data.id,
@@ -42,6 +43,7 @@ function Comment(params) {
       )
       .then((response) => {
         setCommentText(response.data);
+        window.location.reload();
       })
       .catch((error) => {
         console.log(error);

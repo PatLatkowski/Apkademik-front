@@ -6,7 +6,6 @@ import { Link, useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { UserContext } from "../index";
 import { contextInitialState } from "../consts";
-import { serverUrl } from "../consts";
 import axios from "axios";
 
 const TopBar = () => {
@@ -16,29 +15,27 @@ const TopBar = () => {
   const [userRole, setUserRole] = useState([]);
 
   useEffect(() => {
-    if (userName === contextInitialState) {
-      const cookies = new Cookies();
-      const token = cookies.get("token");
-      const config = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-      try {
-        axios
-          .get("http://46.41.142.44:8080/user", config)
-          .then(({ data: { id, name, surname } }) => {
-            setUserName(name + " " + surname);
-            setUserID(id);
-          })
-          .catch((error) => {
-            if (error.request.status === 401) {
-              const cookies = new Cookies();
-              cookies.remove("token");
-              history.push("/login");
-            }
-          });
-      } catch (e) {
-        console.log(e);
-      }
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    try {
+      axios
+        .get("http://46.41.142.44:8080/user", config)
+        .then(({ data: { id, name, surname } }) => {
+          setUserName(name + " " + surname);
+          setUserID(id);
+        })
+        .catch((error) => {
+          if (error.request.status === 401) {
+            const cookies = new Cookies();
+            cookies.remove("token");
+            history.push("/login");
+          }
+        });
+    } catch (e) {
+      console.log(e);
     }
   }, []);
 

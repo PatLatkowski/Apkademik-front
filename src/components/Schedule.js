@@ -123,20 +123,22 @@ function Schedule() {
   }, []);
   //currentDorm
   useEffect(() => {
-    const options = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    axios
-      .get(serverUrl + "/dorm/" + currentDorm + "/floors", options)
-      .then((response) => {
-        //console.log(response.data);
-        setFloors(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (currentDorm !== "") {
+      const options = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      axios
+        .get(serverUrl + "/dorm/" + currentDorm + "/floors", options)
+        .then((response) => {
+          //console.log(response.data);
+          setFloors(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDorm]);
   //currentFloor
