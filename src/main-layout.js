@@ -28,9 +28,13 @@ function MainPage() {
         </div>
         <div className="col-10 bg-secondary">
           <Switch>
-            <Route path="/mainPage/reservation" component={Schedule} />
+            <Route exact path="/mainPage/reservation" component={Schedule} />
             <Route exact path="/mainPage/:boardTitle" component={Board} />
-            <Route path="/mainPage/:boardTitle/post/:id" component={ShowPost} />
+            <Route
+              exact
+              path="/mainPage/:boardTitle/post/:id"
+              component={ShowPost}
+            />
           </Switch>
         </div>
       </div>

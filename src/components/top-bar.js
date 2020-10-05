@@ -96,7 +96,7 @@ const TopBar = () => {
   const handleLogout = (event) => {
     const cookies = new Cookies();
     setUserName(contextInitialState);
-    cookies.remove("token");
+    cookies.remove("token", { path: "/" });
     history.push("/login");
   };
   return (

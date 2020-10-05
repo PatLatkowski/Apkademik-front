@@ -4,10 +4,6 @@ import StyledTreeItem from "./StyledTreeItem";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import { makeStyles } from "@material-ui/core/styles";
 import HouseIcon from "@material-ui/icons/House";
-import InfoIcon from "@material-ui/icons/Info";
-import SubjectIcon from "@material-ui/icons/Subject";
-import SpeakerIcon from "@material-ui/icons/Speaker";
-import LocationCityIcon from "@material-ui/icons/LocationCity";
 import axios from "axios";
 import { serverUrl } from "../consts";
 import Cookies from "universal-cookie";
@@ -20,21 +16,18 @@ const useStyles = makeStyles({
   },
 });
 
-const cookies = new Cookies();
-const token = cookies.get("token");
-
 function SideBar(props) {
   const classes = useStyles();
   const [noticeBoards, setNoticeBoards] = useState([]);
 
   useEffect(() => {
-    console.log(token);
+    const cookies = new Cookies();
+    const token = cookies.get("token");
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
     axios
-      .get(serverUrl + "/dorm/noticeBoards", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(serverUrl + "/dorm/noticeBoards", config)
       .then((response) => {
         setNoticeBoards(response.data);
       })
